@@ -3,6 +3,8 @@
 
 class Plant{
 	
+	private $plant_id;
+	private $species_id;
 	private $family;
 	private $genus;
 	private $species;
@@ -26,6 +28,14 @@ class Plant{
 	private $location;
 	private $birth_date;
 
+	public function set_plant_id($plant_id){
+		$this->plant_id = $plant_id;
+	}
+	
+	public function set_species_id($species_id){
+		$this->species_id = $species_id;
+	}
+	
 	public function set_family($family){
 		$this->family = $family;
 	}
@@ -94,6 +104,14 @@ class Plant{
 	
 	public function set_birthdate($birthdate){
 		$this->birth_date = $birthdate;
+	}
+	
+	public function get_plant_id(){
+		return $this->plant_id;
+	}
+	
+	public function get_species_id(){
+		return $this->species_id;
 	}
 	
 	public function get_family(){
