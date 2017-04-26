@@ -1,4 +1,5 @@
 <?php
+<<<<<<< HEAD
 
 require_once 'classes/db_handler.php';
 
@@ -28,4 +29,6 @@ for($i = 0; $i < count($plants); $i++){
 
 $db_handler->disconnect_sql();
 
+=======
+>>>>>>> 6fef8a8934609a37c2eaf728b3fde50796354459
 ?>

@@ -1,6 +1,7 @@
 <?php
 
-class Sensor{
+
+abstract class Sensor{
 	
 	private $sensor_id;
 	private $value;
@@ -28,6 +29,11 @@ class Sensor{
 	
 	public function get_gpio_pin_id(){
 		return $this->gpio_pin_id;
+	}
+	
+	public function update(){
+		$this->value = random_int(0,255);
+		//TODO: Sensordaten aktualisieren
 	}
 }
 
