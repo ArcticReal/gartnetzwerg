@@ -1,11 +1,13 @@
 <?php
 
+use PhpGpio\Gpio;
 
 abstract class Sensor{
 	
 	private $sensor_id;
 	private $value;
 	private $gpio_pin_id;
+	private $gpio = new GPIO();
 	
 	public function set_sensor_id ($new_sensor_id){
 		$this->sensor_id = $new_sensor_id;
@@ -33,7 +35,13 @@ abstract class Sensor{
 	
 	public function update(){
 		$this->value = random_int(0,255);
-		//TODO: Sensordaten aktualisieren
+				
+		set_gpio_pin_id(10); 				//TODO: neeeds the right value
+		$gpio->setup(gpio_pin_id, "in");	//nicht auskommentieren, falls der Code auf PiZero is, aber der GPIO-Pin noch nicht klar ist
+		//$this->value = ;
+		
+		echo "Unexporting all pins\n";
+		$gpio->unexportAll();
 	}
 }
 
