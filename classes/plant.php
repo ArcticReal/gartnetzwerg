@@ -26,7 +26,7 @@ class Plant{
 	private $max_fertilizer_period;
 	private $is_indoor;
 	private $location;
-	private $birth_date;
+	private $birthdate;
 
 	public function set_plant_id($plant_id){
 		$this->plant_id = $plant_id;
@@ -70,8 +70,8 @@ class Plant{
 		$this->max_soil_humidity = $max_soil_humidity;
 	}
 	
-	public function set_tolerated_waterlogging($tolerated_waterloggging){
-		$this->tolerates_waterlogging = $tolerated_waterloggging;
+	public function set_tolerated_waterlogging($tolerated_waterlogging){
+		$this->tolerates_waterlogging = $tolerated_waterlogging;
 	}
 	
 	public function set_temperature($min_temperature, $max_temperature){
@@ -103,7 +103,7 @@ class Plant{
 	}
 	
 	public function set_birthdate($birthdate){
-		$this->birth_date = $birthdate;
+		$this->birthdate = $birthdate;
 	}
 	
 	public function get_plant_id(){
@@ -186,7 +186,7 @@ class Plant{
 		return $this->min_fertilizer_period;
 	}
 	
-	public function get_max_fertilzier_period(){
+	public function get_max_fertilizer_period(){
 		return $this->max_fertilizer_period;
 	}
 	
