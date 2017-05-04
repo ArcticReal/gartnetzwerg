@@ -81,7 +81,7 @@ class Sensorunit{
 			echo "Testing sensor with the id ".$key.":\n";
 			if (is_a($value, "Watertank_fillage_sensor")){
 				echo "\tYeah a watertank fillage sensor\n\twatertank fillage sensor is meassuring the "
-						.$value->get_position()." level of the watertank\n";
+						.$value->get_position()." level of the watertank\n\n";
 				$watertank_sensors[$value->get_position()] = $value->get_value();
 				
 			}else {
@@ -96,7 +96,7 @@ class Sensorunit{
 			$max_fillage_level ++;
 		}
 		echo "wich means that ".$fillage_level." out of ".$max_fillage_level." sensors sense water\n"
-				."so our watertank is ".$fillage_level/$max_fillage_level." full\n";
+				."so our watertank is at least ".$fillage_level/$max_fillage_level." full\n";
 	}
 	
 }
