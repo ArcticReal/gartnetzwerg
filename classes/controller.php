@@ -1,11 +1,18 @@
 <?php
 require_once 'sensorunit.php';
+
+//TODO: [Bratrich] bin noch zu doof für php, deswegen weiß ich noch net wie man so was macht
+//https://github.com/cmfcmf/OpenWeatherMap-PHP-Api
+//use Cmfcmf\OpenWeatherMap;
+//use Cmfcmf\OpenWeatherMap\Exception as OWMException;
+//require 'vendor/autoload.php';
+
 class Controller{
 	private $sensorunit_array;
 	private $plant_array;
 	private $curent_timestamp;		// HH:MM:SS-DD-MM-YYYY
 	private $openweathermap_api_key;
-	private $default_openweathermap_api_key;
+	private $default_openweathermap_api_key = "cd91b0f34b0fd55a44899fa358743139";
 	
 	private $value;
 	
