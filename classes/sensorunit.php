@@ -1,6 +1,7 @@
 <?php
 require_once 'air_moisture_sensor.php';
 require_once 'temperature_sensor.php';
+require_once 'watertank_fillage_sensor.php';
 require_once 'GifCreator.php';
 
 class Sensorunit{
@@ -33,7 +34,7 @@ class Sensorunit{
 	}
 	
 	public function update_sensor($sensor_id){
-		echo("Aktualisiere Sensor ".$sensor_id."\n");
+		echo("update Sensor ".$sensor_id."\n");
 		$this->sensor_array[$sensor_id]->update();
 		
 		
@@ -72,16 +73,49 @@ class Sensorunit{
 	}
 	
 	public function calculate_watertank_level(){
-		
+		echo "calculating watertank fillage\n\n";
+		$watertank_sensors = array();
+		$fillage_level = 0;
+		$max_fillage_level = 0;
+		foreach ($this->sensor_array as $key => $value){
+			echo "Testing sensor with the id ".$key.":\n";
+			if (is_a($value, "Watertank_fillage_sensor")){
+				echo "\tYeah a watertank fillage sensor\n\twatertank fillage sensor is meassuring the "
+						.$value->get_position()." level of the watertank\n";
+				$watertank_sensors[$value->get_position()] = $value->get_value();
+				
+			}else {
+				echo "\tohh nah! its another sensor\n\n";
+			}
+		}
+		echo "\nlet me summarize that for you:\nWe have ".sizeof($watertank_sensors)
+				." watertank sensors\n";
+		foreach ($watertank_sensors as $key => $value){
+			echo "Sensor ".$key." says: ".$value."\n";
+			$fillage_level += $value;
+			$max_fillage_level ++;
+		}
+		echo "wich means that ".$fillage_level." out of ".$max_fillage_level." sensors sense water\n"
+				."so our watertank is ".$fillage_level/$max_fillage_level." full\n";
 	}
 	
 }
 $test = new Sensorunit();
 $test->set_sensor(0, new Air_moisture_sensor());
-$test->set_sensor(1, new Temperature_sensor());
 $test->get_sensor(0)->set_sensor_id(0);
+$test->set_sensor(1, new Temperature_sensor());
 $test->get_sensor(1)->set_sensor_id(1);
+$test->set_sensor(2, new Watertank_fillage_sensor());
+$test->get_sensor(2)->set_sensor_id(2);
+$test->get_sensor(2)->set_position("top");
+$test->set_sensor(3, new Watertank_fillage_sensor());
+$test->get_sensor(3)->set_sensor_id(3);
+$test->get_sensor(3)->set_position("bottom");
+$test->set_sensor(4, new Watertank_fillage_sensor());
+$test->get_sensor(4)->set_sensor_id(4);
+$test->get_sensor(4)->set_position("middle");
 $test->update_all();
 $test->make_time_lapse();
+$test->calculate_watertank_level();
 
 ?>

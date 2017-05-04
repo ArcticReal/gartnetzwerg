@@ -33,8 +33,12 @@ abstract class Sensor{
 		return $this->gpio_pin_id;
 	}
 	
+	public function update_value(){
+		$this->set_value(random_int(0,255));
+	}
+	
 	public function update(){
-		$this->set_value(random_int(0,255));//value = random_int(0,255);
+		$this->update_value();
 		//TODO: Sensordaten aktualisieren
 		// https://www.sitepoint.com/powering-raspberry-pi-projects-with-php/
 		// https://github.com/ronanguilloux/php-gpio
