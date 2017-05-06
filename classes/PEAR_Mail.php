@@ -2,18 +2,18 @@
 
 require_once 'Mail.php';
 
-$from = "boosterchopper@hotmail.de";
+$from = "gartnetzwerg@outlook.de";
 $to = "pierre@cup7.com";
 $to2 = "dennis.horn@stud.hs-kempten.de";
 $subject = "Hi!";
 $body = "Hi,\n\nHow are you?";
 
 $host = "smtp-mail.outlook.com";
-$username = "boosterchopper@hotmail.de";
-$password = "Asdf1234";
+$username = "gartnetzwerg@outlook.de";
+$password = "hellomy4plants";
 
 $headers = array ('From' => $from,
-		'To' => $to,
+		'To' => $to2,
 		'Subject' => $subject);
 $smtp = Mail::factory('smtp',
 		array ('host' => $host,

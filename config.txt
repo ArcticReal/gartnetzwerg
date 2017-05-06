@@ -1,0 +1,3 @@
+##Email-Settings
+SEND_MAIL_TO = "dennishorn@hotmail.de"
+

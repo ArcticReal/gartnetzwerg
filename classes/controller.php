@@ -1,5 +1,7 @@
 <?php
 require_once 'sensorunit.php';
+require_once 'Mail.php';
+
 
 //TODO: [Bratrich] bin noch zu doof für php, deswegen weiß ich noch net wie man so was macht
 //https://github.com/cmfcmf/OpenWeatherMap-PHP-Api
@@ -13,11 +15,18 @@ class Controller{
 	private $curent_timestamp;		// HH:MM:SS-DD-MM-YYYY
 	private $openweathermap_api_key;
 	private $default_openweathermap_api_key = "cd91b0f34b0fd55a44899fa358743139";
+	private $notification_receiving_email_address;
 	
 	private $value;
 	
+	//setters:
+	
 	public function set_sensorunit($new_sensorunit, $new_sensorunit_id){
 		$this->sensorunit_array[$new_sensorunit_id] = $new_sensorunit;
+	}
+	
+	public function set_plant($new_plant, $newplant_id){
+		$this->plant_array[$newplant_id] = $new_plant;
 	}
 	
 	public function set_current_timestamp($new_current_timestamp){
@@ -32,6 +41,20 @@ class Controller{
 		$this->default_openweathermap_api_key = $new_default_openweathermap_api_key;
 	}
 	
+	public function set_notification_receiving_email_address($new_notification_receiving_email_address){
+		$this->notification_receiving_email_address = $new_notification_receiving_email_address;	
+	}
+	
+	//getters:
+	
+	public function get_sensorunit($sensorunitid){
+		return $this->sensorunit_array[$sensorunitid];
+	}
+	
+	public function get_plant($plant_id){
+		return $this->plant_array[$plant_id];
+	}
+	
 	public function get_openweathermap_api_key(){
 		return $this->openweathermap_api_key;	
 	}
@@ -39,6 +62,12 @@ class Controller{
 	public function get_default_openweathermap_api_key(){
 		return $this->default_openweathermap_api_key;
 	}
+	
+	public function get_notification_receiving_email_address(){
+		return $this->notification_receiving_email_address;
+	}
+	
+	//
 	
 	public function open_openweathermap_connection(){
 				
@@ -52,8 +81,64 @@ class Controller{
 		
 	}
 	
-	public function send_mail(){
+	/*
+	 * Always execute this after restarting the script
+	 */
+	public function init(){
 		
+		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
+	}
+	
+	/*
+	 * Searches in the confix.txt for the $searchkeyword and returns the value of the config
+	 */
+	public function lookup_config($search_keyword){
+		$config = file("../config.txt");
+		//var_dump($config);
+		$substr = "";
+		echo "\nLooking up ".$search_keyword.": \n";
+		foreach ($config as $key => $line){
+			if (strpos($line, $search_keyword) !== FALSE){
+				echo "\t".$search_keyword." found in line: ".$key."\n";
+				$pos = strpos($line, "\"");
+				$substr = substr($line, $pos+1);
+				$substr = substr($substr, 0, strpos($substr, "\""));
+				echo "\tValue: ".$substr."\n\n";
+			}
+		}
+		return $substr;
+	}
+	
+	public function send_mail($subject, $message){
+		
+		
+		$from = "gartnetzwerg@outlook.de";
+		
+		$host = "smtp-mail.outlook.com";
+		$username = "gartnetzwerg@outlook.de";
+		$password = "hellomy4plants";
+		
+		$headers = array ('From' => $from,
+				'To' => $this->get_notification_receiving_email_address(),
+				'Subject' => $subject);
+		
+		$smtp = Mail::factory('smtp',
+				array ('host' => $host,
+						'auth' => true,
+						'username' => $username,
+						'password' => $password)
+				);
+		
+				
+		
+		$mail = $smtp->send($this->get_notification_receiving_email_address(), $headers, $message);
+		
+		if (PEAR::isError($mail)) {
+			echo("<p>" . $mail->getMessage() . "</p>\n");
+		} else {
+			echo("<p>Message successfully sent!</p>\n");
+		}
+				
 	}
 	
 	public function color_state(){
@@ -107,5 +192,6 @@ class Controller{
 	}
 */
 }
-
+$test2 = new Controller();
+$test2->init();
 ?>

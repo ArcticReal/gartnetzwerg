@@ -100,7 +100,7 @@ class Sensorunit{
 	}
 	
 }
-$test = new Sensorunit();
+/*$test = new Sensorunit();
 $test->set_sensor(0, new Air_moisture_sensor());
 $test->get_sensor(0)->set_sensor_id(0);
 $test->set_sensor(1, new Temperature_sensor());
@@ -117,5 +117,5 @@ $test->get_sensor(4)->set_position("middle");
 $test->update_all();
 $test->make_time_lapse();
 $test->calculate_watertank_level();
-
+*/
 ?>
