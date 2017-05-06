@@ -38,14 +38,13 @@ abstract class Sensor{
 	}
 	
 	public function update(){
-<<<<<<< HEAD
+
 		$this->update_value();
 		//TODO: Sensordaten aktualisieren
 		// https://www.sitepoint.com/powering-raspberry-pi-projects-with-php/
 		// https://github.com/ronanguilloux/php-gpio
-=======
+
 		//$this->value = random_int(0,255);
->>>>>>> 312e72e6c55bf98699c0e8728bcd6519d59f3dd9
 				
 		$this->set_gpio_pin_id(10);				//TODO: neeeds the right value
 		//$gpio->setup(gpio_pin_id, "in");	//nicht auskommentieren, falls der Code auf PiZero is, aber der GPIO-Pin noch nicht klar ist
