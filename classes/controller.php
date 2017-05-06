@@ -67,30 +67,59 @@ class Controller{
 		return $this->notification_receiving_email_address;
 	}
 	
-	//
+	//openweathermap functions
 	
 	public function open_openweathermap_connection(){
 				
 	}
-	
-	public function get_openweathermap_data(){
+	/**
+	 * 
+	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
+	 * the default api key
+	 * 
+	 * @param $location this is the location the forecast will be for
+	 * 
+	 * @return returns the data in an array
+	 */
+	public function get_openweathermap_data($location){
+		if ($this->get_openweathermap_api_key() == ""){
+			// gets forecast with default api key if the api key value is empty
+			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_default_openweathermap_api_key().'&q='.$location);
+			$data = json_decode($json, true);
+		}
+		else {
+			//gets forecast with api key
+			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_openweathermap_api_key().'&q='.$location);		
+			echo $json;
+			$data = json_decode($json, true);
+			if ($data == ""){ //if api doesnt work then use the default one
+				$this->set_openweathermap_api_key("");
+				$data = $this->get_openweathermap_data($location);	
+			}
+		}
 		
+		return $data;
 	}
 	
 	public function close_openweathermap_connection(){
 		
 	}
 	
-	/*
+	/**
+	 * 
 	 * Always execute this after restarting the script
 	 */
 	public function init(){
-		
+		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
 	}
 	
-	/*
+	
+	/**
 	 * Searches in the confix.txt for the $searchkeyword and returns the value of the config
+	 * 
+	 * @param unknown $search_keyword
+	 * @return string
 	 */
 	public function lookup_config($search_keyword){
 		$config = file("../config.txt");
@@ -109,6 +138,12 @@ class Controller{
 		return $substr;
 	}
 	
+	/**
+	 * 
+	 * sends a Mail to the $notification_receiving_email_address
+	 * setting this address happens in the init-function so be sure to call it
+	 * 
+	 */
 	public function send_mail($subject, $message){
 		
 		
@@ -194,4 +229,5 @@ class Controller{
 }
 $test2 = new Controller();
 $test2->init();
+$test2->get_openweathermap_data('Kempten');
 ?>
