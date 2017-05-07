@@ -166,10 +166,12 @@ class Plant{
 		return $this->max_temperature;
 	}
 	
+	//TODO: delete
 	public function get_min_lux(){
 		return $this->min_lux;
 	}
 	
+	//TODO: delete
 	public function get_max_lux(){
 		return $this->max_lux;
 	}

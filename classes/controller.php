@@ -60,6 +60,19 @@ class Controller{
 		return $this->notification_receiving_email_address;
 	}
 	
+	/**
+	 * checks all plants, if they are indoor or outdoor and 
+	 */
+	public function check_plants(){
+		foreach ($this->plant_array as $plant) {
+			if($plant->is_indoor() == false){
+				//TODO: plant is outdoor, check for weather and watering stuff
+			} else {
+				//TODO: plant is indoor, no owm rain check (still check for sun though)
+			}
+		}
+	}
+	
 	//openweathermap functions
 	
 	public function open_openweathermap_connection(){
@@ -166,37 +179,63 @@ class Controller{
 				
 	}
 	
+	
+	/**
+	 * sub-function for color_state. 
+	 * 
+	 * @param takes $min and $max value from the database and compares it to the current $sensor value.$this
+	 * @return offset/difference between current value and ideal value
+	 * 
+	 * TODO: je nach dem was die Diskussion in Freedcamp jetz ergibt,
+	 *       muss hier vielleicht noch eine Sensorgewichtung rein (wie von mir beschrieben).
+	 *       (wobei ich meine alte/Horn's Idee besser finde, was aber die ganze Funktion unnötigt macht...)
+	 */
+	public function sensor_offset($sensor, $min, $max){
+		if($sensor->get_value() - $min < 0){
+			return -1;
+		} else if($max - $sensor->get_value() < 0){
+			return 1;
+		}
+		return 0;
+	}
+	
+	/**
+	 * 
+	 */
 	public function color_state(){
 		$this->value = 0;
-		//sucht sich werte der sensoren zusammen (aus plant.php?)
 		
-		//berechnet abweichung (mit den soll-werten über db_handler.php?)
-		//a1 = soll1 - akt1;
-		//a2 = soll2 - akt2;
-		//a3 = soll3 - akt3;
-		//a4 = soll4 - akt4;
-		//a5 = soll5 - akt5;
-		
-		//multipliziert sensor-werte mit sensor-gewichtung (die, theoretisch irgendwo in der Pflanze noch gespeichert werden müsste
-		//m1 = a1 * g1;
-		//m2 = a2 * g2;
-		//m3 = a3 * g3;
-		//m4 = a4 * g4;
-		//m5 = a5* g5;
-		
-		//addiert mächtigkeiten
-		//$this->value = m1 + m2 + m3 + m4 + m5;
+		//TODO: woher weiß ich welcher Sensor und welche sensorunit was ist?
+		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört; brauch da Bestätigung, Pierre 
+		foreach($this->plant_array as $index => $plant ) {
+			//Lufttemperatur
+			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[0], 
+					$plant->get_min_temperature(), $plant->get_max_temperature()));
+			//Luftfeuchtigkeit
+			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[1],
+					$plant->get_min_air_humidity(), $plant->get_max_air_humidity()));
+			//Lichtsensor
+			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[2],
+					$plant->get_min_light_hours(), $plant->get_max_light_hours()));
+			//Bodenfeuchtigkeit
+			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[3],
+					$plant->get_min_soil_humidity(), $plant->get_max_soil_humidity()));
+			//Bodentemperatur
+			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[4],
+					$plant->get_min_soil_temperature(), $plant->get_max_soil_temperature()));
+		}
 		
 		if($this->value>= 0.5){
-			//return grün
+			return "green";
 		} else if($this->value>= 1){
-			//return gelb
+			return "yellow";
 		} else if($this->value>= 2){
-			//return orange
+			return "orange";
 		} else if($this->value>= 3){
-			//return rot
+			return "red";
 		} else {
-			//return gold
+			return "gold";
+			//TODO: return oder echo?
 		}
 	}
 	
