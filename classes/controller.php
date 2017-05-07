@@ -2,13 +2,6 @@
 require_once 'sensorunit.php';
 require_once 'Mail.php';
 
-
-//TODO: [Bratrich] bin noch zu doof für php, deswegen weiß ich noch net wie man so was macht
-//https://github.com/cmfcmf/OpenWeatherMap-PHP-Api
-//use Cmfcmf\OpenWeatherMap;
-//use Cmfcmf\OpenWeatherMap\Exception as OWMException;
-//require 'vendor/autoload.php';
-
 class Controller{
 	private $sensorunit_array;
 	private $plant_array;
@@ -70,10 +63,10 @@ class Controller{
 	//openweathermap functions
 	
 	public function open_openweathermap_connection(){
-				
+		//TODO: könnte eigentlich gelöscht werden, muss aber noch in den Diagrammen geändert werden
 	}
+	
 	/**
-	 * 
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
 	 * the default api key
 	 * 
@@ -86,8 +79,7 @@ class Controller{
 			// gets forecast with default api key if the api key value is empty
 			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_default_openweathermap_api_key().'&q='.$location);
 			$data = json_decode($json, true);
-		}
-		else {
+		} else {
 			//gets forecast with api key
 			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_openweathermap_api_key().'&q='.$location);		
 			echo $json;
@@ -102,18 +94,16 @@ class Controller{
 	}
 	
 	public function close_openweathermap_connection(){
-		
+		//TODO: könnte eigentlich gelöscht werden, muss aber noch in den Diagrammen geändert werden
 	}
 	
 	/**
-	 * 
 	 * Always execute this after restarting the script
 	 */
 	public function init(){
 		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
 	}
-	
 	
 	/**
 	 * Searches in the confix.txt for the $searchkeyword and returns the value of the config
