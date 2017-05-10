@@ -33,34 +33,21 @@ abstract class Sensor{
 		return $this->gpio_pin_id;
 	}
 	
-	public function update_value(){
+	/*public function update_value(){
 		$this->set_value(random_int(0,255));
-	}
+	}*/
 	
 	public function update(){
-		$this->update_value();
-		//TODO: Sensordaten aktualisieren
+		//$this->update_value();
+		//TODO: Ich geh mal davon aus, dass die SensorID ne nummer is, und dass die Nummer immer die gleiche für den jeweiligen Sensor is.
+		exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_".$this->get_sensor_id().".py", $rReturn, $err);
 		
-		/* Für Montag:
-		 * - https://www.sitepoint.com/powering-raspberry-pi-projects-with-php/
-		 * - https://github.com/ronanguilloux/php-gpio
-		 * - https://github.com/PiPHP/GPIO
-		 * - https://raspberrypi.stackexchange.com/questions/7365/php-to-execute-python-scripts-for-gpio
-		 * - http://wiringpi.com/
-		 * - http://www.raspberry-pi-geek.com/Archive/2014/07/PHP-on-Raspberry-Pi
-		 * - https://captainbodgit.blogspot.de/2015/04/raspberry-pi-gpio-control-with-php.html
-		 */
-		
-		$this->set_gpio_pin_id(10);	//TODO: neeeds the right pin
-		
-		//$gpio->setup(gpio_pin_id, "in");	//nicht auskommentieren, falls der Code auf PiZero is, aber der GPIO-Pin noch nicht klar ist
-		//$this->value = ;
-		
-		//exec("gpio read 1", $status);
-		//print_r($status); //or var_dump($status);
-		
-		echo "Unexporting all pins\n";
-		//$gpio->unexportAll();
+		//foreach($rReturn as $key => $val){
+			//echo $val."<br/>";
+			if($val != ""){
+				$this->value = $val;
+			}
+		//}
 	}
 }
 
