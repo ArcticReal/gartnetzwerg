@@ -38,16 +38,15 @@ abstract class Sensor{
 	}*/
 	
 	public function update(){
-		//$this->update_value();
-		//TODO: Ich geh mal davon aus, dass die SensorID ne nummer is, und dass die Nummer immer die gleiche für den jeweiligen Sensor is.
-		exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_".$this->get_sensor_id().".py", $rReturn, $err);
+		//TODO: hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
+		/*exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_".$this->get_sensor_id().".py", $rReturn, $err);
 		
-		//foreach($rReturn as $key => $val){
-			//echo $val."<br/>";
+		foreach($rReturn as $key => $val){
+			echo $val."<br/>";
 			if($val != ""){
 				$this->value = $val;
 			}
-		//}
+		}*/
 	}
 }
 

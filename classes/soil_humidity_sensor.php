@@ -10,5 +10,13 @@ class Soil_humidity_sensor extends Sensor{
 	public function get_position(){
 		return $this->position;
 	}
+	
+	public function update(){
+		exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_sh.py", $rReturn, $err);
+		
+		if($rReturn != ""){
+			$this->value = $rReturn;
+		}
+	}
 }
 ?>
