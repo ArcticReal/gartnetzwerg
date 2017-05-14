@@ -1,6 +1,7 @@
 <?php
 require_once 'air_moisture_sensor.php';
-require_once 'temperature_sensor.php';
+require_once 'air_temperature_sensor.php';
+require_once 'soil_temperature_sensor.php';
 require_once 'light_sensor.php';
 require_once 'soil_humidity_sensor.php';
 require_once 'watertank_fillage_sensor.php';
@@ -41,16 +42,13 @@ class Sensorunit{
 	public function update_sensor($sensor_id){
 		echo("update Sensor ".$sensor_id."\n");
 		$this->sensor_array[$sensor_id]->update();
-		
-		
 	}
 	
 	public function update_all(){
 		foreach ($this->sensor_array as $key => $value){
 			$this->update_sensor($key);
 			echo ("Key: ".$key." Value: ".$value->get_value()."\n\n");
-		}
-			
+		}	
 	}
 
 	public function make_time_lapse(){
@@ -73,8 +71,7 @@ class Sensorunit{
 		}
 		catch (\Exception $ex){
 			echo $ex->getMessage()."\n";
-		}
-		
+		}	
 	}
 	
 	public function calculate_watertank_level(){
@@ -103,8 +100,8 @@ class Sensorunit{
 		echo "wich means that ".$fillage_level." out of ".$max_fillage_level." sensors sense water\n"
 				."so our watertank is at least ".$fillage_level/$max_fillage_level." full\n";
 	}
-	
 }
+
 /*$test = new Sensorunit();
 $test->set_sensor(0, new Air_moisture_sensor());
 $test->get_sensor(0)->set_sensor_id(0);
@@ -123,4 +120,5 @@ $test->update_all();
 $test->make_time_lapse();
 $test->calculate_watertank_level();
 */
+
 ?>
