@@ -1,8 +1,13 @@
 <?php
 require_once 'air_moisture_sensor.php';
 require_once 'temperature_sensor.php';
+require_once 'light_sensor.php';
+require_once 'soil_humidity_sensor.php';
 require_once 'watertank_fillage_sensor.php';
+
 require_once 'GifCreator.php';
+
+require_once 'camera.php';
 
 class Sensorunit{
 		

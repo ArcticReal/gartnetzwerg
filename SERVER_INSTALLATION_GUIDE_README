@@ -6,3 +6,6 @@ einbinden mit:
 
 kann sein dass ihr diese hier auch noch braucht(bei mir gings ohne):
 	sudo apt-get install libgd2-xpm-dev
+
+[Bratrich]
+    sudo apt-get install git //nich sicher, ob git schon vorinstalliert is, oder ob ich/Michi ha schon gemacht haben (war auf Basis zumindest schon mal drauf)
