@@ -38,15 +38,7 @@ abstract class Sensor{
 	}*/
 	
 	public function update(){
-		//TODO: hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
-		/*exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_".$this->get_sensor_id().".py", $rReturn, $err);
-		
-		foreach($rReturn as $key => $val){
-			echo $val."<br/>";
-			if($val != ""){
-				$this->value = $val;
-			}
-		}*/
+		//hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
 	}
 }
 

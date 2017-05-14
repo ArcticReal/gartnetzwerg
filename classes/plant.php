@@ -18,8 +18,8 @@ class Plant{
 	private $tolerates_waterlogging;
 	private $min_temperature;
 	private $max_temperature;
-	private $min_lux;
-	private $max_lux;
+	//private $min_lux;
+	//private $max_lux;
 	private $min_watering_period;
 	private $max_watering_period;
 	private $min_fertilizer_period;
@@ -166,15 +166,14 @@ class Plant{
 		return $this->max_temperature;
 	}
 	
-	//TODO: delete
-	public function get_min_lux(){
+	//TODO: "deleted"
+	/*public function get_min_lux(){
 		return $this->min_lux;
-	}
+	}*/
 	
-	//TODO: delete
-	public function get_max_lux(){
+	/*public function get_max_lux(){
 		return $this->max_lux;
-	}
+	}*/
 	
 	public function get_min_watering_period(){
 		return $this->min_watering_period;

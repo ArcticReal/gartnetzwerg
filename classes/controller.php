@@ -75,9 +75,7 @@ class Controller{
 	
 	//openweathermap functions
 	
-	public function open_openweathermap_connection(){
-		//TODO: könnte eigentlich gelöscht werden, muss aber noch in den Diagrammen geändert werden
-	}
+	//public function open_openweathermap_connection(){}
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
@@ -106,9 +104,7 @@ class Controller{
 		return $data;
 	}
 	
-	public function close_openweathermap_connection(){
-		//TODO: könnte eigentlich gelöscht werden, muss aber noch in den Diagrammen geändert werden
-	}
+	//public function close_openweathermap_connection(){}
 	
 	/**
 	 * Always execute this after restarting the script

@@ -1,6 +1,6 @@
 <?php
 require_once 'sensor.php';
-class Temperature_sensor extends Sensor{
+class soil_temperature_sensor extends Sensor{
 	public function update(){
 		/*TODO: Unterscheidung zwischen _at (Lufttemperatursensor) und _st (Bodentemperatursensor)
 				Muss da noch eine weitere Sensor-Klasse her? ich glaube schon; mach ich vielleicht nachher mal
