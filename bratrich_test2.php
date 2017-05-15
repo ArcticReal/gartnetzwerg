@@ -40,6 +40,8 @@ $plant->set_air_humidity(30,50);
 $plant->set_soil_humidity(30,50);
 $plant->set_light_hours(0, 1000);
 
-$test->color_state();
+$test->color_state((random_int(5,20)/10),(random_int(5,20)/10),(random_int(5,20)/10),(random_int(5,20)/10),(random_int(5,20)/10));
+
+$test->correction_text(0, 1, 1);
 
 ?>

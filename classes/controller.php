@@ -180,9 +180,7 @@ class Controller{
 	 * @param takes $min and $max value from the database and compares it to the current $sensor value.$this
 	 * @return offset/difference between current value and ideal value
 	 * 
-	 * TODO: je nach dem was die Diskussion in Freedcamp jetz ergibt,
-	 *       muss hier vielleicht noch eine Sensorgewichtung rein (wie von mir beschrieben).
-	 *       (wobei ich meine alte/Horn's Idee besser finde, was aber die ganze Funktion unnötigt macht...)
+	 * TODO: Siehe Diskussion (is alles drin, außer Zeitliche Veränderung, Lichtsensor-Korrektheit und eventuell Icons)
 	 */
 	public function sensor_offset($sensor, $min, $max, $gewichtung){
 		echo "Sensorvalue: ".$sensor->get_value()." min: ".$min." max: ".$max."\n";
@@ -195,36 +193,113 @@ class Controller{
 	}
 	
 	/**
+	 * @param takes plant_id and sensor_id
+	 * @return text depending on sensor and offset-value
+	 */
+	public function correction_text($plant, $sensor){
+		$offset = 0;
+		$prio = 1;
+
+		//TODO: auch hier gehe davon aus dass der Index von sensor_unit array und plant_array die gleiche nummer sind.
+		echo $plant.", ". $sensor .", ". get_class($this->get_sensorunit($plant)->get_sensor($sensor)) ."\n";
+		
+		switch (get_class($this->get_sensorunit($plant)->get_sensor($sensor))) {
+			case "Air_temperature_sensor":
+				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_temperature(), $this->plant_array[$plant]->get_max_air_temperature(),$prio);
+				if($offset == -1){
+					//TODO: get negative offset feedback; later return
+					echo "test: es isch zu kalt, tu was\n\n";
+				} else if($offset == 1){
+					//TODO: get positive offset feedback; later return
+					echo "test: hilfe, ich brenne!\n\n";
+				}
+				break;
+				
+			case "Air_moisture_sensor":
+				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_humidity(), $this->plant_array[$plant]->get_max_air_humidity(),$prio);
+				if($offset == -1){
+					//TODO: get negative offset feedback
+				} else if($offset == 1){
+					//TODO: get positive offset feedback
+				}
+				break;
+				
+			case "Light_sensor":
+				//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
+				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_light_hours(), $this->plant_array[$plant]->get_max_light_hours(),$prio);
+				if($offset == -1){
+					//TODO: get negative offset feedback
+				} else if($offset == 1){
+					//TODO: get positive offset feedback
+				}
+				break;
+				
+			case "Soil_humidity_sensor":
+				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_humidity(), $this->plant_array[$plant]->get_max_soil_humidity(),$prio);
+				if($offset == -1){
+					//TODO: get negative offset feedback
+				} else if($offset == 1){
+					//TODO: get positive offset feedback
+				}
+				break;
+				
+			case "Soil_temperature_sensor":
+				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_temperature(), $this->plant_array[$plant]->get_max_soil_temperature(),$prio);
+				if($offset == -1){
+					//TODO: get negative offset feedback
+				} else if($offset == 1){
+					//TODO: get positive offset feedback
+				}
+				break;
+				
+			default:;break;
+		}
+	}
+	
+	/**
+	 * @param takes 5 priorities for (in this order): air_temp, air_hum, light, soil_hum, soil_temp
+	 * @return color as string, for later CSS;
 	 * 
 	 */
-	public function color_state(){
+	public function color_state($g_at,$g_ah,$g_l,$g_sh,$g_st){
 		$color_value = 0;
-		
+				
 		//TODO: woher weiß ich welche sensorunit was ist?
-		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört; brauch da Bestätigung, Pierre 
+		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört
+		//EDIT: ich geh mal davon aus, das läuft über den DB_Handler oder es fehlt noch ne plant_id in der Unit (oder andersrum);
+		
 		foreach($this->plant_array as $key => $value){
 			foreach($this->get_sensorunit($key)->get_array() as $key2 => $value2){
 				echo $key .", ". $key2 .", ". get_class($value2) ."\n";
 				
-				if(get_class($value2) == "Air_temperature_sensor"){
-					$color_value += abs($this->sensor_offset($value2, $value->get_min_air_temperature(), $value->get_max_air_temperature(),1));
-				}
-				
-				if(get_class($value2) == "Air_moisture_sensor"){
-					$color_value += abs($this->sensor_offset($value2, $value->get_min_air_humidity(), $value->get_max_air_humidity(),1));
-				}
-				
-				//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
-				if(get_class($value2) == "Light_sensor"){
-					$color_value += abs($this->sensor_offset($value2, $value->get_min_light_hours(), $value->get_max_light_hours(),0.5));
-				}
-				
-				if(get_class($value2) == "Soil_humidity_sensor"){
-					$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_humidity(), $value->get_max_soil_humidity(),1));
-				}
-				
-				if(get_class($value2) == "Soil_temperature_sensor"){
-					$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_temperature(), $value->get_max_soil_temperature(),1));
+				switch (get_class($value2)) {
+					case "Air_temperature_sensor": 
+						echo $g_at." ";
+						$color_value += abs($this->sensor_offset($value2, $value->get_min_air_temperature(), $value->get_max_air_temperature(),$g_at));
+						break;
+						
+					case "Air_moisture_sensor": 
+						echo $g_ah." ";
+						$color_value += abs($this->sensor_offset($value2, $value->get_min_air_humidity(), $value->get_max_air_humidity(),$g_ah));
+						break;
+						
+					case "Light_sensor":
+						//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
+						echo $g_l." ";
+						$color_value += abs($this->sensor_offset($value2, $value->get_min_light_hours(), $value->get_max_light_hours(),$g_l));
+						break;
+						
+					case "Soil_humidity_sensor":
+						echo $g_sh." ";
+						$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_humidity(), $value->get_max_soil_humidity(),$g_sh));
+						break;
+						
+					case "Soil_temperature_sensor":
+						echo $g_st." ";
+						$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_temperature(), $value->get_max_soil_temperature(),$g_st));
+						break;
+						
+					default:;break;
 				}
 			}
 		}
@@ -244,7 +319,7 @@ class Controller{
 			echo "green\n\n";
 			return "green";
 		} else {
-			echo "gold\n";
+			echo "gold\n\n";
 			return "gold";
 		}
 	}
