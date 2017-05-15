@@ -1,6 +1,6 @@
 <?php
 require_once 'sensorunit.php';
-require_once 'Mail.php';
+//require_once 'Mail.php'; [Bratrich] hat bei mir bei meinem Test rumgefucked; Mail.php oder PEAR_mail.php?
 
 class Controller{
 	private $sensorunit_array;
@@ -9,9 +9,7 @@ class Controller{
 	private $openweathermap_api_key;
 	private $default_openweathermap_api_key = "cd91b0f34b0fd55a44899fa358743139";
 	private $notification_receiving_email_address;
-	
-	private $value;
-	
+		
 	//setters:
 	
 	public function set_sensorunit($new_sensorunit, $new_sensorunit_id){
@@ -186,11 +184,12 @@ class Controller{
 	 *       muss hier vielleicht noch eine Sensorgewichtung rein (wie von mir beschrieben).
 	 *       (wobei ich meine alte/Horn's Idee besser finde, was aber die ganze Funktion unnötigt macht...)
 	 */
-	public function sensor_offset($sensor, $min, $max){
+	public function sensor_offset($sensor, $min, $max, $gewichtung){
+		echo "Sensorvalue: ".$sensor->get_value()." min: ".$min." max: ".$max."\n";
 		if($sensor->get_value() - $min < 0){
-			return -1;
+			return (-1 * $gewichtung);
 		} else if($max - $sensor->get_value() < 0){
-			return 1;
+			return (1 * $gewichtung);
 		}
 		return 0;
 	}
@@ -199,39 +198,54 @@ class Controller{
 	 * 
 	 */
 	public function color_state(){
-		$this->value = 0;
+		$color_value = 0;
 		
-		//TODO: woher weiß ich welcher Sensor und welche sensorunit was ist?
+		//TODO: woher weiß ich welche sensorunit was ist?
 		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört; brauch da Bestätigung, Pierre 
-		foreach($this->plant_array as $index => $plant ) {
-			//Lufttemperatur
-			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[0], 
-					$plant->get_min_temperature(), $plant->get_max_temperature()));
-			//Luftfeuchtigkeit
-			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[1],
-					$plant->get_min_air_humidity(), $plant->get_max_air_humidity()));
-			//Lichtsensor
-			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[2],
-					$plant->get_min_light_hours(), $plant->get_max_light_hours()));
-			//Bodenfeuchtigkeit
-			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[3],
-					$plant->get_min_soil_humidity(), $plant->get_max_soil_humidity()));
-			//Bodentemperatur
-			$this->value += abs($this->sensor_offset($this->sensorunit_array[$index]->$sensor_array[4],
-					$plant->get_min_soil_temperature(), $plant->get_max_soil_temperature()));
+		foreach($this->plant_array as $key => $value){
+			foreach($this->get_sensorunit($key)->get_array() as $key2 => $value2){
+				echo $key .", ". $key2 .", ". get_class($value2) ."\n";
+				
+				if(get_class($value2) == "Air_temperature_sensor"){
+					$color_value += abs($this->sensor_offset($value2, $value->get_min_air_temperature(), $value->get_max_air_temperature(),1));
+				}
+				
+				if(get_class($value2) == "Air_moisture_sensor"){
+					$color_value += abs($this->sensor_offset($value2, $value->get_min_air_humidity(), $value->get_max_air_humidity(),1));
+				}
+				
+				//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
+				if(get_class($value2) == "Light_sensor"){
+					$color_value += abs($this->sensor_offset($value2, $value->get_min_light_hours(), $value->get_max_light_hours(),0.5));
+				}
+				
+				if(get_class($value2) == "Soil_humidity_sensor"){
+					$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_humidity(), $value->get_max_soil_humidity(),1));
+				}
+				
+				if(get_class($value2) == "Soil_temperature_sensor"){
+					$color_value += abs($this->sensor_offset($value2, $value->get_min_soil_temperature(), $value->get_max_soil_temperature(),1));
+				}
+			}
 		}
 		
-		if($this->value>= 0.5){
-			return "green";
-		} else if($this->value>= 1){
-			return "yellow";
-		} else if($this->value>= 2){
-			return "orange";
-		} else if($this->value>= 3){
+		echo "\n".$color_value." ";
+		
+		if($color_value >= 3){
+			echo "red\n\n";
 			return "red";
+		} else if($color_value >= 2){
+			echo "orange\n\n";
+			return "orange";
+		} else if($color_value >= 1){
+			echo "yellow\n\n";
+			return "yellow";
+		} else if($color_value >= 0.5){
+			echo "green\n\n";
+			return "green";
 		} else {
+			echo "gold\n";
 			return "gold";
-			//TODO: return oder echo?
 		}
 	}
 	
@@ -252,7 +266,9 @@ class Controller{
 	}
 */
 }
-$test2 = new Controller();
+
+/*$test2 = new Controller();
 $test2->init();
-$test2->get_openweathermap_data('Kempten');
+$test2->get_openweathermap_data('Kempten');*/
+
 ?>

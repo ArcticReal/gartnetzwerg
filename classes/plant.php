@@ -13,11 +13,15 @@ class Plant{
 	private $scientific_name;
 	private $min_light_hours;
 	private $max_light_hours;
+	private $min_air_humidity;
+	private $max_air_humidity;
 	private $min_soil_humidity;
 	private $max_soil_humidity;
 	private $tolerates_waterlogging;
-	private $min_temperature;
-	private $max_temperature;
+	private $min_air_temperature;
+	private $max_air_temperature;
+	private $min_soil_temperature;
+	private $max_soil_temperature;
 	//private $min_lux;
 	//private $max_lux;
 	private $min_watering_period;
@@ -65,6 +69,11 @@ class Plant{
 		$this->max_light_hours = $max_light_hours;
 	}
 	
+	public function set_air_humidity($min_air_humidity, $max_air_humidity){
+		$this->min_air_humidity = $min_air_humidity;
+		$this->max_air_humidity = $max_air_humidity;
+	}
+	
 	public function set_soil_humidity($min_soil_humidity, $max_soil_humidity){
 		$this->min_soil_humidity = $min_soil_humidity;
 		$this->max_soil_humidity = $max_soil_humidity;
@@ -74,15 +83,20 @@ class Plant{
 		$this->tolerates_waterlogging = $tolerated_waterlogging;
 	}
 	
-	public function set_temperature($min_temperature, $max_temperature){
-		$this->min_temperature = $min_temperature;
-		$this->max_temperature = $max_temperature;
+	public function set_air_temperature($min_air_temperature, $max_air_temperature){
+		$this->min_air_temperature = $min_air_temperature;
+		$this->max_air_temperature = $max_air_temperature;
 	}
 	
-	public function set_lux($min_lux, $max_lux){
+	public function set_soil_temperature($min_soil_temperature, $max_soil_temperature){
+		$this->min_soil_temperature = $min_soil_temperature;
+		$this->max_soil_temperature = $max_soil_temperature;
+	}
+	
+	/*public function set_lux($min_lux, $max_lux){
 		$this->min_lux = $min_lux;
 		$this->max_lux = $max_lux;
-	}
+	}*/
 	
 	public function set_watering_period($min_watering_period, $max_watering_period){
 		$this->min_watering_period = $min_watering_period;
@@ -146,6 +160,14 @@ class Plant{
 		return $this->max_light_hours;
 	}
 	
+	public function get_min_air_humidity(){
+		return $this->min_air_humidity;
+	}
+	
+	public function get_max_air_humidity(){
+		return $this->max_air_humidity;
+	}
+	
 	public function get_min_soil_humidity(){
 		return $this->min_soil_humidity;
 	}
@@ -158,12 +180,20 @@ class Plant{
 		return $this->tolerates_waterlogging;
 	}
 	
-	public function get_min_temperature(){
-		return $this->min_temperature;
+	public function get_min_air_temperature(){
+		return $this->min_air_temperature;
 	}
 	
-	public function get_max_temperature(){
-		return $this->max_temperature;
+	public function get_max_air_temperature(){
+		return $this->max_air_temperature;
+	}
+	
+	public function get_min_soil_temperature(){
+		return $this->min_soil_temperature;
+	}
+	
+	public function get_max_soil_temperature(){
+		return $this->max_soil_temperature;
 	}
 	
 	//TODO: "deleted"
