@@ -121,6 +121,16 @@ class DB_Handler{
 			$birthdate = $this->fetch_birthdate($plant_id);
 			$plant->set_birthdate($birthdate);
 			
+			/* TODO sobald fetch methoden für diese attribute der klasse plant.php implementiert sind hier aufrufen
+			 fetch_sensor_unit_id;
+			 private $akt_light_hours;
+			 private $akt_air_humidity;
+			 private $akt_soil_humidity;
+			 private $akt_waterlogging;
+			 private $akt_air_temperature;
+			 private $akt_soil_temperature;
+			 */
+			
 			$this->plants[$plant_id] = $plant;
 		}
 		
@@ -401,6 +411,34 @@ class DB_Handler{
 		
 	}
 	
+	public function fetch_sensor_unit_id($plant_id){
+		// TODO
+	}
+	
+	public function fetch_akt_light_hours($sensor_unit_id){
+		// TODO
+	}
+	
+	public function fetch_akt_air_humidity($sensor_unit_id){
+		// TODO
+	}
+	
+	public function fetch_akt_soil_humidity($sensor_unit_id){
+		// TODO
+	}
+	
+	public function fetch_akt_waterlogging($sensor_unit_id){
+		// TODO
+	}
+	
+	public function fetch_akt_air_temperature($sensor_unit_id){
+		// TODO
+	}
+	
+	public function fetch_akt_soil_temperature($sensor_unit_id){
+		// TODO
+	}
+		
 	public function fetch_season(){
 		
 		$season_id = 1;
