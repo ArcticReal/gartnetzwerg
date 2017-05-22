@@ -121,8 +121,10 @@ class DB_Handler{
 			$birthdate = $this->fetch_birthdate($plant_id);
 			$plant->set_birthdate($birthdate);
 			
+			$sensor_unit_id = $this->fetch_sensor_unit_id($plant_id);
+			$plant->set_sensor_unit_id($sensor_unit_id);
+			
 			/* TODO sobald fetch methoden für diese attribute der klasse plant.php implementiert sind hier aufrufen
-			 fetch_sensor_unit_id;
 			 private $akt_light_hours;
 			 private $akt_air_humidity;
 			 private $akt_soil_humidity;
@@ -397,7 +399,7 @@ class DB_Handler{
 	
 	public function fetch_birthdate($plant_id){
 		
-		$query = "SELECT birthday from plants WHERE plant_id = ".$plant_id.";";
+		$query = "SELECT birthday FROM plants WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		$birthdate = mysqli_fetch_array($result);
 		
@@ -412,7 +414,14 @@ class DB_Handler{
 	}
 	
 	public function fetch_sensor_unit_id($plant_id){
-		// TODO
+				
+		$query = "SELECT sensor_unit_id FROM sensor_unit WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_unit_id = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return $sensor_unit_id[0];
 	}
 	
 	public function fetch_akt_light_hours($sensor_unit_id){
@@ -456,32 +465,28 @@ class DB_Handler{
 		return $season_id;
 	}
 	
-	public function init(){
-		
-	}
-	
 	public function put_soil_humidity_top(){
-		
+		// TODO
 	}
 	
 	public function put_soil_humidity_bottom(){
-		
+		// TODO
 	}
 	
 	public function put_air_moisture(){
-		
+		// TODO
 	}
 	
 	public function put_lux(){
-		
+		// TODO
 	}
 	
 	public function put_temperature(){
-		
+		// TODO
 	}
 	
 	public function put_all(){
-		
+		// TODO
 	}
 	
 	public function get_plant_ids(){

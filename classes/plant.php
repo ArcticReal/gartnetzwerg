@@ -37,6 +37,7 @@ class Plant{
 	private $akt_waterlogging;
 	private $akt_air_temperature;
 	private $akt_soil_temperature;
+	private $sensor_unit_id;
 
 	public function set_plant_id($plant_id){
 		$this->plant_id = $plant_id;
@@ -148,6 +149,10 @@ class Plant{
 	
 	public function set_akt_soil_temperature($akt_soil_temperature){
 		$this->akt_soil_temperature = $akt_soil_temperature;
+	}
+	
+	public function set_sensor_unit_id($sensor_unit_id){
+		$this->sensor_unit_id = $sensor_unit_id;
 	}
 	
 	public function get_plant_id(){
@@ -285,6 +290,10 @@ class Plant{
 	
 	public function get_akt_soil_temperature(){
 		return $this->akt_soil_temperature;
+	}
+	
+	public function get_sensor_unit_id(){
+		return $this->sensor_unit_id;
 	}
 	
 }
