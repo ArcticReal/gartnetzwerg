@@ -31,6 +31,12 @@ class Plant{
 	private $is_indoor;
 	private $location;
 	private $birthdate;
+	private $akt_light_hours;
+	private $akt_air_humidity;
+	private $akt_soil_humidity;
+	private $akt_waterlogging;
+	private $akt_air_temperature;
+	private $akt_soil_temperature;
 
 	public function set_plant_id($plant_id){
 		$this->plant_id = $plant_id;
@@ -118,6 +124,30 @@ class Plant{
 	
 	public function set_birthdate($birthdate){
 		$this->birthdate = $birthdate;
+	}
+	
+	public function set_akt_light_hours($akt_light_hours){
+		$this->akt_light_hours = $akt_light_hours;
+	}
+	
+	public function set_akt_air_humidity($akt_air_humidity){
+		$this->akt_air_humidity = $akt_air_humidity;
+	}
+	
+	public function set_akt_soil_humidity($akt_soil_humidity){
+		$this->akt_soil_humidity = $akt_soil_humidity;
+	}
+	
+	public function set_akt_waterlogging($akt_waterlogging){
+		$this->akt_waterlogging = $akt_waterlogging;
+	}
+	
+	public function  set_akt_air_temperature($akt_air_temperature){
+		$this->akt_air_temperature = $akt_air_temperature;
+	}
+	
+	public function set_akt_soil_temperature($akt_soil_temperature){
+		$this->akt_soil_temperature = $akt_soil_temperature;
 	}
 	
 	public function get_plant_id(){
@@ -231,6 +261,30 @@ class Plant{
 	
 	public function get_birthdate(){
 		return $this->birthdate;
+	}
+	
+	public function get_akt_light_hours(){
+		return $this->akt_light_hours;
+	}
+	
+	public function get_akt_air_humidity(){
+		return $this->akt_air_humidity;
+	}
+	
+	public function get_akt_soil_humidity(){
+		return $this->akt_soil_humidity;
+	}
+	
+	public function get_akt_waterlogging(){
+		return $this->akt_waterlogging;
+	}
+	
+	public function get_akt_air_temperature(){
+		return $this->akt_air_temperature;
+	}
+	
+	public function get_akt_soil_temperature(){
+		return $this->akt_soil_temperature;
 	}
 	
 }
