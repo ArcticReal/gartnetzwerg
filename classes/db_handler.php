@@ -1,6 +1,7 @@
 <?php
 require_once (__DIR__.'/../config.php');
 require_once 'plant.php';
+require_once 'sensorunit.php';
 
 class DB_Handler{
 	
@@ -62,7 +63,7 @@ class DB_Handler{
 		
 		$this->sensorunit_ids = [];
 		while($sensorunit_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
-			$this->sensorunit_ids = $sensorunit_ids[0];
+			$this->sensorunit_ids[] = $sensorunit_ids[0];
 		}
 		
 	}
@@ -161,6 +162,58 @@ class DB_Handler{
 			$this->plants[$plant_id] = $plant;
 		}
 		
+	}
+	
+	public function fetch_all_sensorunits(){
+		$this->fetch_sensor_unit_ids();
+		$sensorunit_ids = $this->sensorunit_ids;
+		for($i = 0; $i < count($sensorunit_ids); $i++){
+			
+			$sensorunit_id = $sensorunit_ids[$i];
+			$this->sensorunits[$sensorunit_id] = new Sensorunit();
+			$this->fetch_sensors($sensorunit_id);
+			
+		}
+		
+	}
+	
+	public function fetch_sensors($sensorunit_id){
+		$query = "SELECT sensor_id, type FROM sensor WHERE sensor_unit_id = ".$sensorunit_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		
+		$sensor_ids = [];
+		$sensor_types = [];
+		while($sensoor_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
+			$sensor_ids[] = $sensoor_ids[0];
+			$sensor_types[] = $sensoor_ids[1];
+		}
+		var_dump($sensor_ids);
+		var_dump($sensor_types);
+		for ($i = 0; $i < count($sensor_ids); $i++){
+			switch ($sensor_types[$i]){
+				case "Air_humidity_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Air_humidity_sensor());
+					break;
+				case "Air_temperature_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Air_temperature_sensor());
+					break;
+				case "Light_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Light_sensor());
+					break;
+				case "Soil_humidity_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Soil_humidity_sensor());
+					break;
+				case "Soil_temperature_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Soil_temperature_sensor());
+					break;
+				case "Watertank_fillage_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Watertank_fillage_sensor());
+					break;
+				default:
+					echo "i dont know this kind o' sensor\n";
+			}
+		}
 	}
 	
 	public function fetch_species_id($plant_id){
@@ -565,6 +618,10 @@ class DB_Handler{
 	
 	public function get_plants(){
 		return $this->plants;
+	}
+	
+	public function get_sensorunits(){
+		return $this->sensorunits;
 	}
 	
 	public function write_log($logtext){

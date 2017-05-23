@@ -2,5 +2,5 @@
 SEND_MAIL_TO = "dennishorn@hotmail.de"
 
 ## Openweathermap-Settings
-OPENWEATHERMAP_API_KEY = "3"
+OPENWEATHERMAP_API_KEY = ""
 

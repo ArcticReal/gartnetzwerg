@@ -121,8 +121,10 @@ class Controller{
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$db_handler->fetch_all_plants();
-		$this->plant_array = $db_handler->get_plants();
+		//$db_handler->fetch_all_plants();
+		//$this->plant_array = $db_handler->get_plants();
+		$db_handler->fetch_all_sensorunits();
+		$this->sensorunit_array = $db_handler->get_sensorunits();
 		$db_handler->disconnect_sql();
 	}
 	
@@ -422,7 +424,7 @@ class Controller{
 
 $test2 = new Controller();
 $test2->init();
-var_dump($test2->get_plants());
+var_dump($test2->get_sensorunit(1));
 $test2->get_openweathermap_data('Kempten');
 
 ?>
