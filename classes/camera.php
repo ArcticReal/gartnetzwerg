@@ -14,7 +14,7 @@ class Camera extends Sensor{
 	}
 	
 	public function set_cam(){
-		//exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_set_cam.py", $rReturn, $err);
+		exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_set_cam.py", $rReturn, $err);
 	}
 }
 

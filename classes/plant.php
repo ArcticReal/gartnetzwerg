@@ -22,8 +22,6 @@ class Plant{
 	private $max_air_temperature;
 	private $min_soil_temperature;
 	private $max_soil_temperature;
-	//private $min_lux;
-	//private $max_lux;
 	private $min_watering_period;
 	private $max_watering_period;
 	private $min_fertilizer_period;
@@ -230,15 +228,6 @@ class Plant{
 	public function get_max_soil_temperature(){
 		return $this->max_soil_temperature;
 	}
-	
-	//TODO: "deleted"
-	/*public function get_min_lux(){
-		return $this->min_lux;
-	}*/
-	
-	/*public function get_max_lux(){
-		return $this->max_lux;
-	}*/
 	
 	public function get_min_watering_period(){
 		return $this->min_watering_period;
