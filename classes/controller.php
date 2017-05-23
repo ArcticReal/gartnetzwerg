@@ -1,5 +1,7 @@
 <?php
 require_once 'sensorunit.php';
+require_once 'plant.php';
+require_once 'db_handler.php';
 //require_once 'Mail.php'; [Bratrich] hat bei mir bei meinem Test rumgefucked; Mail.php oder PEAR_mail.php?
 
 class Controller{
@@ -44,6 +46,10 @@ class Controller{
 	
 	public function get_plant($plant_id){
 		return $this->plant_array[$plant_id];
+	}
+	
+	public function get_plants(){
+		return $this->plant_array;
 	}
 	
 	public function get_openweathermap_api_key(){
@@ -95,6 +101,7 @@ class Controller{
 			$data = json_decode($json, true);
 			if ($data == ""){ //if api doesnt work then use the default one
 				$this->set_openweathermap_api_key("");
+				echo "\nrequest failed;\ntrying with default key:\n";
 				$data = $this->get_openweathermap_data($location);	
 			}
 		}
@@ -108,8 +115,15 @@ class Controller{
 	 * Always execute this after restarting the script
 	 */
 	public function init(){
+		//read config file
 		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$db_handler->fetch_all_plants();
+		$this->plant_array = $db_handler->get_plants();
+		$db_handler->disconnect_sql();
 	}
 	
 	/**
@@ -119,7 +133,7 @@ class Controller{
 	 * @return string
 	 */
 	public function lookup_config($search_keyword){
-		$config = file("../config.txt");
+		$config = file('__FILE__/../config.txt');
 		//var_dump($config);
 		$substr = "";
 		echo "\nLooking up ".$search_keyword.": \n";
@@ -406,8 +420,9 @@ class Controller{
 */
 }
 
-/*$test2 = new Controller();
+$test2 = new Controller();
 $test2->init();
-$test2->get_openweathermap_data('Kempten');*/
+var_dump($test2->get_plants());
+$test2->get_openweathermap_data('Kempten');
 
 ?>

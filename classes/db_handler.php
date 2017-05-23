@@ -8,6 +8,7 @@ class DB_Handler{
 	private $plants;
 	private $plant_ids;
 	private $sensorunits;
+	private $sensorunit_ids;
 	
 	
 	public function connect_sql(){
@@ -35,7 +36,6 @@ class DB_Handler{
 		$query = "SELECT plant_id FROM plants;";
 		$result = mysqli_query($this->mysqli, $query);
 		
-		//$plant_ids = mysqli_fetch_all($result);
 		
 		$this->plant_ids = [];
 		while($plant_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
@@ -51,6 +51,19 @@ class DB_Handler{
 		}
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
+		
+	}
+	
+	public function fetch_sensor_unit_ids(){
+		
+		$query = "SELECT sensor_unit_id FROM sensor_unit;";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		
+		$this->sensorunit_ids = [];
+		while($sensorunit_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
+			$this->sensorunit_ids = $sensorunit_ids[0];
+		}
 		
 	}
 	
@@ -102,7 +115,8 @@ class DB_Handler{
 			
 			$min_temperature = $this->fetch_min_temperature($species_id, $season_id);
 			$max_temperature = $this->fetch_max_temperature($species_id, $season_id);
-			$plant->set_temperature($min_temperature, $max_temperature);
+			$plant->set_air_temperature($min_temperature, $max_temperature);
+			$plant->set_soil_temperature($min_temperature, $max_temperature);
 			
 			$min_watering_period = $this->fetch_min_watering_period($species_id, $season_id);
 			$max_watering_period = $this->fetch_max_watering_period($species_id, $season_id);
