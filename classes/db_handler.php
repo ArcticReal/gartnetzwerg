@@ -124,14 +124,25 @@ class DB_Handler{
 			$sensor_unit_id = $this->fetch_sensor_unit_id($plant_id);
 			$plant->set_sensor_unit_id($sensor_unit_id);
 			
-			/* TODO sobald fetch methoden für diese attribute der klasse plant.php implementiert sind hier aufrufen
-			 private $akt_light_hours;
-			 private $akt_air_humidity;
-			 private $akt_soil_humidity;
-			 private $akt_waterlogging;
-			 private $akt_air_temperature;
-			 private $akt_soil_temperature;
-			 */
+			/* TODO Methode noch nicht implementiert
+			$akt_light_hours = $this->fetch_akt_light_hours($sensor_unit_id);
+			$plant->set_akt_light_hours($akt_light_hours); */
+			
+			$akt_air_humidity = $this->fetch_akt_air_humidity($sensor_unit_id);
+			$plant->set_akt_air_humidity($akt_air_humidity);
+			
+			$akt_soil_humidity = $this->fetch_akt_soil_humidity($sensor_unit_id);
+			$plant->set_akt_soil_humidity($akt_soil_humidity);
+			
+			/* TODO Methode noch nicht implementiert
+			$akt_waterlogging = $this->fetch_akt_waterlogging($sensor_unit_id);
+			$plant->set_akt_waterlogging($akt_waterlogging); */
+			
+			$akt_air_temperature = $this->fetch_akt_air_temperature($sensor_unit_id);
+			$plant->set_akt_air_temperature($akt_air_temperature);
+			
+			$akt_soil_temperature = $this->fetch_akt_soil_temperature($sensor_unit_id);
+			$plant->set_akt_soil_temperature($akt_soil_temperature);
 			
 			$this->plants[$plant_id] = $plant;
 		}
@@ -415,7 +426,7 @@ class DB_Handler{
 	
 	public function fetch_sensor_unit_id($plant_id){
 				
-		$query = "SELECT sensor_unit_id FROM sensor_unit WHERE plant_id = ".$plant_id.";";
+		$query = "SELECT sensor_unit_id FROM plants WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_unit_id = mysqli_fetch_array($result);
 		
@@ -425,27 +436,76 @@ class DB_Handler{
 	}
 	
 	public function fetch_akt_light_hours($sensor_unit_id){
+		
+		
+	
+		
 		// TODO
 	}
 	
 	public function fetch_akt_air_humidity($sensor_unit_id){
-		// TODO
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Air_humidity_sensor';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$akt_air_humidity = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return $akt_air_humidity[0];
 	}
 	
 	public function fetch_akt_soil_humidity($sensor_unit_id){
-		// TODO
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Soil_humidity_sensor';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$akt_soil_humidity = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return $akt_soil_humidity[0];
 	}
 	
 	public function fetch_akt_waterlogging($sensor_unit_id){
+		
 		// TODO
 	}
 	
 	public function fetch_akt_air_temperature($sensor_unit_id){
-		// TODO
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Air_temperature_sensor';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$akt_air_temperature = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return $akt_air_temperature[0];
 	}
 	
 	public function fetch_akt_soil_temperature($sensor_unit_id){
-		// TODO
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Soil_temperature_sensor';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$akt_soil_temperature = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return $akt_soil_temperature[0];
 	}
 		
 	public function fetch_season(){
@@ -474,10 +534,6 @@ class DB_Handler{
 	}
 	
 	public function put_air_moisture(){
-		// TODO
-	}
-	
-	public function put_lux(){
 		// TODO
 	}
 	
