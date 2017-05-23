@@ -6,6 +6,7 @@ require_once 'light_sensor.php';
 require_once 'soil_humidity_sensor.php';
 require_once 'watertank_fillage_sensor.php';
 
+
 require_once 'GifCreator.php';
 
 require_once 'camera.php';
@@ -21,6 +22,7 @@ class Sensorunit{
 
 	public function set_sensor($sensor_id, $new_sensor){
 		$this->sensor_array[$sensor_id] = $new_sensor;
+		$this->sensor_array[$sensor_id]->set_sensor_id($sensor_id);
 	}
 
 	public function set_watertank_level($new_watertank_level){
