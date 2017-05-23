@@ -1,5 +1,5 @@
 <?php
-require_once 'air_moisture_sensor.php';
+require_once 'air_humidity_sensor.php';
 require_once 'air_temperature_sensor.php';
 require_once 'soil_temperature_sensor.php';
 require_once 'light_sensor.php';
