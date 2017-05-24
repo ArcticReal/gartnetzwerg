@@ -188,10 +188,10 @@ class DB_Handler{
 			$sensor_ids[] = $sensoor_ids[0];
 			$sensor_types[] = $sensoor_ids[1];
 		}
-		var_dump($sensor_ids);
-		var_dump($sensor_types);
+	
 		for ($i = 0; $i < count($sensor_ids); $i++){
-			switch ($sensor_types[$i]){
+			$type = explode("#", $sensor_types[$i], 2);
+			switch ($type[0]){		
 				case "Air_humidity_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Air_humidity_sensor());
 					break;
@@ -209,6 +209,10 @@ class DB_Handler{
 					break;
 				case "Watertank_fillage_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Watertank_fillage_sensor());
+					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i]->set_position($type[1]));
+					break;
+				case "Waterlogging_sensor":
+					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Waterlogging_sensor());
 					break;
 				default:
 					echo "i dont know this kind o' sensor\n";
@@ -592,7 +596,11 @@ class DB_Handler{
 		return $season_id;
 	}
 	
-	public function put_soil_humidity_top(){
+	public function put_soil_humidity_top($soil_humidity_sensor){
+		
+		
+		
+		$query = "";
 		// TODO
 	}
 	
