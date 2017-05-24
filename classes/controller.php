@@ -120,10 +120,12 @@ class Controller{
 		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
 		
+		$this->write_config("SEND_MAIL_TO", "test@test.com");
+		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		//$db_handler->fetch_all_plants();
-		//$this->plant_array = $db_handler->get_plants();
+		$db_handler->fetch_all_plants();
+		$this->plant_array = $db_handler->get_plants();
 		$db_handler->fetch_all_sensorunits();
 		$this->sensorunit_array = $db_handler->get_sensorunits();
 		$db_handler->disconnect_sql();
@@ -137,11 +139,11 @@ class Controller{
 	 */
 	public function lookup_config($search_keyword){
 		$config = file('__FILE__/../config.txt');
-		//var_dump($config);
 		$substr = "";
+		var_dump($config);
 		echo "\nLooking up ".$search_keyword.": \n";
 		foreach ($config as $key => $line){
-			if (strpos($line, $search_keyword) !== FALSE){
+			if (strpos($line, $search_keyword." =") !== FALSE){
 				echo "\t".$search_keyword." found in line: ".$key."\n";
 				$pos = strpos($line, "\"");
 				$substr = substr($line, $pos+1);
@@ -151,6 +153,26 @@ class Controller{
 		}
 		return $substr;
 	}
+	
+	
+	public function write_config($keyword, $value){
+		$config = file('__FILE__/../config.txt');
+		$substr = "";
+		$changed = FALSE;
+		echo "searching for ".$keyword.":\n";
+		foreach ($config as $key => $line){
+			if (strpos($line, $keyword." =") !== FALSE){
+				echo "\t".$keyword." found in line: ".$key."\n";
+				$config[$key] = $keyword." = \""."$value"."\"\n";
+				$changed = TRUE;	
+			}
+		}
+		if (!$changed){
+			$config[count($config)+1] = $keyword." = \""."$value"."\"\n";
+		}
+		file_put_contents('__FILE__/../config.txt', $config);	
+	}
+	
 	
 	/**
 	 * 
@@ -439,6 +461,7 @@ class Controller{
 $test2 = new Controller();
 $test2->init();
 var_dump($test2->get_sensorunit(1));
+var_dump($test2->get_sensorunit(2));
 $test2->get_openweathermap_data('Kempten');
 
 ?>
