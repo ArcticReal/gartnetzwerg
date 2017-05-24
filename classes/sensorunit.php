@@ -15,6 +15,7 @@ class Sensorunit{
 		
 	private $sensor_array;
 	private $watertank_level;
+	private $sensor_ids;
 	
 	public function set_array($new_array){
 		$this->sensor_array = $new_array;
@@ -29,6 +30,10 @@ class Sensorunit{
 		$this->watertank_level = $new_watertank_level;
 	}
 	
+	public function set_sensor_ids($sensor_ids){
+		$this->sensor_ids = $sensor_ids;
+	}
+	
 	public function get_array(){
 		return $this->sensor_array;
 	}
@@ -41,11 +46,15 @@ class Sensorunit{
 		return $this->watertank_level;
 	}
 	
+	public function get_sensor_ids(){
+		return $this->sensor_ids;
+	}
+		
 	public function update_sensor($sensor_id){
 		echo("update Sensor ".$sensor_id."\n");
 		$this->sensor_array[$sensor_id]->update();
 	}
-	
+
 	public function update_all(){
 		foreach ($this->sensor_array as $key => $value){
 			$this->update_sensor($key);

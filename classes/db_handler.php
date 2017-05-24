@@ -188,6 +188,8 @@ class DB_Handler{
 			$sensor_ids[] = $sensoor_ids[0];
 			$sensor_types[] = $sensoor_ids[1];
 		}
+		
+		$this->sensorunits[$sensorunit_id]->set_sensor_ids($sensor_ids);
 	
 		for ($i = 0; $i < count($sensor_ids); $i++){
 			$type = explode("#", $sensor_types[$i], 2);
@@ -594,6 +596,25 @@ class DB_Handler{
 		$this->write_log($logtext);
 		
 		return $season_id;
+	}
+	
+	public function put_all_sensors(){
+		
+		$sensorunits = $this->sensorunits;
+		$sensorunit_ids = $this->sensorunit_ids;
+		
+		for($i = 0; $i < count($sensorunit_ids); $i++){
+			
+			$sensorunit_id = $sensorunit_ids[$i];
+			$sensorunit = $sensorunits[$sensorunit_id];
+			
+			$sensors = $sensorunit->get_array();
+			$sensor_ids = $sensorunit->get_sensor_ids();
+			
+			
+			
+		}
+		
 	}
 	
 	public function put_soil_humidity_top($soil_humidity_sensor){
