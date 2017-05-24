@@ -211,7 +211,7 @@ class DB_Handler{
 					break;
 				case "Watertank_fillage_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Watertank_fillage_sensor());
-					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i]->set_position($type[1]));
+					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i])->set_position(intval($type[1]));
 					break;
 				case "Waterlogging_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Waterlogging_sensor());
@@ -629,7 +629,7 @@ class DB_Handler{
 	
 	public function put_sensor_value($sensor_id, $value){
 		
-		$query = "INSERT INTO sensor_data (sensor_id, value, date) VALUES ($sensor_id, $value, CURRENT_DATE);
+		$query = "INSERT INTO sensor_data (sensor_id, value, date) VALUES ($sensor_id, $value, CURRENT_DATE);";
 		$result = mysqli_query($this->mysqli, $query);
 
 	}
