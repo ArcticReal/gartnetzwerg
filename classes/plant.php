@@ -98,11 +98,6 @@ class Plant{
 		$this->max_soil_temperature = $max_soil_temperature;
 	}
 	
-	/*public function set_lux($min_lux, $max_lux){
-		$this->min_lux = $min_lux;
-		$this->max_lux = $max_lux;
-	}*/
-	
 	public function set_watering_period($min_watering_period, $max_watering_period){
 		$this->min_watering_period = $min_watering_period;
 		$this->max_watering_period = $max_watering_period;
