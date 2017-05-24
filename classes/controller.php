@@ -3,6 +3,7 @@ require_once 'sensorunit.php';
 require_once 'plant.php';
 require_once 'db_handler.php';
 //require_once 'Mail.php'; [Bratrich] hat bei mir bei meinem Test rumgefucked; Mail.php oder PEAR_mail.php?
+require_once 'db_handler.php';
 
 class Controller{
 	private $sensorunit_array;
@@ -402,6 +403,19 @@ class Controller{
 			echo "gold\n\n";
 			return "gold";
 		}
+	}
+	
+	/**
+	 * takes data from the DB, counts the values of hours of light per day
+	 * @returns hours of light, TODO: kommt noch auf Lichttests (mit den anderen Zeros) an, wie hoch die Sensoren bei Volllicht/Halbschatten/Dunkel reagieren
+	 */
+	public function count_lighthours($sensor_unit_id){
+		$count = 0;
+				
+		//fetch_akt_light_hours($sensor_unit_id);
+		
+		echo $count . "\n";
+		return $count;
 	}
 	
 /*	public function make_time_laps(){
