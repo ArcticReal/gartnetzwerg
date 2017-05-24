@@ -1,6 +1,7 @@
 ## Email-Settings
-SEND_MAIL_TO = "dennishorn@hotmail.de"
+SEND_MAIL_TO = "test@test.com"
 
 ## Openweathermap-Settings
 OPENWEATHERMAP_API_KEY = ""
 
+## Other settings
