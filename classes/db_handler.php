@@ -611,34 +611,27 @@ class DB_Handler{
 			$sensors = $sensorunit->get_array();
 			$sensor_ids = $sensorunit->get_sensor_ids();
 			
-			
+			for($j = 0; $j < count($sensor_ids); $j++){
+				
+				$sensor_id = $sensor_ids[$j];
+				$sensor = $sensors[$sensor_id];
+				
+				$value = $sensor->get_value();
+				
+				$this->put_sensor_value($sensor_id, $value);
+				
+				
+			}
 			
 		}
 		
 	}
 	
-	public function put_soil_humidity_top($soil_humidity_sensor){
+	public function put_sensor_value($sensor_id, $value){
 		
-		
-		
-		$query = "";
-		// TODO
-	}
-	
-	public function put_soil_humidity_bottom(){
-		// TODO
-	}
-	
-	public function put_air_moisture(){
-		// TODO
-	}
-	
-	public function put_temperature(){
-		// TODO
-	}
-	
-	public function put_all(){
-		// TODO
+		$query = "INSERT INTO sensor_data (sensor_id, value, date) VALUES ($sensor_id, $value, CURRENT_DATE);
+		$result = mysqli_query($this->mysqli, $query);
+
 	}
 	
 	public function get_plant_ids(){
