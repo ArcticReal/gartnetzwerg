@@ -97,6 +97,9 @@ class DB_Handler{
 			$species_id = $this->fetch_species_id($plant_id);
 			$plant->set_species_id($species_id);
 			
+			$name = $this->fetch_name($species_id);
+			$plant->set_name($name);
+			
 			$scientific_name = $this->fetch_scientific_name($species_id);
 			$plant->set_scientific_name($scientific_name);
 			
@@ -238,7 +241,15 @@ class DB_Handler{
 		
 	}
 	
-	public function fetch_name(){
+	public function fetch_name($species_id){
+		
+		$query = "SELECT name FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$name = mysqli_fetch_array($result);
+				
+		// TODO Logging
+		
+		return $name[0];
 		
 	}
 	

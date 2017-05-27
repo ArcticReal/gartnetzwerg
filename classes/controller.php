@@ -140,15 +140,15 @@ class Controller{
 	public function lookup_config($search_keyword){
 		$config = file('__FILE__/../config.txt');
 		$substr = "";
-		var_dump($config);
-		echo "\nLooking up ".$search_keyword.": \n";
+	//	var_dump($config);
+	//	echo "\nLooking up ".$search_keyword.": \n";
 		foreach ($config as $key => $line){
 			if (strpos($line, $search_keyword." =") !== FALSE){
-				echo "\t".$search_keyword." found in line: ".$key."\n";
+			//	echo "\t".$search_keyword." found in line: ".$key."\n";
 				$pos = strpos($line, "\"");
 				$substr = substr($line, $pos+1);
 				$substr = substr($substr, 0, strpos($substr, "\""));
-				echo "\tValue: ".$substr."\n\n";
+			//	echo "\tValue: ".$substr."\n\n";
 			}
 		}
 		return $substr;
@@ -159,10 +159,10 @@ class Controller{
 		$config = file('__FILE__/../config.txt');
 		$substr = "";
 		$changed = FALSE;
-		echo "searching for ".$keyword.":\n";
+	//	echo "searching for ".$keyword.":\n";
 		foreach ($config as $key => $line){
 			if (strpos($line, $keyword." =") !== FALSE){
-				echo "\t".$keyword." found in line: ".$key."\n";
+			//	echo "\t".$keyword." found in line: ".$key."\n";
 				$config[$key] = $keyword." = \""."$value"."\"\n";
 				$changed = TRUE;	
 			}
@@ -458,10 +458,10 @@ class Controller{
 */
 }
 
-$test2 = new Controller();
+/*$test2 = new Controller();
 $test2->init();
 var_dump($test2->get_sensorunit(1));
 var_dump($test2->get_sensorunit(2));
-$test2->get_openweathermap_data('Kempten');
+$test2->get_openweathermap_data('Kempten');*/
 
 ?>
