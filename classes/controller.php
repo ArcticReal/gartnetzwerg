@@ -65,6 +65,17 @@ class Controller{
 		return $this->notification_receiving_email_address;
 	}
 	
+	public function add_sensor_unit($mac_address, $name){
+		
+		// TODO
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$db_handler->insert_sensor_unit($mac_address, $name);
+		$db_handler->disconnect_sql();
+		
+	}
+	
 	/**
 	 * checks all plants, if they are indoor or outdoor and 
 	 */

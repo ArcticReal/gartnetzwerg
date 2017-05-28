@@ -583,7 +583,7 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_id = mysqli_fetch_array($result);
 		
-		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_soil_temperature = mysqli_fetch_array($result);
 		
@@ -607,6 +607,23 @@ class DB_Handler{
 		$this->write_log($logtext);
 		
 		return $season_id;
+	}
+	
+	public function insert_sensor_unit($mac_address, $name){
+		
+		// Logging
+		$logtext = date('c')."	insert_sensor_unit(mac_address: ".$mac_address.", name: ".$name.")\n";
+		
+		$query = "INSERT INTO sensor_unit ( mac_address, name) VALUES ('".$mac_address."', '".$name."');";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		// TODO fertig machen
+		
+		// Logging
+		$logtext = $logtext.date('c')."	SQL: ".$query."\n";
+		$logtext = $logtext.date('c')." result: ".$result."\n";
+		$this->write_log($logtext);
+		
 	}
 	
 	public function put_all_sensors(){

@@ -1,8 +1,13 @@
 <?php
 
-require_once 'classes/db_handler.php';
+require_once 'classes/controller.php';
 
+$controller = new Controller();
+$mac_address = "r2d2";
+$name = "Repbot";
+$controller->add_sensor_unit($mac_address, $name);
 
+/*
 $db_handler = new DB_Handler();
 $db_handler->connect_sql();
 
@@ -75,5 +80,5 @@ for($i = 0; $i < count($plants); $i++){
 }
 
 $db_handler->disconnect_sql();
-
+*/
 ?>
