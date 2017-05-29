@@ -1,0 +1,539 @@
+
+body {
+  margin: 0;
+  padding:0;
+  background-color: #f2f2f2;
+}
+
+a img{
+  border: 0px;
+}
+
+@media (min-width: 300px){
+	.nav-justified>li {
+    display: table-cell;
+    width: 1%;
+}
+}
+
+.swiper-container {
+	width: 100%;
+	height: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.swiper-slide {
+	background-size: cover;
+	background-position: center;
+}
+.gallery-top {
+	height: 80%;
+	width: 100%;
+}
+.gallery-thumbs {
+	height: 20%;
+	box-sizing: border-box;
+	padding: 10px 0;
+}
+.gallery-thumbs .swiper-slide {
+	width: 25%;
+	height: 100%;
+	opacity: 0.4;
+}
+.gallery-thumbs .swiper-slide-active {
+	opacity: 1;
+}
+
+
+
+.header {
+	width: 100%;
+	position: absolute;
+    top: 30px;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.containerPlaceholder{
+	background-color:none;
+	height:10vh;
+	width:25vw;
+}
+.containerSpaceholderBottom{
+	background-color:none;
+	height:17vh;
+	width:10vw;
+
+}
+
+.containerLogo{
+	position:fixed;
+	background-color: #ffffff;
+	z-index:1000;
+
+	height: 10vh;
+	width: 100%;
+	
+	
+	border-bottom-color: #f2f2f2;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
+}
+.containerLogo{
+	
+	top:0;
+	left:0;
+}
+
+.logo{
+	padding-left:5vw;
+}
+
+.logo img{
+	/*background:orange;*/
+
+	height:10vh;
+}
+
+.containerFlowers{
+	/*background-color: yellow;*/
+
+	position: absolute;
+	margin-bottom: 500px;
+	left: 30%;
+	
+	width:40%;
+	box-shadow
+	height: 100%;
+}
+a{
+	text-decoration: none;
+	
+}
+.containerFlowers :focus{
+
+
+}
+
+.containerFlowers .flower{
+	background-color: #ffffff;
+	
+	border-width: 1px;
+	border-style: solid;
+	border-color:#a6a6a6;
+	border-left-color: #008000;
+	border-left-width: 10px; 
+	
+	width:100%;
+	height: 10vh;
+	margin-top: 5vh;
+	display:table;
+	-webkit-box-shadow: 3px 6px 19px -12px rgba(0,0,0,0.75);
+-moz-box-shadow: 3px 6px 19px -12px rgba(0,0,0,0.75);
+box-shadow: 3px 6px 19px -12px rgba(0,0,0,0.75);
+
+
+}
+
+.flowerName{
+	color: black;
+	font-size: 3.5vh;
+
+	text-align: center;
+	
+	
+
+}
+span{
+	display: table-cell;
+	vertical-align: middle;
+
+}
+
+.containerBottom{
+	background-color: #ffffff;
+	position: fixed;
+	height: 10vh;
+	width: 100vw;
+	bottom: 0;
+	display:table;
+	padding:0vh;
+
+}
+
+.containerBottom .boxSymbol{
+	/* background-color: #cccccc; */
+	background-color: none;
+	border-style:solid;
+	border-color:#ffffff;
+	border-width:2px;
+	
+	height: 8vh;
+	
+}
+
+.boxSymbol i{
+	color: #8e8e8e;
+	margin-left:12vw;
+	
+}
+
+/*XXXX STATUS PAGE XXXXXXXXXXXXXXXX*/
+
+
+* {
+  margin: 0;
+  padding: 0;
+}
+/*
+ body { 
+  background: url('https://westfieldcc.files.wordpress.com/2011/10/simple-blur-ipad-background.jpg') no-repeat center center fixed; 
+   background-size: cover; 
+} 
+*/
+.wrapper {
+  /* margin: 100px auto; */
+  /* z-index:2000; */
+  margin-top: 40px;
+  
+  width: 100%;
+  font-family: sans-serif;
+  color: #98927C;
+  font-size: 14px;
+  line-height: 24px;
+  /* max-width: 600px; */
+  /* min-width: 340px; */
+  overflow: hidden;
+}
+.tabs li {
+  list-style: none;
+  float: left;
+  width: 25%;
+  z-index: 9999;
+}
+.tabs a {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+  position: relative;
+  text-transform: uppercase;
+  color: #fff;
+  height: 70px;
+  line-height: 90px;
+  background: linear-gradient(180deg, transparent 29%, #98927C 30%);
+}
+.tabs a:hover,
+.tabs a.active {
+  background: linear-gradient(170deg, transparent 29%, #F2EEE2 30%);
+  color: #98927C;
+}
+.tabs a:before {
+  content: '';
+  position: absolute;
+  z-index: 11;
+  left: 100%;
+  top: -80%;
+  height: 74px;
+  line-height: 90px;
+  width: 0;
+  border-bottom: 52px solid rgba(0, 0, 0, 0.1);
+  border-right: 7px solid transparent;
+}
+.tabs a.active:before {
+  content: '';
+  position: absolute;
+  z-index: 11;
+  left: 100%;
+  top: -75%;
+  height: 55px;
+  line-height:90px;
+  width: 0;
+  border-bottom: 68px solid rgba(0, 0, 0, 0.2);
+  border-right: 20px solid transparent;
+}
+.tabgroup {
+  box-shadow: 2px 2px 2px 2px rgba(0, 0, 0, 0.1);
+}
+.tabgroup div {
+  padding: 30px;
+  background: #F2EEE2;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);
+}
+.clearfix:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+/*flowerStatus*/
+/*STATUS.HTMLXXXXXXXXXXXXXXXXXXXXXX*/
+.topStatus{
+	margin-top:15vh;
+}
+.wrapperStatus{
+	height: 100vh;
+	background: none;
+
+}
+@media screen and (max-width: 420px){
+	.wrapperStatus{
+		background:none;
+		padding: 0;
+		margin: 0;
+		width:80vw;
+		margin-left:auto;
+		margin-right:auto;
+	}
+	.textBox{
+		min-width:80vw;
+	}
+}
+/* .arrowLeft{ */
+	/* float:left; */
+	/* padding-top:2vh; */
+	/* padding-left:2vh; */
+	
+/* } */
+/* .cogRight{ */
+	/* float:right; */
+	/* padding-top:2vh; */
+	/* padding-right:2vh; */
+/* } */
+.containerStatusTop{
+	position:fixed;
+	background-color: #ffffff;
+	z-index:1000;
+	top:0;
+	height: 10vh;
+	width: 100%;
+	
+	
+	border-bottom-color: #f2f2f2;
+	border-bottom-style: solid;
+	border-bottom-width: 2px;
+}
+.imageFlower IMG{
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+		border-style: solid;
+	border-width: 2px;
+	border-color: #b7b7b7;
+	border-bottom-style:none;
+	/* width:20vw; */
+}
+.textBox{
+	border-style: solid;
+	border-width: 2px;
+	border-color: #b7b7b7;
+	width:40vw;
+	margin-left: auto;
+	margin-right: auto;
+	display:block;
+	padding:5vw;
+	padding-top:0px;
+	background-color:white;
+}
+
+.headerSensor{
+	padding-bottom:3vw;
+}
+
+/*tableAxel*/
+
+table, tr, th{
+    border: 1px solid black;
+	
+}
+
+table{
+	/* max-width: 40vw; */
+	width:100%;
+	margin-left: auto;
+	margin-right: auto;
+	position: relative;
+	padding: 0px;
+
+}
+th{
+	padding: 2vh;
+	font-size: 2vh;
+	border:2px solid white;
+}
+tr{
+
+}
+
+tr:nth-child(odd) {background-color: #f2f2f2}
+
+/* tr:hover{ */
+	/* background-color: #f5f5f5 */
+/* } */
+/*diagramm3.html*/
+
+/* @font-face { */
+  /* font-family: "Source Sans Pro Light"; */
+  /* font-weight: lighter; */
+  /* src: url("http://meloncholy.com/static/fonts/source-sans-pro/SourceSansPro-Light.otf"); */
+/* } */
+/* html { */
+  /* font-size: 100%; */
+  /* height: 100%; */
+  /* margin: 0; */
+  /* padding: 0; */
+/* } */
+/* body { */
+  /* background-color: #222; */
+  /* color: #fff; */
+  /* font: lighter normal 18px/22px "Source Sans Pro Light", "Helvetica Neue", Helvetica, Arial, sans-serif; */
+  /* height: 100%; */
+  /* padding: 0 50px; */
+/* } */
+h1 {
+  font-size: 48px;
+  line-height: 60px;
+}
+
+#test{
+	color:red;
+}
+
+a {
+  color: #fff;
+}
+.graph {
+  background-color: none;
+  font-size: 14px;
+  height: 50%;
+  margin-bottom: 16px;
+  width: 100%;
+}
+.graph svg {
+  overflow: visible;
+}
+.domain {
+  display: none;
+}
+.tick {
+  shape-rendering: "crispEdges";
+  stroke: #fff;
+  stroke-width: 1px;
+}
+.graph-val {
+  text-anchor: end;
+}
+text {
+  fill: #fff;
+}
+.line {
+  fill: none;
+  stroke-width: 3px;
+  vector-effect: non-scaling-stroke;
+}
+.area {
+  vector-effect: non-scaling-stroke;
+}
+
+/*Webcam*/
+
+.webcamNew{
+	/* background: yellow; */
+	width:80vw;
+	height:auto;
+	margin-left:auto;
+	margin-right:auto;
+	position: relative;
+}
+.webcamNew img{
+	max-width: 80vw;
+}
+.webcamButtons{
+	margin-left:auto;
+	margin-right:auto;
+	width:80vw;
+}
+.webcamButtons li{
+	
+	
+}
+
+.webcamGallery{
+	background-color: white;
+	width:80vw;
+	height:auto;
+	margin-left:auto;
+	margin-right:auto;
+	position: relative;
+}
+
+.webcamGallery img{
+	max-width: 20vw;
+	padding: 2px;
+
+}
+
+.deleteColour{
+	background-color:red;
+	
+	padding:1px;
+}
+
+/*TabHeaderStyle*/
+.tab-content h3{
+	/* padding-left:8vw; */
+	font-color: red;
+}
+
+/*Infos*/
+.arrowBack{
+	margin-top:10vh;
+	padding-left:4vh;
+	color: #8e8e8e;
+}
+
+
+.masthead{
+
+}
+
+.masthead .nav-justified li{
+	/* background-color: red; */
+
+}
+
+.masthead .subsection .nav-justified li a{
+	/* background: white; */
+	  /* border-radius: 25px; */
+}
+.containerSettingsSmall{
+	background:yellow;
+	/* width:80%; */
+}
+/* .activeSection:focus{ */
+	/* height:200px; */
+	
+/* }	   */
+.settingsbsox1{
+	height:40vh;
+	width:100%;
+	background:white;
+	border-style:solid;
+
+	border-width:1px;
+	border-color:yellow;
+}
+.settingsbox1 li{
+ list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+}
+.settingsbox1{
+	background:white;
+
+}
+
+.changeItemCheckbox:active{
+	color:red;
+}
