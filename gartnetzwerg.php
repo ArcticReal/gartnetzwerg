@@ -3,9 +3,16 @@
 require_once 'classes/controller.php';
 
 $controller = new Controller();
-$mac_address = "r2d2";
-$name = "Repbot";
-$controller->add_sensor_unit($mac_address, $name);
+$controller ->init();
+$plants = $controller->get_plants();
+
+foreach($plants as $plant){
+	echo "\n";
+	echo $plant->get_name();
+	echo "\n";
+	echo $plant->get_nickname();
+	echo "\n";
+}
 
 /*
 $db_handler = new DB_Handler();

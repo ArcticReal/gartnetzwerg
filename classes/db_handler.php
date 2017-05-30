@@ -249,7 +249,7 @@ class DB_Handler{
 				
 		// TODO Logging
 		
-		return $name[0];
+		return utf8_encode($name[0]);
 		
 	}
 	
@@ -265,7 +265,7 @@ class DB_Handler{
 		$logtext = $logtext.date('c')."	Result: ".$nickname[0]."\n\n";
 		$this->write_log($logtext);
 		
-		return $nickname[0];
+		return utf8_encode($nickname[0]);
 		
 	}
 	
@@ -674,6 +674,7 @@ class DB_Handler{
 		return $this->sensorunits;
 	}
 	
+		
 	public function write_log($logtext){
 		
 		$logfile = fopen("/var/log/gartnetzwerg/db_handler_log.".date('w'), "a");
