@@ -67,7 +67,7 @@ class Controller{
 	
 	public function add_sensor_unit($mac_address, $name){
 		
-		// TODO
+		// TODO pj: ich bau das noch in add_plant($data_array) um, und verwurste das alles hier
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -380,6 +380,8 @@ class Controller{
 				
 		//TODO: woher weiß ich welche sensorunit was ist?
 		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört
+		// nein Alex in der tabelle plants steht die sensorunit_id drin und nach dem erstellen 
+		// der plant objekte, hat die plant ein Attribut $sensor_unit_id
 		//EDIT: ich geh mal davon aus, das läuft über den DB_Handler oder es fehlt noch ne plant_id in der Unit (oder andersrum);
 		
 		foreach($this->plant_array as $key => $value){
@@ -451,7 +453,7 @@ class Controller{
 		return $count;
 	}
 	
-/*	public function make_time_laps(){
+/*	public function make_time_lapse(){
 		
 	}
 	

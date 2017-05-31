@@ -59,81 +59,76 @@
 		$plants = $controller->get_plants();
 		$plant = $plants[$plant_id];
 		$nickname = $plant->get_nickname();
-		$name = $plant->get_name();
-
-		
-		
-
-		print "<div class=\"container\">";
-	      	print 	 "<div class=\"masthead\">";
-		print 	  "<nav>";
-		print	    "<ul class=\"nav nav-justified\">";
-		print	       "<li><a href=\"index.php\"><div class=\"arrowLeft\"><i class=\"fa fa-arrow-circle-left\" aria-hidden=\"true\"></i></div></a></li>";
-		print          "<li><a href=\"#2\">".$nickname."</a></li>";
-		print	       "<li><a href=\"#3\">".$name."</a></li>";
-		print          "<li><a href=\"flowersettings.php\"><div class=\"cogRight\"><i class=\"fa fa-cog fa-1x\" aria-hidden=\"true\"></i></div></a></li>";
-		print       "</ul>";
-		print      "</nav>";
-		print     "</div>";
-
-		print   	"<br/>";
-		print         "<ul class=\"nav nav-tabs nav-justified\">";
-	    	print 	  "<li class=\"active\"><a data-toggle=\"tab\" href=\"#home\">Status</a></li>";
-	    	print     "<li><a data-toggle=\"tab\" href=\"#menu1\">Diagramme</a></li>";
-	    	print     "<li><a data-toggle=\"tab\" href=\"#menu2\">Webcam</a></li>";
-		print	  "<li><a data-toggle=\"tab\" href=\"#menu3\">Info</a></li>";
-	   
-	
-	  	print    "</ul>";
-
-		
-		print	 "<div class=\"tab-content\">";
-	    	print      "<div id=\"home\" class=\"tab-pane fade in active\">";
-	      	print	     "<br>";
-		print	       "<h3>Status deiner Pflanze</h3>";
-
-		print	 "<div class=\"wrapperStatus\">";
-		print	 "<div class=\"imageFlower\"><img src=\"./images/aloevera.jpg\"/></div>";
-		print	 "<div class=\"textBox\"  layout=\"column\" layout-padding>";
-		print	 "<h2 class=\"headerSensor\">Sensor Messdaten</h2>"; 
-					
-				
+		$name = $plant->get_name();				
 		$soil_humidity = $plant->get_akt_soil_humidity();
 		$waterlogging = $plant->get_akt_waterlogging();
 		$temperature = $plant->get_akt_air_temperature();
 		$air_humidity = $plant->get_akt_air_humidity();
 		$soil_temperature = $plant->get_akt_soil_temperature();
 		
-					
-		print	 "	<table>";
-		print	 "		<tr>";
-		print	 "			<th>Bodenfeuchtigkeit:</th>";
-		print	 "			<th>".$soil_humidity."</th>";
-		print	 "		</tr>";
-		print	 "		<tr>";
-		print	 "			<th>Staunässe:</th>";
-		print	 "			<th>N.A.</th>";
-		print	 "		</tr>";
-		print	 "		<tr>";
-		print	 "			<th>Lichtstunden:</th>";
-		print	 "			<th>N.A.</th>";
-		print	 "		</tr>";
-		print	 "		<tr>";
-		print	 "			<th>Temperatur:</th>";
-		print	 "			<th>".$temperature."</th>";
-		print	 "		</tr>";
-		print	 "		<tr>";
-		print	 "			<th>Luftfeuchtigkeit:</th>";
-		print	 "			<th>".$air_humidity."</th>";
-		print	 "		</tr>";
-		print	 "		<tr>";
-		print	 "			<th>Bodentemperatur:</th>";
-		print	 "			<th>".$soil_temperature."</th>";
-		print	 "		</tr>";
-		print	 "	</table>"; 
 	
-
 	?>
+	
+	<div class="container">
+      <div class="masthead">
+        <nav>
+          <ul class="nav nav-justified">
+            <li><a href="index.php"><div class="arrowLeft"><i class="fa fa-arrow-circle-left" aria-hidden="true"></i></div></a></li>
+            <li><a href="#2"><?php echo $nickname ?></a></li>
+            <li><a href="#3"><?php echo $name ?></a></li>
+            <li><a href="flowersettings.php"><div class="cogRight"><i class="fa fa-cog fa-1x" aria-hidden="true"></i></div></a></li>
+          </ul>
+        </nav>
+      </div>
+	  <br/>
+	 <ul class="nav nav-tabs nav-justified">
+    <li class="active"><a data-toggle="tab" href="#home">Status</a></li>
+    <li><a data-toggle="tab" href="#menu1">Diagramme</a></li>
+    <li><a data-toggle="tab" href="#menu2">Webcam</a></li>
+	<li><a data-toggle="tab" href="#menu3">Info</a></li>
+   
+	
+  </ul>
+<div class="tab-content">
+    <div id="home" class="tab-pane fade in active">
+      <br>
+	  <h3>Status deiner Pflanze</h3>
+
+			 <div class="wrapperStatus">
+				  <div class="imageFlower"><img src="./images/aloevera.jpg"/></div>
+				  <div class="textBox"  layout="column" layout-padding>
+					<h2 class="headerSensor">Sensor Messdaten</h2>
+					
+					
+					
+					
+					<table>
+						<tr>
+							<th>Bodenfeuchtigkeit:</th>
+							<th><?php echo $soil_humidity ?></th>
+						</tr>
+						<tr>
+							<th>Staunässe:</th>
+							<th><?php echo "N.A." ?></th>
+						</tr>
+						<tr>
+							<th>Lichtstunden:</th>
+							<th><?php echo "N.A." ?></th>
+						</tr>
+						<tr>
+							<th>Temperatur:</th>
+							<th><?php echo $temperature ?></th>
+						</tr>
+						<tr>
+							<th>Luftfeuchtigkeit:</th>
+							<th><?php echo $air_humidity ?></th>
+						</tr>
+						<tr>
+							<th>Bodentemperatur:</th>
+							<th><?php echo $soil_temperature ?></th>
+						</tr>
+					</table>
+	
 	
   <!--
   <div class="container">

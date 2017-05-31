@@ -617,7 +617,7 @@ class DB_Handler{
 		$query = "INSERT INTO sensor_unit ( mac_address, name) VALUES ('".$mac_address."', '".$name."');";
 		$result = mysqli_query($this->mysqli, $query);
 		
-		// TODO fertig machen
+		// TODO Es müssen noch sensoren dafür inserted werden fertig machen
 		
 		// Logging
 		$logtext = $logtext.date('c')."	SQL: ".$query."\n";
