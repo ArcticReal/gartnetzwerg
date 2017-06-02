@@ -5,7 +5,7 @@ require_once 'soil_temperature_sensor.php';
 require_once 'light_sensor.php';
 require_once 'soil_humidity_sensor.php';
 require_once 'watertank_fillage_sensor.php';
-
+require_once 'waterlogging_sensor.php';
 
 require_once 'GifCreator.php';
 
@@ -16,6 +16,9 @@ class Sensorunit{
 	private $sensor_array;
 	private $watertank_level;
 	private $sensor_ids;
+	
+	
+	//setters
 	
 	public function set_array($new_array){
 		$this->sensor_array = $new_array;
@@ -34,6 +37,9 @@ class Sensorunit{
 		$this->sensor_ids = $sensor_ids;
 	}
 	
+	
+	//getters
+	
 	public function get_array(){
 		return $this->sensor_array;
 	}
@@ -50,6 +56,9 @@ class Sensorunit{
 		return $this->sensor_ids;
 	}
 		
+	
+	//functions
+	
 	public function update_sensor($sensor_id){
 		echo("update Sensor ".$sensor_id."\n");
 		$this->sensor_array[$sensor_id]->update();
@@ -62,6 +71,9 @@ class Sensorunit{
 		}	
 	}
 
+	/**
+	 * todo: working with parameters to choose pics
+	 */
 	public function make_time_lapse(){
 		//links u den bilder im internet
 		$frames = array("http://www.sarracenia.com/photos/dionaea/dionamusci070.jpg",
@@ -85,6 +97,10 @@ class Sensorunit{
 		}	
 	}
 	
+	
+	/**
+	 * 
+	 */
 	public function calculate_watertank_level(){
 		echo "calculating watertank fillage\n\n";
 		$watertank_sensors = array();
@@ -110,6 +126,8 @@ class Sensorunit{
 		}
 		echo "wich means that ".$fillage_level." out of ".$max_fillage_level." sensors sense water\n"
 				."so our watertank is at least ".$fillage_level/$max_fillage_level." full\n";
+		
+		$this->set_watertank_level($fillage_level/$max_fillage_level);
 	}
 }
 
