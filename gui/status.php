@@ -65,7 +65,16 @@
 		$temperature = $plant->get_akt_air_temperature();
 		$air_humidity = $plant->get_akt_air_humidity();
 		$soil_temperature = $plant->get_akt_soil_temperature();
-		
+		$min_soil_humidity = $plant->get_min_soil_humidity();
+		$max_soil_humidity = $plant->get_max_soil_humidity();
+		$min_air_humidity = $plant->get_min_air_humidity();
+		$max_air_humidity = $plant->get_max_air_humidity();
+		$min_air_temperature = $plant->get_min_air_temperature();
+		$max_air_temperature = $plant->get_max_air_temperature();
+		$min_soil_temperature = $plant->get_min_soil_temperature();
+		$max_soil_temperature = $plant->get_max_soil_temperature();
+		$min_light_hours = $plant->get_min_light_hours();
+		$max_light_hours = $plant->get_max_light_hours();
 	
 	?>
 	
@@ -99,33 +108,41 @@
 				  <div class="textBox"  layout="column" layout-padding>
 					<h2 class="headerSensor">Sensor Messdaten</h2>
 					
-					
-					
-					
 					<table>
 						<tr>
-							<th>Bodenfeuchtigkeit:</th>
-							<th><?php echo $soil_humidity ?></th>
+							<th></th>
+							<th>IST</th>
+							<th>SOLL</th>
 						</tr>
 						<tr>
-							<th>Staunässe:</th>
-							<th><?php echo "N.A." ?></th>
+							<th>Bodenfeuchtigkeit:</th>
+							<th><?php echo $soil_humidity ?>%</th>
+							<th><?php echo $min_soil_humidity ?>% - <?php echo $max_soil_humidity ?>%</th>
+						</tr>
+						<tr>
+							<th>Luftfeuchtigkeit:</th>
+							<th><?php echo $air_humidity ?>%</th>
+							<th><?php echo $min_air_humidity ?>% - <?php echo $max_air_humidity ?>%</th>
+						</tr>
+						<tr>
+							<th>Temperatur:</th>
+							<th><?php echo $temperature ?>°C</th>
+							<th><?php echo $min_air_temperature ?>°C - <?php echo $max_air_temperature ?>°C</th>
+						</tr>
+						<tr>
+							<th>Bodentemperatur:</th>
+							<th><?php echo $soil_temperature ?>°C</th>
+							<th><?php echo $min_soil_temperature ?>°C - <?php echo $max_soil_temperature ?>°C</th>
 						</tr>
 						<tr>
 							<th>Lichtstunden:</th>
 							<th><?php echo "N.A." ?></th>
+							<th><?php echo $min_light_hours ?> - <?php echo $max_light_hours ?></th>
 						</tr>
 						<tr>
-							<th>Temperatur:</th>
-							<th><?php echo $temperature ?></th>
-						</tr>
-						<tr>
-							<th>Luftfeuchtigkeit:</th>
-							<th><?php echo $air_humidity ?></th>
-						</tr>
-						<tr>
-							<th>Bodentemperatur:</th>
-							<th><?php echo $soil_temperature ?></th>
+							<th>Staunässe:</th>
+							<th><?php echo "N.A." ?></th>
+							<th><?php echo "N.A." ?> - <?php echo "N.A." ?></th>
 						</tr>
 					</table>
 	
