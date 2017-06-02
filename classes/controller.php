@@ -11,7 +11,10 @@ class Controller{
 	private $curent_timestamp;		// HH:MM:SS-DD-MM-YYYY
 	private $openweathermap_api_key;
 	private $default_openweathermap_api_key = "cd91b0f34b0fd55a44899fa358743139";
+	private $openweathermap_location;
 	private $notification_receiving_email_address;
+	private $vacation_start_date;
+	private $vacation_end_date;
 		
 	//setters:
 	
@@ -37,6 +40,18 @@ class Controller{
 	
 	public function set_notification_receiving_email_address($new_notification_receiving_email_address){
 		$this->notification_receiving_email_address = $new_notification_receiving_email_address;	
+	}
+	
+	public function set_vacation_start_date($new_start_date){
+		$this->vacation_start_date = $new_start_date;	
+	}
+	
+	public function set_vacation_end_date($new_end_date){
+		$this->vacation_end_date = $new_end_date;
+	}
+	
+	public function set_openweathermap_location($new_location){
+		$this->openweathermap_location = $new_location;
 	}
 	
 	//getters:
@@ -65,6 +80,52 @@ class Controller{
 		return $this->notification_receiving_email_address;
 	}
 	
+	public function get_vacation_start_date(){
+		return $this->vacation_start_date;
+	}
+	
+	public function get_vacation_end_date(){
+		return $this->vacation_end_date;
+	}
+	
+	public function get_openweathermap_location(){
+		return $this->openweathermap_location;
+	}
+	
+	//functions
+	
+	/**
+	 * Always execute this after restarting the script
+	 */
+	public function init(){
+		//read config file 
+		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
+	
+		//read openweathermap info
+		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
+		$this->set_openweathermap_location($this->lookup_config("OPENWEATHERMAP_LOCATION"));
+		//read info for vacation function
+		if ($this->lookup_config("VACATION_FUNCTION" == "ON")){
+			$this->set_vacation_start_date($this->lookup_config("VACATION_START_DATE"));
+			$this->set_vacation_end_date($this->lookup_config("VACATION_END_DATE"));
+		}else {
+			$this->set_vacation_start_date("");
+			$this->set_vacation_end_date("");
+		}
+			
+		
+		//$this->write_config("SEND_MAIL_TO", "test@test.com");
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$db_handler->fetch_all_plants();
+		$this->plant_array = $db_handler->get_plants();
+		$db_handler->fetch_all_sensorunits();
+		$this->sensorunit_array = $db_handler->get_sensorunits();
+		$db_handler->disconnect_sql();
+	}
+	
+	
 	public function add_sensor_unit($mac_address, $name){
 		
 		// TODO pj: ich bau das noch in add_plant($data_array) um, und verwurste das alles hier
@@ -89,58 +150,38 @@ class Controller{
 		}
 	}
 	
-	//openweathermap functions
 	
-	//public function open_openweathermap_connection(){}
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
 	 * the default api key
 	 * 
-	 * @param $location this is the location the forecast will be for
+	 * the location is read from the config.txt file
 	 * 
 	 * @return returns the data in an array
 	 */
-	public function get_openweathermap_data($location){
+	public function get_openweathermap_data(){
 		if ($this->get_openweathermap_api_key() == ""){
 			// gets forecast with default api key if the api key value is empty
-			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_default_openweathermap_api_key().'&q='.$location);
+			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_default_openweathermap_api_key().'&q='.$this->get_openweathermap_location());
 			$data = json_decode($json, true);
 		} else {
 			//gets forecast with api key
-			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_openweathermap_api_key().'&q='.$location);		
+			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_openweathermap_api_key().'&q='.$this->get_openweathermap_location());		
 			echo $json;
 			$data = json_decode($json, true);
 			if ($data == ""){ //if api doesnt work then use the default one
 				$this->set_openweathermap_api_key("");
 				echo "\nrequest failed;\ntrying with default key:\n";
-				$data = $this->get_openweathermap_data($location);	
+				$data = $this->get_openweathermap_data();	
 			}
 		}
 		
 		return $data;
 	}
 	
-	//public function close_openweathermap_connection(){}
 	
-	/**
-	 * Always execute this after restarting the script
-	 */
-	public function init(){
-		//read config file
-		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
-		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
-		
-		$this->write_config("SEND_MAIL_TO", "test@test.com");
-		
-		$db_handler = new DB_Handler();
-		$db_handler->connect_sql();
-		$db_handler->fetch_all_plants();
-		$this->plant_array = $db_handler->get_plants();
-		$db_handler->fetch_all_sensorunits();
-		$this->sensorunit_array = $db_handler->get_sensorunits();
-		$db_handler->disconnect_sql();
-	}
+
 	
 	/**
 	 * Searches in the confix.txt for the $searchkeyword and returns the value of the config
@@ -165,7 +206,13 @@ class Controller{
 		return $substr;
 	}
 	
-	
+	/**
+	 * Writes a value to the config.txt file if there is a line with the keyword it replaces this one
+	 * if not it will write a new line at the bottom of the file under ## other settings
+	 * 
+	 * @param unknown $keyword
+	 * @param unknown $value
+	 */
 	public function write_config($keyword, $value){
 		$config = file('__FILE__/../config.txt');
 		$substr = "";
@@ -380,7 +427,7 @@ class Controller{
 				
 		//TODO: woher weiß ich welche sensorunit was ist?
 		//ich geh einfach mal davon aus, dass sensorunit[0] sozusagen zu plant[0] gehört
-		// nein Alex in der tabelle plants steht die sensorunit_id drin und nach dem erstellen 
+		//pj: nein Alex in der tabelle plants steht die sensorunit_id drin und nach dem erstellen 
 		// der plant objekte, hat die plant ein Attribut $sensor_unit_id
 		//EDIT: ich geh mal davon aus, das läuft über den DB_Handler oder es fehlt noch ne plant_id in der Unit (oder andersrum);
 		
