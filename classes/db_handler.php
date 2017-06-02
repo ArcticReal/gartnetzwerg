@@ -627,7 +627,16 @@ class DB_Handler{
 	}
 	
 	public function insert_sensor_data($sensor_id, $value, $manual){
-		//TODO insert query for sensor data
+		//logging
+		$logtext = date('c')."	insert_sensor_data(sensor_id: ".$sensor_id.", value: ".$value.", manual: ".$manual.")\n";
+		
+		$query = "INSERT INTO sensor_data (sensor_id, value, date, manual) VALUES (".$sensor_id.", ".$value.", NOW(), ".$manual.");";
+		$result = mysqli_query($this->mysqli, $query);	
+		
+		//logging
+		$logtext = $logtext.date('c')." SQL: ".$query."\n";
+		$logtext = $logtext.date('c')." result: ".$result."\n";
+		$this->write_log($logtext);
 	}
 	
 	public function put_all_sensors(){
