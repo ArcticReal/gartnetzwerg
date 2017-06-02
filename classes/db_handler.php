@@ -626,6 +626,10 @@ class DB_Handler{
 		
 	}
 	
+	public function insert_sensor_data($sensor_id, $value, $manual){
+		//TODO insert query for sensor data
+	}
+	
 	public function put_all_sensors(){
 		
 		$sensorunits = $this->sensorunits;

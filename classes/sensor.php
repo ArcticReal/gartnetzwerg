@@ -33,10 +33,6 @@ abstract class Sensor{
 		return $this->gpio_pin_id;
 	}
 	
-	/*public function update_value(){
-		$this->set_value(random_int(0,255));
-	}*/
-	
 	public function update(){
 		//hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
 	}

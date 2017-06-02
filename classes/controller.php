@@ -114,7 +114,6 @@ class Controller{
 		}
 			
 		
-		//$this->write_config("SEND_MAIL_TO", "test@test.com");
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -500,28 +499,36 @@ class Controller{
 		return $count;
 	}
 	
-/*	public function make_time_lapse(){
+	/**
+	 * updates all sensors then writes data to database
+	 * 
+	 * 
+	 * 
+	 * @param unknown $manual if this flag is set this means that the sensor data wont be used for diagrams, set this flag if the meassurement got triggered manually and not by cron
+	 * 
+	 */
+	public function update_sensor_data($manual){
+		//TODO damit das hier funktioniert muss das updaten der sensorwerte funktionieren 
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
+			$this->sensorunit_array[$sensorunit_id]->update_all();
+			$sensor_ids = $this->sensorunit_array[$sensorunit_id]->get_sensor_ids();
+			foreach ($sensor_ids as $sensor_id){
+				$value = $this->sensorunit_array[$sensorunit_id]->get_sensor($sensor_id)->get_value();
+				
+				$db_handler->insert_sensor_data($sensor_id, $value, $manual);
+				
+			}
+		}
+		$db_handler->disconnect_sql();
 		
 	}
 	
-	public function calculate_water_level(){
-		
-	}
-	
-	public function open_sensorunit_connection(){
-		
-	}
-	
-	public function close_sensorunit_connection(){
-		
-	}
-*/
 }
-
-/*$test2 = new Controller();
+/*
+$test2 = new Controller();
 $test2->init();
-var_dump($test2->get_sensorunit(1));
-var_dump($test2->get_sensorunit(2));
-$test2->get_openweathermap_data('Kempten');*/
-
+$test2->update_sensor_data(1);
+*/
 ?>
