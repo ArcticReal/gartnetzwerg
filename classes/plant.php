@@ -35,8 +35,13 @@ class Plant{
 	private $akt_waterlogging;
 	private $akt_air_temperature;
 	private $akt_soil_temperature;
+	private $auto_watering;
+	private $last_watering;
 	private $sensor_unit_id;
 
+	
+	//setters
+	
 	public function set_plant_id($plant_id){
 		$this->plant_id = $plant_id;
 	}
@@ -136,7 +141,7 @@ class Plant{
 		$this->akt_waterlogging = $akt_waterlogging;
 	}
 	
-	public function  set_akt_air_temperature($akt_air_temperature){
+	public function set_akt_air_temperature($akt_air_temperature){
 		$this->akt_air_temperature = $akt_air_temperature;
 	}
 	
@@ -144,9 +149,20 @@ class Plant{
 		$this->akt_soil_temperature = $akt_soil_temperature;
 	}
 	
+	public function set_auto_watering($new_auto_watering){
+		$this->auto_watering = $new_auto_watering;
+	}
+	
+	public function set_last_watering($new_last_watering){
+		$this->last_watering = $new_last_watering;
+	}
+	
 	public function set_sensor_unit_id($sensor_unit_id){
 		$this->sensor_unit_id = $sensor_unit_id;
 	}
+	
+	
+	//getters
 	
 	public function get_plant_id(){
 		return $this->plant_id;
@@ -274,6 +290,14 @@ class Plant{
 	
 	public function get_akt_soil_temperature(){
 		return $this->akt_soil_temperature;
+	}
+	
+	public function get_auto_watering(){
+		return $this->auto_watering;
+	}
+
+	public function get_last_watering(){
+		return $this->last_watering;
 	}
 	
 	public function get_sensor_unit_id(){
