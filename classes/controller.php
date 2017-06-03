@@ -586,6 +586,61 @@ class Controller{
 		return $water_usage_sum.$unit;
 	}
 	
+	public function water_usage_per_day($plant_id){
+		
+		// TODO Logging
+		
+		$days = 14;
+		$day = date('d');
+		$month = date('m');
+		$year = date('Y');
+		
+		for($k = 14;$k >= 0; $k--){
+			
+			$date[$k] = $year."-".$month."-".$day;
+			
+			if($day == 1){
+				
+				if($month == 1){
+					
+					$year--;
+					$month = 12;
+					$day = date("t", $month);
+					
+					
+				}else{
+					
+					$month--;
+					$day = date("t", $month);
+					if($month < 10){
+						$month = "0".$month;
+					}
+				}
+				
+			}else{
+				
+				$day--;
+				if($day < 10){
+					$day = "0".$day;
+				}
+			}
+			
+		}
+		echo "\n";
+		var_dump($date);
+		echo "\n";
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$water_usage_per_day = $db_handler->water_usage_per_day($plant_id,$date);
+		$db_handler->disconnect_sql();
+		
+		
+		
+		return $water_usage_per_day;
+		
+	}
+	
 	/**
 	 * takes data from the DB, counts the values of hours of light per day
 	 * @returns hours of light, TODO: kommt noch auf Lichttests (mit den anderen Zeros) an, wie hoch die Sensoren bei Volllicht/Halbschatten/Dunkel reagieren

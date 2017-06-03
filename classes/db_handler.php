@@ -720,6 +720,38 @@ class DB_Handler{
 		return $water_usage_sum[0];
 	}
 	
+	public function water_usage_per_day($plant_id,$date){
+		
+		// Logging
+		$logtext = "\n".date('c')." DB_handler::water_usage_per_day(plant_id: ".$plant_id." days: 14)\n\n";
+		
+		for($k=0; $k<count($date);$k++){
+			
+			$query = "SELECT SUM(water_usage) FROM water_usage WHERE plant_id = ".$plant_id." AND DATE(date) = '".$date[$k]."';";
+			$result =  mysqli_query($this->mysqli, $query);
+			$return_value[$k] = mysqli_fetch_array($result);
+			
+			// Logging
+			$logtext = $logtext.date('c')." SQL: ".$query."\n";
+			$logtext = $logtext.date('c')." result: ".$return_value[$k][0]."\n";
+
+		}
+		
+		$this->write_log($logtext);
+		
+		for($k=0;$k<count($date);$k++){
+			
+			if($return_value[$k][0] == NULL){
+				$water_usage_per_day[$k] = 0;
+			}else{
+				$water_usage_per_day[$k] = intval($return_value[$k][0]);
+			}
+			
+		}
+		
+		return $water_usage_per_day;
+	}
+	
 	public function get_plant_ids(){
 		return $this->plant_ids;
 	}
