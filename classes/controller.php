@@ -128,7 +128,7 @@ class Controller{
 	
 	public function add_sensor_unit($mac_address, $name){
 		
-		// TODO pj: ich bau das noch in add_plant($data_array) um, und verwurste das alles hier
+		// TODO pj: ich bau das noch in add_plant($data_array)
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -150,7 +150,33 @@ class Controller{
 		}
 	}
 	
+	public function change_plant_nickname($plant_id,$nickname){
+		
+		// TODO Logging
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$db_handler->update_plant_nickname($plant_id, $nickname);
+		$db_handler->disconnect_sql();
+		
+	}
 	
+	public function change_plant_location($plant_id,$location,$is_indoor){
+		
+		// TODO Logging
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$db_handler->update_plant_location($plant_id, $location,$is_indoor);
+		$db_handler->disconnect_sql();
+		
+	}
+	
+	public function insert_sensor_data(){
+		
+		// TODO
+		
+	}
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
@@ -485,6 +511,80 @@ class Controller{
 			echo "gold\n\n";
 			return "gold";
 		}
+	}
+	
+	/**
+	 * return the sum of used water during $days from plant with $plant_id
+	 * @param  $plant_id
+	 * @param  $days
+	 * @return $water_usage_sum
+	 */
+	public function sum_water_usage($plant_id, $days){
+		
+		// TODO Logging
+		
+		$day = date('d');
+		$month = date('m');
+		$year = date('Y');
+		
+		while($days > date("t",$month)){
+			
+			if($month == 1){
+				
+				$days = $days-date("t",$month);
+				$month = 12;
+				$year--;
+				
+			}else{
+				
+				$days = $days-date("t",$month);
+				$month--;
+				
+			}
+			
+		}
+		
+		if($days < date('d')){
+			
+			$day = $day-$days;
+			
+		}else{
+			
+			if(date('m') > 1){
+				
+				$month--;
+				$tmp = date("t",$month);
+				$days = $days-$day;
+				$day = $tmp-$days;
+				
+			}else{
+				
+				$year--;
+				$month = 12;
+				$tmp = date("t",$month);
+				$days = $days-$day;
+				$day = $tmp-$days;
+				
+			}
+		}
+		
+		$date = $year."-".$month."-".$day;
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$water_usage_sum = $db_handler->sum_water_usage($plant_id,$date);
+		$db_handler->disconnect_sql();
+		$unit = "ml";
+		
+		if($water_usage_sum >= 1000){
+			
+			$water_usage_sum = $water_usage_sum/1000;
+			$unit = "L";
+			
+		}
+		
+		
+		return $water_usage_sum.$unit;
 	}
 	
 	/**

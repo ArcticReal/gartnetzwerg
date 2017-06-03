@@ -18,7 +18,7 @@ class DB_Handler{
 		$this->mysqli = mysqli_connect(HOST, USER, PASS, DATABASE);
 		
 		// Logging
-		$logtext = "\n".date('c')."	Connect to Database\n";
+		$logtext = "\n".date('c')."	DB_handler::connect_sql()\n";
 		$this->write_log($logtext);
 		
 	}
@@ -28,7 +28,7 @@ class DB_Handler{
 		mysqli_close($this->mysqli);
 		
 		// Logging
-		$logtext = date('c')."	Disconnect Database\n\n";
+		$logtext = date('c')."	DB_handler::disconnect_sql()\n\n";
 		$this->write_log($logtext);
 	}
 	
@@ -44,7 +44,7 @@ class DB_Handler{
 		}
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_plant_ids()\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_plant_ids()\n";
 		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."  	Result:	";
 		for($i = 0; $i < count($this->plant_ids); $i++){
@@ -56,6 +56,8 @@ class DB_Handler{
 	}
 	
 	public function fetch_sensor_unit_ids(){
+		
+		// TODO Logging
 		
 		$query = "SELECT sensor_unit_id FROM sensor_unit;";
 		$result = mysqli_query($this->mysqli, $query);
@@ -79,7 +81,7 @@ class DB_Handler{
 	public function fetch_all_plants(){
 		
 		// Logging
-		$logtext = date('c')." 	fetch_all_plants()\n";
+		$logtext = date('c')." 	DB_handler::fetch_all_plants()\n";
 		$this->write_log($logtext);
 		
 		$this->fetch_plant_ids();	
@@ -168,6 +170,9 @@ class DB_Handler{
 	}
 	
 	public function fetch_all_sensorunits(){
+		
+		// TODO Logging
+		
 		$this->fetch_sensor_unit_ids();
 		$sensorunit_ids = $this->sensorunit_ids;
 		for($i = 0; $i < count($sensorunit_ids); $i++){
@@ -181,6 +186,9 @@ class DB_Handler{
 	}
 	
 	public function fetch_sensors($sensorunit_id){
+		
+		// TODO Logging
+		
 		$query = "SELECT sensor_id, type FROM sensor WHERE sensor_unit_id = ".$sensorunit_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
@@ -232,7 +240,7 @@ class DB_Handler{
 		$species_id = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_species_id(plant_id: ".$plant_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_species_id(plant_id: ".$plant_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')." 	Result: ".$species_id[0]."\n\n";
 		$this->write_log($logtext);
@@ -260,7 +268,7 @@ class DB_Handler{
 		$nickname = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_nickname(plant_id: ".$plant_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_nickname(plant_id: ".$plant_id.")\n";
 		$logtext = $logtext.date('c')." 	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$nickname[0]."\n\n";
 		$this->write_log($logtext);
@@ -276,7 +284,7 @@ class DB_Handler{
 		$scientific_name = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_scientific_name(species_id: ".$species_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_scientific_name(species_id: ".$species_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$scientific_name[0]."\n";
 		$this->write_log($logtext);
@@ -291,7 +299,7 @@ class DB_Handler{
 		$min_light_hours = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_min_light_hours(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_light_hours(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$min_light_hours[0]."\n";
 		$this->write_log($logtext);
@@ -306,7 +314,7 @@ class DB_Handler{
 		$max_light_hours = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_max_light_hours(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_light_hours(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$max_light_hours[0]."\n";
 		$this->write_log($logtext);
@@ -321,7 +329,7 @@ class DB_Handler{
 		$min_soil_humidity = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_min_soil_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_soil_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$min_soil_humidity[0]."\n";
 		$this->write_log($logtext);
@@ -336,7 +344,7 @@ class DB_Handler{
 		$max_soil_humidity = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_max_soil_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_soil_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$max_soil_humidity[0]."\n";
 		$this->write_log($logtext);
@@ -351,7 +359,7 @@ class DB_Handler{
 		$waterlogging = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_waterlogging(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_waterlogging(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$waterlogging[0]."\n";
 		$this->write_log($logtext);
@@ -367,7 +375,7 @@ class DB_Handler{
 		$min_temperature = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_min_temperature(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_temperature(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$min_temperature[0]."\n";
 		$this->write_log($logtext);
@@ -383,7 +391,7 @@ class DB_Handler{
 		$max_temperature = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_max_temperature(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_temperature(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$max_temperature[0]."\n";
 		$this->write_log($logtext);
@@ -403,7 +411,7 @@ class DB_Handler{
 		$min_watering_period = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_min_watering_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_watering_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$min_watering_period[0]."\n";
 		$this->write_log($logtext);
@@ -419,7 +427,7 @@ class DB_Handler{
 		$max_watering_period = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_max_watering_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_watering_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$max_watering_period[0]."\n";
 		$this->write_log($logtext);
@@ -435,7 +443,7 @@ class DB_Handler{
 		$min_fertilizer_period = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_min_fertilizer_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_fertilizer_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$min_fertilizer_period[0]."\n";
 		$this->write_log($logtext);
@@ -451,7 +459,7 @@ class DB_Handler{
 		$max_fertilizer_period = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_max_fertilizer_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_fertilizer_period(species_id: ".$species_id.", season_id: ".$season_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$max_fertilizer_period[0]."\n";
 		$this->write_log($logtext);
@@ -467,7 +475,7 @@ class DB_Handler{
 		$is_indoor = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_indoor(plant_id: ".$plant_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_indoor(plant_id: ".$plant_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$is_indoor[0]."\n";
 		$this->write_log($logtext);
@@ -483,7 +491,7 @@ class DB_Handler{
 		$location = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_location(plant_id: ".$plant_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_location(plant_id: ".$plant_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$location[0]."\n";
 		$this->write_log($logtext);
@@ -499,7 +507,7 @@ class DB_Handler{
 		$birthdate = mysqli_fetch_array($result);
 		
 		// Logging
-		$logtext = "\n".date('c')."	fetch_birthdate(plant_id: ".$plant_id.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_birthdate(plant_id: ".$plant_id.")\n";
 		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."	Result: ".$birthdate[0]."\n";
 		$this->write_log($logtext);
@@ -602,7 +610,7 @@ class DB_Handler{
 			}
 		}
 		// Logging
-		$logtext = "\n".date('c')."	fetch_season()\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_season()\n";
 		$logtext = $logtext.date('c')."	season_id: ".$season_id."\n";
 		$this->write_log($logtext);
 		
@@ -612,7 +620,7 @@ class DB_Handler{
 	public function insert_sensor_unit($mac_address, $name){
 		
 		// Logging
-		$logtext = date('c')."	insert_sensor_unit(mac_address: ".$mac_address.", name: ".$name.")\n";
+		$logtext = date('c')."	DB_handler::insert_sensor_unit(mac_address: ".$mac_address.", name: ".$name.")\n";
 		
 		$query = "INSERT INTO sensor_unit ( mac_address, name) VALUES ('".$mac_address."', '".$name."');";
 		$result = mysqli_query($this->mysqli, $query);
@@ -626,7 +634,27 @@ class DB_Handler{
 		
 	}
 	
+	public function update_plant_nickname($plant_id, $nickname){
+		
+		$query = "UPDATE plants SET nickname = '".$nickname."' WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		// TODO Logging
+		
+	}
+	
+	public function update_plant_location($plant_id, $location, $is_indoor){
+		
+		$query = "UPDATE plants SET location = '".$location."' ,is_indoor = ".$is_indoor." ' WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		// TODO Logging
+		
+	}
+	
 	public function put_all_sensors(){
+		
+		// TODO Logging
 		
 		$sensorunits = $this->sensorunits;
 		$sensorunit_ids = $this->sensorunit_ids;
@@ -657,9 +685,26 @@ class DB_Handler{
 	
 	public function put_sensor_value($sensor_id, $value){
 		
-		$query = "INSERT INTO sensor_data (sensor_id, value, date) VALUES ($sensor_id, $value, CURRENT_DATE);";
+		// TODO Logging
+		
+		$query = "INSERT INTO sensor_data (sensor_id, value, date) VALUES ($sensor_id, $value, NOW());";
 		$result = mysqli_query($this->mysqli, $query);
 
+	}
+	
+	public function sum_water_usage($plant_id, $date){
+		
+		$query = "SELECT SUM(water_usage) FROM water_usage WHERE plant_id = ".$plant_id." AND date >= CAST('".$date."' as Datetime);";
+		$result =  mysqli_query($this->mysqli, $query);
+		$water_usage_sum = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::sum_water_usage(plant_id: ".$plant_id.", date: ".$date.")\n";
+		$logtext = $logtext." SQL:	".$query."\n";
+		$logtext = $logtext." result:	".$water_usage_sum[0]."\n";
+		$this->write_log($logtext);
+		
+		return $water_usage_sum[0];
 	}
 	
 	public function get_plant_ids(){
@@ -677,7 +722,7 @@ class DB_Handler{
 		
 	public function write_log($logtext){
 		
-		$logfile = fopen("/var/log/gartnetzwerg/db_handler_log.".date('w'), "a");
+		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('w'), "a");
 		
 		fwrite($logfile, $logtext);
 		

@@ -3,17 +3,11 @@
 require_once 'classes/controller.php';
 
 $controller = new Controller();
-$controller ->init();
-$plants = $controller->get_plants();
+$sum_water_usage = $controller->sum_water_usage(1, 14);
 
-foreach($plants as $plant){
-	echo "\n";
-	echo $plant->get_name();
-	echo "\n";
-	echo $plant->get_nickname();
-	echo "\n";
-}
-
+echo "\n";
+echo $sum_water_usage;
+echo "\n\n";
 /*
 $db_handler = new DB_Handler();
 $db_handler->connect_sql();
