@@ -634,6 +634,7 @@ class DB_Handler{
 		
 	}
 	
+<<<<<<< HEAD
 	public function update_plant_nickname($plant_id, $nickname){
 		
 		$query = "UPDATE plants SET nickname = '".$nickname."' WHERE plant_id = ".$plant_id.";";
@@ -650,6 +651,19 @@ class DB_Handler{
 		
 		// TODO Logging
 		
+=======
+	public function insert_sensor_data($sensor_id, $value, $manual){
+		//logging
+		$logtext = date('c')."	insert_sensor_data(sensor_id: ".$sensor_id.", value: ".$value.", manual: ".$manual.")\n";
+		
+		$query = "INSERT INTO sensor_data (sensor_id, value, date, manual) VALUES (".$sensor_id.", ".$value.", NOW(), ".$manual.");";
+		$result = mysqli_query($this->mysqli, $query);	
+		
+		//logging
+		$logtext = $logtext.date('c')." SQL: ".$query."\n";
+		$logtext = $logtext.date('c')." result: ".$result."\n";
+		$this->write_log($logtext);
+>>>>>>> 61b0a3f3b4b1970b887fcb0d8ddc021cbbf42ac0
 	}
 	
 	public function put_all_sensors(){

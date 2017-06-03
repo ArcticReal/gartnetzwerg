@@ -16,7 +16,7 @@ class Sensorunit{
 	private $sensor_array;
 	private $watertank_level;
 	private $sensor_ids;
-	
+	private $mac_address;
 	
 	//setters
 	
@@ -37,6 +37,9 @@ class Sensorunit{
 		$this->sensor_ids = $sensor_ids;
 	}
 	
+	public function set_mac_address($new_mac_address){
+		$this->mac_address = $new_mac_address;
+	}
 	
 	//getters
 	
@@ -56,6 +59,9 @@ class Sensorunit{
 		return $this->sensor_ids;
 	}
 		
+	public function get_mac_address(){
+		return $this->mac_address;
+	}
 	
 	//functions
 	
