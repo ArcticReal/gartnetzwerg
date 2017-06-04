@@ -711,8 +711,8 @@ class Controller{
 	
 }
 
-$test2 = new Controller();
+/*$test2 = new Controller();
 //$test2->init();
 var_dump($test2->test());
-//var_dump($test2->water_usage_per_day(1, 20));
+//var_dump($test2->water_usage_per_day(1, 20));*/
 ?>
