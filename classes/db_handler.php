@@ -653,7 +653,7 @@ class DB_Handler{
 		
 	public function insert_sensor_data($sensor_id, $value, $manual){
 		//logging
-		$logtext = date('c')."	insert_sensor_data(sensor_id: ".$sensor_id.", value: ".$value.", manual: ".$manual.")\n";
+		$logtext = date('c')."	DB_Handler::insert_sensor_data(sensor_id: ".$sensor_id.", value: ".$value.", manual: ".$manual.")\n";
 		
 		$query = "INSERT INTO sensor_data (sensor_id, value, date, manual) VALUES (".$sensor_id.", ".$value.", NOW(), ".$manual.");";
 		$result = mysqli_query($this->mysqli, $query);	
