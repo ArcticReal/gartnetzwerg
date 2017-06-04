@@ -16,7 +16,9 @@ class Sensorunit{
 	private $sensor_array;
 	private $watertank_level;
 	private $sensor_ids;
+	private $name;
 	private $mac_address;
+	private $status;
 	
 	//setters
 	
@@ -37,8 +39,16 @@ class Sensorunit{
 		$this->sensor_ids = $sensor_ids;
 	}
 	
+	public function set_name($new_name){
+		$this->name = $new_name;
+	}
+	
 	public function set_mac_address($new_mac_address){
 		$this->mac_address = $new_mac_address;
+	}
+	
+	public function set_status($new_status){
+		$this->status = $new_status;
 	}
 	
 	//getters
@@ -59,8 +69,16 @@ class Sensorunit{
 		return $this->sensor_ids;
 	}
 		
+	public function get_name(){
+		return $this->name;
+	}
+	
 	public function get_mac_address(){
 		return $this->mac_address;
+	}
+	
+	public function get_status(){
+		return $this->status;
 	}
 	
 	//functions
@@ -75,6 +93,7 @@ class Sensorunit{
 			$this->update_sensor($key);
 			echo ("Key: ".$key." Value: ".$value->get_value()."\n\n");
 		}	
+		$this->calculate_watertank_level();
 	}
 
 	/**
@@ -108,35 +127,22 @@ class Sensorunit{
 	 * 
 	 */
 	public function calculate_watertank_level(){
-		echo "calculating watertank fillage\n\n";
-		$watertank_sensors = array();
+		$watertank_sensor_data = [];
+
 		$fillage_level = 0;
 		$max_fillage_level = 0;
 		foreach ($this->sensor_array as $key => $value){
-			echo "Testing sensor with the id ".$key.":\n";
 			if (is_a($value, "Watertank_fillage_sensor")){
-				echo "\tYeah a watertank fillage sensor\n\twatertank fillage sensor is meassuring the "
-						.$value->get_position()." level of the watertank\n\n";
-				$watertank_sensors[$value->get_position()] = $value->get_value();
-				
-			}else {
-				echo "\tohh nah! its another sensor\n\n";
+				$watertank_sensor_data[$value->get_position()] = $value->get_value();
 			}
+			foreach ($watertank_sensor_data as $value){
+				$fillage_level += $value;
+				$max_fillage_level ++;
+			}		
+			$this->set_watertank_level($fillage_level/$max_fillage_level);
 		}
-		echo "\nlet me summarize that for you:\nWe have ".sizeof($watertank_sensors)
-				." watertank sensors\n";
-		foreach ($watertank_sensors as $key => $value){
-			echo "Sensor ".$key." says: ".$value."\n";
-			$fillage_level += $value;
-			$max_fillage_level ++;
-		}
-		echo "wich means that ".$fillage_level." out of ".$max_fillage_level." sensors sense water\n"
-				."so our watertank is at least ".$fillage_level/$max_fillage_level." full\n";
-		
-		$this->set_watertank_level($fillage_level/$max_fillage_level);
 	}
 }
-
 /*$test = new Sensorunit();
 $test->set_sensor(0, new Air_moisture_sensor());
 $test->get_sensor(0)->set_sensor_id(0);

@@ -522,56 +522,11 @@ class Controller{
 		
 		// TODO Logging
 		
-		$day = date('d');
-		$month = date('m');
-		$year = date('Y');
-		
-		while($days > date("t",$month)){
-			
-			if($month == 1){
-				
-				$days = $days-date("t",$month);
-				$month = 12;
-				$year--;
-				
-			}else{
-				
-				$days = $days-date("t",$month);
-				$month--;
-				
-			}
-			
-		}
-		
-		if($days < date('d')){
-			
-			$day = $day-$days;
-			
-		}else{
-			
-			if(date('m') > 1){
-				
-				$month--;
-				$tmp = date("t",$month);
-				$days = $days-$day;
-				$day = $tmp-$days;
-				
-			}else{
-				
-				$year--;
-				$month = 12;
-				$tmp = date("t",$month);
-				$days = $days-$day;
-				$day = $tmp-$days;
-				
-			}
-		}
-		
-		$date = $year."-".$month."-".$day;
+		$date = new DateTime("-".$days." days");
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$water_usage_sum = $db_handler->sum_water_usage($plant_id,$date);
+		$water_usage_sum = $db_handler->sum_water_usage($plant_id,$date->format("Y-m-d"));
 		$db_handler->disconnect_sql();
 		$unit = "ml";
 		
@@ -586,53 +541,22 @@ class Controller{
 		return $water_usage_sum.$unit;
 	}
 	
-	public function water_usage_per_day($plant_id){
+	public function water_usage_per_day($plant_id, $days){
 		
 		// TODO Logging
 		
-		$days = 14;
-		$day = date('d');
-		$month = date('m');
-		$year = date('Y');
 		
-		for($k = 14;$k >= 0; $k--){
-			
-			$date[$k] = $year."-".$month."-".$day;
-			
-			if($day == 1){
-				
-				if($month == 1){
-					
-					$year--;
-					$month = 12;
-					$day = date("t", $month);
-					
-					
-				}else{
-					
-					$month--;
-					$day = date("t", $month);
-					if($month < 10){
-						$month = "0".$month;
-					}
-				}
-				
-			}else{
-				
-				$day--;
-				if($day < 10){
-					$day = "0".$day;
-				}
-			}
-			
-		}
-		echo "\n";
-		var_dump($date);
-		echo "\n";
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$water_usage_per_day = $db_handler->water_usage_per_day($plant_id,$date);
+		
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$water_usage_per_day[$date->format("Y-m-d")] = $db_handler->water_usage_on_day($plant_id,$date->format("Y-m-d"));
+			
+		}
+		
+		
 		$db_handler->disconnect_sql();
 		
 		
@@ -641,18 +565,116 @@ class Controller{
 		
 	}
 	
+	
+	//messwerte
+	
 	/**
 	 * takes data from the DB, counts the values of hours of light per day
-	 * @returns hours of light, TODO: kommt noch auf Lichttests (mit den anderen Zeros) an, wie hoch die Sensoren bei Volllicht/Halbschatten/Dunkel reagieren
+	 * @returns hours of light in an array indexed on days, 
 	 */
-	public function count_lighthours($sensor_unit_id){
-		$count = 0;
-				
-		//fetch_akt_light_hours($sensor_unit_id);
+	public function lighthours_per_day($sensor_unit_id, $days){
 		
-		echo $count . "\n";
-		return $count;
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$light_hours_per_day = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$light_hours_per_day[$date->format("Y-m-d")] = $db_handler->fetch_light_hours($sensor_unit_id, $date->format("Y-m-d"));	
+		}
+		
+		
+		$db_handler->disconnect_sql();
+		
+		
+		
+		return $light_hours_per_day;
+		
+		
+		
 	}
+
+	public function air_humidity_per_day($sensor_unit_id, $days){
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$air_humidity = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$air_humidity[$date->format("Y-m-d")] = $db_handler->fetch_air_humidity($sensor_unit_id, $date->format("Y-m-d"));
+		}
+		
+		$db_handler->disconnect_sql();
+		
+		return $air_humidity;
+	}
+	
+	public function soil_humidity_per_day($sensor_unit_id, $days){
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$soil_humidity = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$soil_humidity[$date->format("Y-m-d")] = $db_handler->fetch_soil_humidity($sensor_unit_id, $date->format("Y-m-d"));
+		}
+		
+		$db_handler->disconnect_sql();
+		
+		return $soil_humidity;
+	}
+	
+	public function air_temperature_per_day($sensor_unit_id, $days){
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$air_temperature = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$air_temperature[$date->format("Y-m-d")] = $db_handler->fetch_air_temperature($sensor_unit_id, $date->format("Y-m-d"));
+		}
+		
+		$db_handler->disconnect_sql();
+		
+		return $air_temperature;
+	}
+	
+	public function soil_temperature_per_day($sensor_unit_id, $days){
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$soil_temperature = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$soil_temperature[$date->format("Y-m-d")] = $db_handler->fetch_soil_temperature($sensor_unit_id, $date->format("Y-m-d"));
+		}
+		
+		$db_handler->disconnect_sql();
+		
+		return $soil_temperature;
+	}
+	
+	public function waterlogging_per_day($sensor_unit_id, $days){
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$waterlogging = [];
+		for ($i = $days-1; $i >= 0; $i--){
+			$date = new DateTime("-".$i." days");
+			$waterlogging[$date->format("Y-m-d")] = $db_handler->fetch_waterlogging($sensor_unit_id, $date->format("Y-m-d"));
+		}
+		
+		$db_handler->disconnect_sql();
+		
+		return $waterlogging;
+	}
+	
+	
 	
 	/**
 	 * updates all sensors then writes data to database
@@ -675,15 +697,22 @@ class Controller{
 				$db_handler->insert_sensor_data($sensor_id, $value, $manual);
 				
 			}
+			
 		}
 		$db_handler->disconnect_sql();
 		
 	}
 	
+	public function test(){
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		return $db_handler->fetch_last_watertank_level(1);
+	}
+	
 }
-/*
+
 $test2 = new Controller();
-$test2->init();
-$test2->update_sensor_data(1);
-*/
+//$test2->init();
+var_dump($test2->test());
+//var_dump($test2->water_usage_per_day(1, 20));
 ?>
