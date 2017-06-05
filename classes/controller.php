@@ -97,6 +97,9 @@ class Controller{
 		return $this->openweathermap_location;
 	}
 	
+	
+	//functions
+
 	public function get_free_sensorunits(){
 		$free_sensorunits_array = [];
 		
@@ -108,8 +111,6 @@ class Controller{
 		
 		return $free_sensorunits_array;
 	}
-	
-	//functions
 	
 	/**
 	 * Always execute this after restarting the script
@@ -162,19 +163,41 @@ class Controller{
 		$db_handler->fetch_all_sensorunits();
 		$this->sensorunit_array = $db_handler->get_sensorunits();
 		$db_handler->disconnect_sql();
+		
+		if ($this->get_vacation_start_date() != ""){
+			if (date("Y-m-d", strtotime($this->get_vacation_end_date())) < date("Y-m-d") ){
+				$this->write_config("VACATION_FUNCTION", "OFF");
+			}
+		}
 	}
 	
-	
+	/**
+	 * puts a plant into database
+	 * 
+	 * 
+	 * @param unknown $sensorunit_id
+	 * @param unknown $species_id
+	 * @param unknown $nickname
+	 * @param unknown $location
+	 * @param unknown $is_indoor
+	 * @param unknown $auto_watering
+	 */
 	public function add_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering){
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
-		$db_handler->update_sensorunit_status($sensorunit_id, "active");
+		$status = $db_handler->fetch_sensorunit_status($sensorunit_id);
+		if ($status != "free"){
+			$return_string = "Diese Sensorunit wird bereits verwendet";
+		}else {
+			$db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
+			$db_handler->update_sensorunit_status($sensorunit_id, "active");
+			
+			$return_string = "";
+		}
 		$db_handler->disconnect_sql();
-		
 		$this->init();
-		
+		return $return_string;
 	}
 	
 	public function add_sensor_unit($mac_address, $name){
