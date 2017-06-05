@@ -199,6 +199,10 @@ class DB_Handler{
 			$max_light_hours = $this->fetch_max_light_hours($species_id, $season_id);
 			$plant->set_light_hours($min_light_hours, $max_light_hours);
 			
+			$min_air_humidity = $this->fetch_min_air_humidity($species_id, $season_id);
+			$max_air_humidity = $this->fetch_max_air_humidity($species_id, $season_id);
+			$plant->set_air_humidity($min_air_humidity, $max_air_humidity);
+			
 			$min_soil_humidity = $this->fetch_min_soil_humidity($species_id, $season_id);
 			$max_soil_humidity = $this->fetch_max_soil_humidity($species_id, $season_id);
 			$plant->set_soil_humidity($min_soil_humidity, $max_soil_humidity);
@@ -405,6 +409,38 @@ class DB_Handler{
 		$this->write_log($logtext);
 		
 		return $max_light_hours[0];
+	}
+	
+	public function fetch_min_air_humidity($species_id, $season_id){
+		
+		$query = "SELECT min_air_humidity FROM brawndo WHERE species_id = ".$species_id." AND season_id = ".$season_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$min_air_humidity = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::fetch_min_air_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$min_air_humidity[0]."\n";
+		$this->write_log($logtext);
+		
+		return $min_air_humidity[0];
+		
+	}
+	
+	public function fetch_max_air_humidity($species_id, $season_id){
+		
+		$query = "SELECT max_air_humidity FROM brawndo WHERE species_id = ".$species_id." AND season_id = ".$season_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$max_air_humidity = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::fetch_max_air_humidity(species_id: ".$species_id.", season_id: ".$season_id.")\n";
+		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$max_air_humidity[0]."\n";
+		$this->write_log($logtext);
+		
+		return $max_air_humidity[0];
+		
 	}
 	
 	public function fetch_min_soil_humidity($species_id, $season_id){
