@@ -231,9 +231,8 @@ class DB_Handler{
 			$sensor_unit_id = $this->fetch_sensor_unit_id($plant_id);
 			$plant->set_sensor_unit_id($sensor_unit_id);
 			
-			/* TODO Methode noch nicht implementiert
-			 $akt_light_hours = $this->fetch_akt_light_hours($sensor_unit_id);
-			 $plant->set_akt_light_hours($akt_light_hours); */
+			$akt_light_hours = $this->fetch_light_hours($sensor_unit_id, date("Y-m-d"));
+			$plant->set_akt_light_hours($akt_light_hours); 
 			
 			$akt_air_humidity = $this->fetch_akt_air_humidity($sensor_unit_id);
 			$plant->set_akt_air_humidity($akt_air_humidity);
@@ -338,9 +337,9 @@ class DB_Handler{
 		$name = mysqli_fetch_array($result);
 				
 		//Logging
-		$logtext = date('c')."DB_handler::fetch_plant_name(Species: ".$species_id.")\n";
-		$logtext = $logtext.date('c')." SQL Query: ".$query."\n";
-		$logtext = $logtext.date('c')." Result: ".$name[0]."\n\n";
+		$logtext = date('c')."	DB_handler::fetch_plant_name(Species: ".$species_id.")\n";
+		$logtext = $logtext.date('c')."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$name[0]."\n\n";
 		$this->write_log($logtext);
 		
 		return utf8_encode($name[0]);
@@ -711,7 +710,7 @@ class DB_Handler{
 		
 		$light_hours = 0.0;
 		while ($light_hours_row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-			if ($light_hours_row >= 50) $light_hours += 0.5; // TODO richtigen wert einfügen
+			if ($light_hours_row <= 50) $light_hours += 0.5;
 		}
 		
 		

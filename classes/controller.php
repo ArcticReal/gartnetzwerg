@@ -1,4 +1,7 @@
 <?php
+
+define("WATER_PER_TIME", 150);
+
 require_once 'sensorunit.php';
 require_once 'plant.php';
 require_once 'db_handler.php';
@@ -18,7 +21,7 @@ class Controller{
 		
 	
 	function __destruct(){
-		echo "Controller Objekt destructed!\n";
+		//echo "Controller Objekt destructed!\n";
 	}
 	
 	//setters:
@@ -115,21 +118,44 @@ class Controller{
 	 * Always execute this after restarting the script
 	 */
 	public function init(){
+		
+		//logging
+		$logtext = "\n".date('c')."	Controller::init()\n";
+		
+		
 		//read config file 
 		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
-	
 		//read openweathermap info
 		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_openweathermap_location($this->lookup_config("OPENWEATHERMAP_LOCATION"));
+
+		//logging
+		$logtext = $logtext.date('c')."	Lookups: \n					";
+		$logtext = $logtext."SEND_MAIL_TO:			".$this->get_notification_receiving_email_address()."\n					";
+		$logtext = $logtext."OPENWEATHERMAP_API_KEY:		".$this->get_openweathermap_api_key()."\n					";
+		$logtext = $logtext."OPENWEATHERMAP_LOCATION:	".$this->get_openweathermap_location()."\n					";
+		
+		
 		//read info for vacation function
 		if ($this->lookup_config("VACATION_FUNCTION" == "ON")){
 			$this->set_vacation_start_date($this->lookup_config("VACATION_START_DATE"));
 			$this->set_vacation_end_date($this->lookup_config("VACATION_END_DATE"));
+			
+			//logging
+			$logtext = $logtext."VACATION_FUNCTION:		ON\n";
+			$logtext = $logtext."					VACATION_START_DATE:		".$this->get_vacation_start_date()."\n";
+			$logtext = $logtext."					VACATION_END_DATE:		".$this->get_vacation_end_date()."\n";
 		}else {
+			//logging
+			$logtext = $logtext."VACATION_FUNCTION:		OFF\n";
+			
 			$this->set_vacation_start_date("");
 			$this->set_vacation_end_date("");
 		}
-			
+		
+		//logging
+		$this->write_log($logtext);
+
 		
 		
 		$db_handler = new DB_Handler();
@@ -196,7 +222,9 @@ class Controller{
 	
 	public function change_plant_nickname($plant_id,$nickname){
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date('c')."	Controller::change_plant_nickname(Plant Id: ".$plant_id.", Nickname: ".$nickname.")\n";
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -208,7 +236,9 @@ class Controller{
 	
 	public function change_plant_location($plant_id,$location,$is_indoor){
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date('c')."	Controller::change_plant_location(Plant Id: ".$plant_id.", Location: ".$location.", Is Indoor: ".$is_indoor.")\n";
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -586,9 +616,9 @@ class Controller{
 	
 	public function water_usage_per_day($plant_id, $days){
 		
-		// TODO Logging
-		
-		
+		//  Logging
+		$logtext = "\n".date('c')."	Controller::water_usage_per_day(Plant ID: ".$plant_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -601,7 +631,8 @@ class Controller{
 		
 		
 		$db_handler->disconnect_sql();
-		
+		$logtext = date('c')."	End	Controller::water_usage_per_day\n";
+		$logtext = $logtext.date('c')."	Result: ".$water_usage_per_day[$date->format("Y-m-d")]."\n";
 		
 		
 		return $water_usage_per_day;
@@ -770,9 +801,9 @@ class Controller{
 
 
 
-/*$test2 = new Controller();
+$test2 = new Controller();
 $test2->init();
-$test2->test();
-var_dump($test2->get_free_sensorunits());
-//var_dump($test2->water_usage_per_day(1, 20));*/
+$test2->water_usage_per_day(1, 20);
+//var_dump($test2->get_free_sensorunits());
+//var_dump($test2->water_usage_per_day(1, 20));
 ?>
