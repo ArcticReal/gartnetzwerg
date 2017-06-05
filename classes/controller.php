@@ -20,6 +20,7 @@ class Controller{
 	private $vacation_end_date;
 		
 	
+
 	//setters:
 	
 	public function set_sensorunit($new_sensorunit, $new_sensorunit_id){
@@ -96,6 +97,18 @@ class Controller{
 		return $this->openweathermap_location;
 	}
 	
+	public function get_free_sensorunits(){
+		$free_sensorunits_array = [];
+		
+		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
+			if($sensorunit->get_status() == "free"){
+				$free_sensorunits_array[$sensorunit_id] = $sensorunit;
+			}
+		}
+		
+		return $free_sensorunits_array;
+	}
+	
 	//functions
 	
 	/**
@@ -152,15 +165,43 @@ class Controller{
 	}
 	
 	
-	public function add_sensor_unit($mac_address, $name){
-		
-		// TODO pj: ich bau das noch in add_plant($data_array)
+	public function add_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering){
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$db_handler->insert_sensor_unit($mac_address, $name);
+		$db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
+		$db_handler->update_sensorunit_status($sensorunit_id, "active");
 		$db_handler->disconnect_sql();
 		
+		$this->init();
+		
+	}
+	
+	public function add_sensor_unit($mac_address, $name){
+		
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$mac_error = $db_handler->check_sensorunit_mac_address($mac_address);
+		$name_error = $db_handler->check_sensorunit_name($name);
+		$return_string = "";
+		
+		if ($name_error == NULL & $mac_error == NULL){
+			$db_handler->insert_sensor_unit($mac_address, $name);
+			
+			$this->init();
+		}else{
+			
+			if ($name_error != NULL){
+				$return_string = "Fehler! Name. ".$name_error." bereits vorhanden\n";
+			}
+			if ($mac_error){
+				$return_string .= "Fehler! Mac Adresse ".$mac_error." bereits vorhanden\n";
+			}
+		}
+		$db_handler->disconnect_sql();
+		
+		return $return_string;
 	}
 	
 	/**
@@ -187,6 +228,7 @@ class Controller{
 		$db_handler->update_plant_nickname($plant_id, $nickname);
 		$db_handler->disconnect_sql();
 		
+		$this->init();
 	}
 	
 	public function change_plant_location($plant_id,$location,$is_indoor){
@@ -200,13 +242,11 @@ class Controller{
 		$db_handler->update_plant_location($plant_id, $location,$is_indoor);
 		$db_handler->disconnect_sql();
 		
+		$this->init();
+		
 	}
 	
-	public function insert_sensor_data(){
-		
-		// TODO
-		
-	}
+	
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
@@ -248,15 +288,11 @@ class Controller{
 	public function lookup_config($search_keyword){
 		$config = file('__FILE__/../config.txt');
 		$substr = "";
-	//	var_dump($config);
-	//	echo "\nLooking up ".$search_keyword.": \n";
 		foreach ($config as $key => $line){
 			if (strpos($line, $search_keyword." =") !== FALSE){
-			//	echo "\t".$search_keyword." found in line: ".$key."\n";
 				$pos = strpos($line, "\"");
 				$substr = substr($line, $pos+1);
 				$substr = substr($substr, 0, strpos($substr, "\""));
-			//	echo "\tValue: ".$substr."\n\n";
 			}
 		}
 		return $substr;
@@ -273,10 +309,8 @@ class Controller{
 		$config = file('__FILE__/../config.txt');
 		$substr = "";
 		$changed = FALSE;
-	//	echo "searching for ".$keyword.":\n";
 		foreach ($config as $key => $line){
 			if (strpos($line, $keyword." =") !== FALSE){
-			//	echo "\t".$keyword." found in line: ".$key."\n";
 				$config[$key] = $keyword." = \""."$value"."\"\n";
 				$changed = TRUE;	
 			}
@@ -527,19 +561,19 @@ class Controller{
 		
 		if($color_value >= 3){
 			echo "red\n\n";
-			return "black";
+			return "red";
 		} else if($color_value >= 2){
 			echo "orange\n\n";
-			return "red";
+			return "orange";
 		} else if($color_value >= 1){
 			echo "yellow\n\n";
-			return "orange";
+			return "yellow";
 		} else if($color_value >= 0.5){
 			echo "green\n\n";
-			return "yellow";
+			return "green";
 		} else {
 			echo "gold\n\n";
-			return "green";
+			return "gold";
 		}
 	}
 	
@@ -551,9 +585,14 @@ class Controller{
 	 */
 	public function sum_water_usage($plant_id, $days){
 		
-		// TODO Logging
-		
+
 		$date = new DateTime("-".$days." days");
+		
+		// Logging
+		$logtext = "\n".date('c')."Controller::sum_water_usage(Plant Id: ".$plant_id.", days: ".$days.")\n";
+		$logtext = $logtext.date('c')."	Datum: ".$date."\n";
+		
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -732,16 +771,31 @@ class Controller{
 			
 		}
 		$db_handler->disconnect_sql();
-		
+		$this->init();
 	}
 	
 	public function test(){
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		return $db_handler->fetch_last_watertank_level(1);
+		$db_handler->update_sensorunit_status(4, "free");
+		$db_handler->disconnect_sql();
+		
+		$this->init();
 	}
+
 	
+	//logging functions
+	
+	public function write_log($logtext){
+		
+		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('w'), "a");
+		
+		fwrite($logfile, $logtext);
+		
+		fclose($logfile);
+	}
 }
+
 
 
 ?>
