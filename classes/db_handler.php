@@ -254,6 +254,30 @@ class DB_Handler{
 			$akt_soil_temperature = $this->fetch_akt_soil_temperature($sensor_unit_id);
 			$plant->set_akt_soil_temperature($akt_soil_temperature);
 			
+			$winter_prep = $this->fetch_winter_prep($species_id);
+			$plant->set_winter_prep($winter_prep);
+			
+			$how_to_water = $this->fetch_how_to_water($species_id);
+			$plant->set_how_to_water($how_to_water);
+			
+			$caretaking_hints = $this->fetch_caretaking_hints($species_id);
+			$plant->set_caretaking_hints($caretaking_hints);
+			
+			$special_needs = $this->fetch_special_needs($species_id);
+			$plant->set_special_needs($special_needs);
+			
+			$transplanting = $this->fetch_transplanting($species_id);
+			$plant->set_transplanting($transplanting);
+			
+			$needed_location = $this->fetch_needed_location($species_id);
+			$plant->set_needed_location($needed_location);
+			
+			$fertilizing_hints = $this->fetch_fertilizing_hints_($species_id);
+			$plant->set_fertilizing_hints($fertilizing_hints);
+			
+			$summer_prep = $this->fetch_summer_prep($species_id);
+			$plant->set_summer_prep($summer_prep);
+					
 			$this->plants[$plant_id] = $plant;
 		}
 		
@@ -857,6 +881,101 @@ class DB_Handler{
 		return $fillage_level;
 	}
 	
+	public function fetch_winter_prep($species_id){
+		
+		$query = "SELECT winter_prep FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$winter_prep = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($winter_prep[0]);
+		
+	}
+	
+	public function fetch_how_to_water($species_id){
+		
+		$query = "SELECT how_to_water FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$how_to_water = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($how_to_water[0]);
+		
+	}
+	
+	public function fetch_caretaking_hints($species_id){
+		
+		$query = "SELECT caretaking_hints FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$caretaking_hints = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($caretaking_hints[0]);
+		
+	}
+	
+	public function fetch_special_needs($species_id){
+		
+		$query = "SELECT special_needs FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$special_needs = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($special_needs[0]);
+		
+	}
+	
+	public function fetch_transplanting($species_id){
+		
+		$query = "SELECT transplanting FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$transplanting = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($transplanting[0]);
+		
+	}
+	
+	public function fetch_needed_location($species_id){
+		
+		$query = "SELECT needed_location FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$needed_location = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($needed_location[0]);
+		
+	}
+	
+	public function fetch_fertilizing_hints_($species_id){
+		
+		$query = "SELECT fertilizing_hints FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$fertilizing_hints = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($fertilizing_hints[0]);
+		
+	}
+	
+	public function fetch_summer_prep($species_id){
+		
+		$query = "SELECT summer_prep FROM species WHERE species_id = ".$species_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$summer_prep = mysqli_fetch_array($result);
+		
+		// TODO Logging
+		
+		return utf8_encode($summer_prep[0]);
+		
+	}
 	
 	//insert functions
 	

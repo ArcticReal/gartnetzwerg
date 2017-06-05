@@ -38,6 +38,14 @@ class Plant{
 	private $auto_watering;
 	private $last_watering;
 	private $sensor_unit_id;
+	private $winter_prep;
+	private $how_to_water;
+	private $caretaking_hints;
+	private $special_needs;
+	private $transplanting;
+	private $needed_location;
+	private $fertilizing_hints;
+	private $summer_prep;
 
 	
 	//setters
@@ -161,6 +169,37 @@ class Plant{
 		$this->sensor_unit_id = $sensor_unit_id;
 	}
 	
+	public function set_winter_prep($winter_prep){
+		$this->winter_prep = $winter_prep;
+	}
+	
+	public function set_how_to_water($how_to_water){
+		$this->how_to_water = $how_to_water;
+	}
+	
+	public function set_caretaking_hints($caretaking_hints){
+		$this->caretaking_hints = $caretaking_hints;
+	}
+	
+	public function set_special_needs($special_needs){
+		$this->special_needs = $special_needs;
+	}
+	
+	public function set_transplanting($transplanting){
+		$this->transplanting = $transplanting;
+	}
+	
+	public function set_needed_location($needed_location){
+		$this->needed_location = $needed_location;
+	}
+	
+	public function set_fertilizing_hints($fertilizing_hints){
+		$this->fertilizing_hints = $fertilizing_hints;
+	}
+	
+	public function set_summer_prep($summer_prep){
+		$this->summer_prep = $summer_prep;
+	}
 	
 	//getters
 	
@@ -304,6 +343,37 @@ class Plant{
 		return $this->sensor_unit_id;
 	}
 	
+	public function get_winter_prep(){
+		return $this->winter_prep;
+	}
+	
+	public function get_how_to_water(){
+		return $this->how_to_water;
+	}
+	
+	public function get_caretaking_hints(){
+		return $this->caretaking_hints;
+	}
+	
+	public function get_special_needs(){
+		return $this->special_needs;
+	}
+	
+	public function get_transplanting(){
+		return $this->transplanting;
+	}
+	
+	public function get_needed_location(){
+		return $this->needed_location;
+	}
+	
+	public function get_fertilizing_hints(){
+		return $this->fertilizing_hints;
+	}
+	
+	public function get_summer_prep(){
+		return $this->summer_prep;
+	}
 }
 
 ?>
