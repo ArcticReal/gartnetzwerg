@@ -6,8 +6,10 @@ abstract class Sensor{
 	
 	private $sensor_id;
 	private $value;
-	private $gpio_pin_id;
 	//private $gpio = new GPIO();
+	
+	
+	// setter
 	
 	public function set_sensor_id ($new_sensor_id){
 		$this->sensor_id = $new_sensor_id;
@@ -17,10 +19,9 @@ abstract class Sensor{
 		$this->value = $new_value;
 	}
 	
-	public function set_gpio_pin_id($new_gpio_pin_id){
-		$this->gpio_pin_id = $new_gpio_pin_id;
-	}
 	
+	//getter
+		
 	public function get_sensor_id(){
 		return $this->sensor_id;
 	}
@@ -29,9 +30,8 @@ abstract class Sensor{
 		return $this->value;
 	}
 	
-	public function get_gpio_pin_id(){
-		return $this->gpio_pin_id;
-	}
+	
+	//functions
 	
 	public function update(){
 		//hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
