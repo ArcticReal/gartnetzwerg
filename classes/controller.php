@@ -97,6 +97,17 @@ class Controller{
 		return $this->openweathermap_location;
 	}
 	
+
+	/**
+	 * TODO:
+	 * Bei sämtlichen eingabestrings, die in die aatenbank kommen auf ' und " überprüfen, 
+	 * da diese die inserts kaputt machen
+	 * 
+	 * 
+	 * 
+	 * 
+	 */
+	
 	
 	//functions
 
@@ -196,8 +207,9 @@ class Controller{
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		$status = $db_handler->fetch_sensorunit_status($sensorunit_id);
+		
 		if ($status != "free"){
-			$return_string = "Diese Sensorunit wird bereits verwendet";
+			$return_string = "Diese Sensorunit wird bereits verwendet oder ist nicht vorhanden.";
 		}else {
 			$db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
 			$db_handler->update_sensorunit_status($sensorunit_id, "active");
@@ -259,9 +271,9 @@ class Controller{
 	}
 	
 	/**
-	 * checks all plants, if they are indoor or outdoor and 
+	 * checks all plants, if they are indoor or outdoor and if they need water
 	 */
-	public function check_plants(){
+	public function check_for_watering(){
 		foreach ($this->plant_array as $plant) {
 			if($plant->is_indoor() == false){
 				//TODO: plant is outdoor, check for weather and watering stuff
@@ -269,6 +281,33 @@ class Controller{
 				//TODO: plant is indoor, no owm rain check (still check for sun though)
 			}
 		}
+	}
+	
+	/**
+	 * turns the pump on to pump WATER_PER_TIME ml of water
+	 * 
+	 * @param unknown $plant_id
+	 */
+	public function water($plant_id){
+		
+		
+		
+		$sensorunit_id = $this->plant_array[$plant_id];
+		
+		//logging
+		$logtext = "\n".date('c')."	Controller::water(Plant Id: ".$plant_id.")\n";
+		$logtext = $logtext.date('c')."	Getting sensorunit_id: ".$sensorunit_id."\n";
+		$this->write_log($logtext);
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
+		//exec(somthingsomething) mit der mac
+		$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
+		$db_handler->disconnect_sql();
+		
+		
+		
 	}
 	
 	public function change_plant_nickname($plant_id,$nickname){
@@ -849,12 +888,6 @@ class Controller{
 		fclose($logfile);
 	}
 }
-
-$test = new Controller();
-$test->init();
-$test->add_sensor_unit("B8:27:EB:A6:6E:F5", "node_1");
-$test->add_sensor_unit("B8:27:EB:65:CB:2B", "node_2");
-$test->add_sensor_unit("B8:27:EB:6E:9D:DD", "node_3");
 
 
 ?>

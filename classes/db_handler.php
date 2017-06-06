@@ -994,6 +994,23 @@ class DB_Handler{
 	
 	//insert functions
 	
+	public function insert_water_usage($plant_id, $water_usage){
+		
+		// logging
+		$logtext = "\n".date('c')."	DB_handler::insert_water_usage(Plant Id: ".$plant_id.", Water Usage: ".$water_usage.")\n";
+		
+		$query = "INSERT INTO water_usage (plant_id, date, water_usage)".
+				" VALUES (".$plant_id.", NOW(), ".$water_usage.");";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		//logging
+		$logtext = $logtext.date('c')."	SQL:".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$result."\n";
+		$this->write_log($logtext);
+		
+		return $result;
+	}
+	
 	public function insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering){
 		
 		// TODO ordner für bilder
@@ -1003,15 +1020,16 @@ class DB_Handler{
 		$logtext = $logtext.", Species Id: ".$species_id.", Location: ".$location.", Is indoor: ".$is_indoor;
 		$logtext = $logtext.", auto watering: ".$auto_watering.")\n";
 		
-		$query = "INSERT INTO plants (sensor_unit_id, species_id, nickname, birthday, location, is_indoor, auto_watering)\n 				";
+		$query = "INSERT INTO plants (sensor_unit_id, species_id, nickname, birthday, location, is_indoor, auto_watering)";
 		$query = $query."VALUES (".$sensorunit_id.", ".$species_id.", '".utf8_decode($nickname)."', NOW(), '".utf8_decode($location)."', ".$is_indoor.", ".$auto_watering.");";
 		$result = mysqli_query($this->mysqli, $query);
 		
+		//logging
 		$logtext = $logtext.date('c')."	SQL: ".utf8_encode($query)."\n";
 		$logtext = $logtext.date('c')."	Result: ".$result."\n";
-		
 		$this->write_log($logtext);
 		
+		return $result;
 	}
 	
 	
