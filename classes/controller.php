@@ -239,10 +239,10 @@ class Controller{
 	public function delete_plant($plant_id){
 		
 		// logging
-		$logtext = "\n".date('c')."	Controller::delete_plant(Plant Id:".$plant_id.")\n";
+		$logtext = "\n".date('c')."	Controller::delete_plant(Plant Id: ".$plant_id.")\n";
 		$this->write_log($logtext);
 		
-		$sensorunit_id = $this->plant_array[$plant_id]->get_sensorunit_id();
+		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -850,6 +850,11 @@ class Controller{
 	}
 }
 
+$test = new Controller();
+$test->init();
+$test->add_sensor_unit("B8:27:EB:A6:6E:F5", "node_1");
+$test->add_sensor_unit("B8:27:EB:65:CB:2B", "node_2");
+$test->add_sensor_unit("B8:27:EB:6E:9D:DD", "node_3");
 
 
 ?>

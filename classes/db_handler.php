@@ -977,7 +977,7 @@ class DB_Handler{
 		
 	}
 	
-	public function fetch_sensor_ids_from_sensor_unit($sensor_unit_id){
+	public function fetch_sensor_ids_from_sensorunit($sensor_unit_id){
 		
 		// TODO Logging
 		
@@ -1163,24 +1163,50 @@ class DB_Handler{
 		// TODO Logging
 	}
 	
+	
 	// delete functions
 	
 	public function delete_plant($plant_id){
 		
-		// TODO Logging
+		$this->delete_water_usage($plant_id);
 		
-		$qery = "DELETE FROM plants WHERE plant_id = ".$plant_id.";";
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::delete_plant(Plant Id: ".$plant_id.")\n";
+		
+		
+		$query = "DELETE FROM plants WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
-		return result;
+		//logging
+		$logtext = $logtext.date('c')."	SQL: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$result."\n";
+		$this->write_log($logtext);
 		
+		return $result;
+		
+	}
+	
+	public function delete_water_usage($plant_id){
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::delete_water_usage(Plant Id: ".$plant_id.")\n";
+		
+		$query = "DELETE FROM water_usage WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		//logging
+		$logtext = $logtext.date('c')."	SQL: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$result."\n";
+		$this->write_log($logtext);
+		
+		return $result;
 	}
 	
 	public function delete_sensor_data($sensor_id){
 		
 		// TODO Logging
 		
-		$qery = "DELETE FROM sensor_data WHERE sensor_id = ".$sensor_id.";";
+		$query = "DELETE FROM sensor_data WHERE sensor_id = ".$sensor_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
 		return $result;		
