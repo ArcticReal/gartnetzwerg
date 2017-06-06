@@ -167,7 +167,16 @@ class Controller{
 		if ($this->get_vacation_start_date() != ""){
 			if (date("Y-m-d", strtotime($this->get_vacation_end_date())) < date("Y-m-d") ){
 				$this->write_config("VACATION_FUNCTION", "OFF");
+			}elseif (date("Y-m-d", strtotime($this->get_vacation_start_date())) < date("Y-m-d")){
+				//alle auto-bewässern werte umschalten
+				$this->turn_on_all_auto_watering();
 			}
+		}
+	}
+	
+	public function turn_on_all_auto_watering(){
+		foreach ($this->plant_array as $plant){
+			$plant->set_auto_watering(1);
 		}
 	}
 	
@@ -225,6 +234,28 @@ class Controller{
 		$db_handler->disconnect_sql();
 		
 		return $return_string;
+	}
+	
+	public function delete_plant($plant_id){
+		
+		// logging
+		$logtext = "\n".date('c')."	Controller::delete_plant(Plant Id:".$plant_id.")\n";
+		$this->write_log($logtext);
+		
+		$sensorunit_id = $this->plant_array[$plant_id]->get_sensorunit_id();
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		if ($db_handler->delete_plant($plant_id)){
+			$sensor_ids = $db_handler->fetch_sensor_ids_from_sensorunit($sensorunit_id);
+			foreach ($sensor_ids as $sensor_id){
+				$db_handler->delete_sensor_data($sensor_id);
+			}
+			$db_handler->update_sensorunit_status($sensorunit_id, "free");
+			
+		}
+		
+		$db_handler->disconnect_sql();
 	}
 	
 	/**
