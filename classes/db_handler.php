@@ -977,6 +977,21 @@ class DB_Handler{
 		
 	}
 	
+	public function fetch_sensor_ids_from_sensor_unit($sensor_unit_id){
+		
+		// TODO Logging
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		$sensor_ids = [];
+		while($tmp = mysqli_fetch_array($result,MYSQLI_NUM)){
+			$sensor_ids[] = $tmp[0];
+		}
+		
+		return $sensor_ids;
+	}
+	
 	//insert functions
 	
 	public function insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering){
@@ -1147,7 +1162,30 @@ class DB_Handler{
 		
 		// TODO Logging
 	}
+	
+	// delete functions
+	
+	public function delete_plant($plant_id){
 		
+		// TODO Logging
+		
+		$qery = "DELETE FROM plants WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		return result;
+		
+	}
+	
+	public function delete_sensor_data($sensor_id){
+		
+		// TODO Logging
+		
+		$qery = "DELETE FROM sensor_data WHERE sensor_id = ".$sensor_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		return $result;		
+		
+	}
 
 	//check functions
 	

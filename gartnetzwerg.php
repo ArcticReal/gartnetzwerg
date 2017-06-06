@@ -2,9 +2,12 @@
 
 require_once 'classes/controller.php';
 
-$controller = new Controller();
-$controller->init();
-$plants = $controller->get_plants();
+$db_handler = new DB_Handler();
+$db_handler->connect_sql();
+$arr = $db_handler->fetch_sensor_ids_from_sensor_unit(2);
+$db_handler->disconnect_sql();
+
+var_dump($arr);
 
 
 /*
