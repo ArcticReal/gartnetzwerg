@@ -1,6 +1,7 @@
 <?php
 
 define("WATER_PER_TIME", 150);
+define("LOG_TIME_FORMAT", '[Y-m-d H:i:s]');
 
 require_once 'sensorunit.php';
 require_once 'plant.php';
@@ -19,6 +20,18 @@ class Controller{
 	private $vacation_start_date;
 	private $vacation_end_date;
 		
+	
+	//constructor
+	
+	function __construct(){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::__construct()\n";
+		$this->write_log($logtext);
+		
+		$this->init();
+		
+	}
 	
 
 	//setters:
@@ -149,7 +162,7 @@ class Controller{
 	public function init(){
 		
 		//logging
-		$logtext = "\n".date('c')."	Controller::init()\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::init()\n";
 		
 		
 		//read config file 
@@ -159,28 +172,51 @@ class Controller{
 		$this->set_openweathermap_location($this->lookup_config("OPENWEATHERMAP_LOCATION"));
 
 		//logging
-		$logtext = $logtext.date('c')."	Lookups: \n					";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Lookups: \n					";
 		$logtext = $logtext."SEND_MAIL_TO:			".$this->get_notification_receiving_email_address()."\n					";
 		$logtext = $logtext."OPENWEATHERMAP_API_KEY:		".$this->get_openweathermap_api_key()."\n					";
 		$logtext = $logtext."OPENWEATHERMAP_LOCATION:	".$this->get_openweathermap_location()."\n					";
 		
 		
 		//read info for vacation function
-		if ($this->lookup_config("VACATION_FUNCTION" == "ON")){
+		if ($this->lookup_config("VACATION_FUNCTION") == "ON"){
+			//vacation ON
+			
 			$this->set_vacation_start_date($this->lookup_config("VACATION_START_DATE"));
 			$this->set_vacation_end_date($this->lookup_config("VACATION_END_DATE"));
+			
+			if (date("Y-m-d", strtotime($this->get_vacation_end_date())) < date("Y-m-d") ){
+		
+				//vacation end date reached
+				$this->write_config("VACATION_FUNCTION", "OFF");
+
+				$this->set_vacation_start_date("");
+				$this->set_vacation_end_date("");
+				
+				
+				//logging
+				$logtext = $logtext."VACATION_FUNCTION:		OFF\n";
+				
+			}elseif (date("Y-m-d", strtotime($this->get_vacation_start_date())) < date("Y-m-d")){
+
+				//logging
+				$logtext = $logtext."VACATION_FUNCTION:		ON\n";
+				$logtext = $logtext."					VACATION_START_DATE:		".$this->get_vacation_start_date()."\n";
+				$logtext = $logtext."					VACATION_END_DATE:		".$this->get_vacation_end_date()."\n";
+
+			}
+			
+		}else {
+			// vacation function OFF
 			
 			//logging
 			$logtext = $logtext."VACATION_FUNCTION:		ON\n";
 			$logtext = $logtext."					VACATION_START_DATE:		".$this->get_vacation_start_date()."\n";
 			$logtext = $logtext."					VACATION_END_DATE:		".$this->get_vacation_end_date()."\n";
-		}else {
-			//logging
-			$logtext = $logtext."VACATION_FUNCTION:		OFF\n";
 			
-			$this->set_vacation_start_date("");
-			$this->set_vacation_end_date("");
+			
 		}
+		
 		
 		//logging
 		$this->write_log($logtext);
@@ -196,19 +232,24 @@ class Controller{
 		$db_handler->disconnect_sql();
 		
 		if ($this->get_vacation_start_date() != ""){
-			if (date("Y-m-d", strtotime($this->get_vacation_end_date())) < date("Y-m-d") ){
-				$this->write_config("VACATION_FUNCTION", "OFF");
-			}elseif (date("Y-m-d", strtotime($this->get_vacation_start_date())) < date("Y-m-d")){
-				//alle auto-bewässern werte umschalten
-				$this->turn_on_all_auto_watering();
-			}
+			
+			//alle auto-bewässern werte umschalten
+			$this->turn_on_all_auto_watering();
+			
 		}
 	}
 	
 	public function turn_on_all_auto_watering(){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::turn_on_all_auto_watering()\n";
+		$this->write_log($logtext);
+		
 		foreach ($this->plant_array as $plant){
 			$plant->set_auto_watering(1);
 		}
+		
+		
 	}
 	
 	/**
@@ -271,7 +312,7 @@ class Controller{
 	public function delete_plant($plant_id){
 		
 		// logging
-		$logtext = "\n".date('c')."	Controller::delete_plant(Plant Id: ".$plant_id.")\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::delete_plant(Plant Id: ".$plant_id.")\n";
 		$this->write_log($logtext);
 		
 		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
@@ -315,8 +356,8 @@ class Controller{
 		$sensorunit_id = $this->plant_array[$plant_id];
 		
 		//logging
-		$logtext = "\n".date('c')."	Controller::water(Plant Id: ".$plant_id.")\n";
-		$logtext = $logtext.date('c')."	Getting sensorunit_id: ".$sensorunit_id."\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::water(Plant Id: ".$plant_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Getting sensorunit_id: ".$sensorunit_id."\n";
 		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
@@ -333,7 +374,7 @@ class Controller{
 	public function change_plant_nickname($plant_id,$nickname){
 		
 		// Logging
-		$logtext = "\n".date('c')."	Controller::change_plant_nickname(Plant Id: ".$plant_id.", Nickname: ".$nickname.")\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::change_plant_nickname(Plant Id: ".$plant_id.", Nickname: ".$nickname.")\n";
 		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
@@ -347,7 +388,7 @@ class Controller{
 	public function change_plant_location($plant_id,$location,$is_indoor){
 		
 		// Logging
-		$logtext = "\n".date('c')."	Controller::change_plant_location(Plant Id: ".$plant_id.", Location: ".$location.", Is Indoor: ".$is_indoor.")\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::change_plant_location(Plant Id: ".$plant_id.", Location: ".$location.", Is Indoor: ".$is_indoor.")\n";
 		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
@@ -702,8 +743,8 @@ class Controller{
 		$date = new DateTime("-".$days." days");
 		
 		// Logging
-		$logtext = "\n".date('c')."Controller::sum_water_usage(Plant Id: ".$plant_id.", days: ".$days.")\n";
-		$logtext = $logtext.date('c')."	Datum: ".$date."\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."Controller::sum_water_usage(Plant Id: ".$plant_id.", days: ".$days.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Datum: ".$date."\n";
 		
 		$this->write_log($logtext);
 		
@@ -727,7 +768,7 @@ class Controller{
 	public function water_usage_per_day($plant_id, $days){
 		
 		//  Logging
-		$logtext = "\n".date('c')."	Controller::water_usage_per_day(Plant ID: ".$plant_id.", Days: ".$days.")\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::water_usage_per_day(Plant ID: ".$plant_id.", Days: ".$days.")\n";
 		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
@@ -741,8 +782,8 @@ class Controller{
 		
 		
 		$db_handler->disconnect_sql();
-		$logtext = date('c')."	End	Controller::water_usage_per_day\n";
-		$logtext = $logtext.date('c')."	Result: ".$water_usage_per_day[$date->format("Y-m-d")]."\n";
+		$logtext = date(LOG_TIME_FORMAT)."	End	Controller::water_usage_per_day\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$water_usage_per_day[$date->format("Y-m-d")]."\n";
 		
 		
 		return $water_usage_per_day;
@@ -901,13 +942,13 @@ class Controller{
 	
 	public function write_log($logtext){
 		
-		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('w'), "a");
+		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
 		
 		fwrite($logfile, $logtext);
 		
 		fclose($logfile);
 	}
 }
-
+$test = new Controller();
 
 ?>
