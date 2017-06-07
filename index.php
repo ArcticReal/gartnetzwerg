@@ -33,10 +33,9 @@
 				$name = $plant->get_name();
 				$plant_id = $plant->get_plant_id();
 
-				$colors = ["green","yellow","orange","red","black"];
-				//$controller->color_state(1,1,1,1,1);
+				$color = $controller->color_state($plant_id,1,1,1,1,1);
 				
-				print "<a href=\"status.php?plant_id=".$plant_id."\"><div class=\"flower ".$colors[random_int(0,4)]."\"><span><p>".$nickname."<br/><small>".$name." (".$scientific_name.")</small></p></span></div></a>";
+				print "<a href=\"status.php?plant_id=".$plant_id."\"><div class=\"flower ".$color."\"><span><p>".$nickname."<br/><small>".$name." (".$scientific_name.")</small></p></span></div></a>";
 			}
 		?>
 	</div>
