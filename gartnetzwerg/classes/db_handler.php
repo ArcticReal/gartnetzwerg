@@ -72,7 +72,7 @@ class DB_Handler{
 		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."  	Result:	";
 		for($i = 0; $i < count($this->plant_ids); $i++){
-			$logtext = $logtext."[".$this->plant_ids[$i][0]."]";
+			$logtext = $logtext."[".$this->plant_ids[$i]."]";
 		}
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
@@ -1007,7 +1007,7 @@ class DB_Handler{
 		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."  	Result:	";
 		for($i = 0; $i < count($this->plant_ids); $i++){
-			$logtext = $logtext."[".$scientific_names[$i][0]."]";
+			$logtext = $logtext."[".$scientific_names[$i]."]";
 		}
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
@@ -1030,7 +1030,7 @@ class DB_Handler{
 		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
 		$logtext = $logtext.date('c')."  	Result:	";
 		for($i = 0; $i < count($this->plant_ids); $i++){
-			$logtext = $logtext."[".$species_ids[$i][0]."]";
+			$logtext = $logtext."[".$species_ids[$i]."]";
 		}
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
