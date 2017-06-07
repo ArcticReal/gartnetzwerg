@@ -141,7 +141,7 @@ class DB_Handler{
 			$sensor_types[] = $sensoor_ids[1];
 			
 			// Logging
-			$logtext = $logtext." [".$sensoor_ids[0]."] => [".$sensoor_ids[1]."]\n";
+			$logtext = $logtext." [".$sensoor_ids[0]."] => [".$sensoor_ids[1]."]\n				";
 		}
 		
 		$logtext = $logtext."\n";
