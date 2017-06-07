@@ -1,0 +1,392 @@
+/* #########################################  GENERAL SETTINGS */
+
+html{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+}
+
+body{
+	margin: 0px;
+	padding: 0px;
+	width: 100%;
+}
+
+*{
+	padding: 0px;
+	margin: 0px;
+	font-family: sans-serif;
+}
+
+/* #################################################### HEADER */
+
+#header{
+	width: 100%;
+	height: 95px;
+	position: fixed;
+	top: 0;
+	background-color: white;
+}
+
+#header #helper{
+	height: 95px;
+	width: 315px;
+	position: relative;
+	margin: 0 auto;
+}
+
+#header > p{
+	font-size: larger;
+	text-align: center;
+	font-weight: bold;
+	margin: 20px 0px;
+}
+
+#header .item, #nav .item{
+	height: 50px;
+	margin: 8px;
+	width: calc(25% - 18px);
+
+	float: left;
+	background-color: #AAA;
+	border: 1px #777 solid; 
+	text-align: center;
+
+	display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #333;
+}
+
+#header .item a, #nav .item a{
+	text-align: center;
+	position: absolute;
+	text-decoration: none;
+}
+
+#header .item2{
+	width: calc(50% - 18px);
+	background-color: transparent;
+	border: none;
+	color: black;
+	font-size: larger;
+}
+
+#nav{
+	position: fixed;
+	height: 50px;
+	width: 100%;
+	margin: 0 auto;
+}
+
+#header #logo{
+	background-image: url("../img/Logo2.png");
+	background-size: 75px;
+	background-position: left center;
+	background-repeat: no-repeat; 
+	height: 75px;
+	width: 75px;
+	float: left;
+	margin: 10px;
+}
+
+#header #font{
+	background-image: url("../img/LogoSchrift.png");
+	background-size: 200px;
+	background-position: center;
+	background-repeat: no-repeat; 
+	height: 75px;
+	width: 200px;
+	float: left;
+	margin: 10px;
+}
+
+/* ################################################# MAIN PART */
+
+#list, #form{
+	margin-top: 95px;
+	background-color: #EEE;
+	clear: both;
+	overflow: auto;
+	height: calc(100vh - 195px);
+	padding: 25px;
+}
+
+#list.status{
+	margin-top: 145px;
+	height: calc(100vh - 145px);
+	position: relative;
+}
+
+#list #img{
+	background-image: url("../img/aloevera.jpg");
+	height: 150px;
+	width: 150px;
+	background-size: 150px;
+	background-position: center;
+	background-repeat: no-repeat;
+	margin: 0px auto;
+	margin-bottom: 50px;
+}
+
+#list a{
+	display: block;
+	margin: 10px 25%;
+	color: black;
+	text-decoration: none;
+	text-align: center;
+
+	-webkit-transition: margin 0.5s ease 0s; /* Safari */
+    transition: margin 0.5s ease 0s;
+}
+
+#list > a > .flower{
+	padding: 20px 10px;
+	background-color: white;
+	border: 1px #777 solid;
+	box-shadow: 0px 10px 20px #AAA;
+	border-left: 15px green solid;
+}
+
+#list small{
+	color: grey;
+}
+
+#footer{
+	position: fixed;
+	bottom: 0;
+	width: 100%;
+	height: 50px;
+}
+
+#footer .button{
+	float: left;
+	background-color: white;
+	width: 25%;
+	text-align: center;
+}
+
+#footer .button.w2{
+	width: 50%;
+}
+
+#footer .button.w3{
+	width: 33.33333333333333333333%;
+	width: calc(1 / 3 * 100%);
+}
+
+#footer .button.w4{
+	width: 25%;
+}
+
+#footer .button *{
+	padding: 0px 10px;
+	color: #AAA;
+}
+
+#list.infos > p{
+	padding-top: 5px;
+}
+
+#list.infos strong{
+	padding-top: 25px;
+}
+
+#list.infos small{
+	padding-bottom: 25px;
+}
+
+#buttonSU{
+	height: 12pt;
+	width: 12pt;
+	background-color: darkgreen;
+	border: 1px green solid;
+}
+
+#buttonSU *{
+	color: white;
+	height: 12pt;
+	width: 12pt;
+	float: left;
+}
+
+#availSU, #newSU{
+	width: 100%;
+	height: auto;
+	float: left;
+	background-color: red;
+}
+
+#availSU.invisible,
+#newSU.invisible{
+	width: 0%;
+	height: 0%;
+	overflow: hidden;
+}
+
+.button#submit{
+	float: right;
+}
+
+#list table, #form table{
+	width: calc(100%);
+	border: 1px #777 solid;
+}
+
+#list table th, td, #form table th{
+	padding: 10px;
+	text-align: left;
+}
+
+#list table tr:nth-child(odd){
+    background-color: #DDD;
+}
+
+#form .row{
+	overflow: auto;
+}
+
+#form .row:nth-child(even){
+	background-color: #DDD;
+}
+
+#form .row div{
+	padding: 8px;
+	float: left;
+}
+
+#form .row div:nth-child(even) {
+    width: 45%;
+    float: right;
+}
+
+.cell{
+	width: 48%;
+}
+
+.cell .tooltip{
+	color: #AAA;
+	float: right;
+}
+
+input, select, textarea {
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+#form input[type="text"],
+#form input[type="email"],
+#form input[type="button"],
+#form select{
+	width: 90%;
+}
+
+/*#alert{
+	background-color: #AA6666;
+	border: 1px darkred solid;
+	color: darkred;
+	padding: 8px;
+	margin-top: 8px;
+	margin-bottom: 8px;
+	opacity: 1;
+	width: 100%;
+}
+
+#alert.alert-none{
+	padding: 0px;
+	margin-top: 0px;
+	margin-bottom: 0px;
+	border: none;
+	opacity: 0;
+
+	width: 100% !important;
+}*/
+
+#form form tr td:nth-child(2){
+	width: 100px;
+}
+
+#form form input[type="radio"]{
+	margin-top: 10px;
+}
+
+#form form input[type="button"]{
+	background-color: darkred;
+	color: white;
+	border: 1px #660000 solid;
+	padding: 5px;
+}
+
+#tab_status.current_tab,
+#tab_diagramme.current_tab,
+#tab_webcam.current_tab,
+#tab_info.current_tab{
+	width: 100%;
+	opacity: 1;
+	overflow: hidden;
+	height: auto;
+}
+
+#tab_status, #tab_diagramme, #tab_webcam, #tab_info{
+	width: 0%;
+	height: 100%;
+	opacity: 0;
+	float: left;
+
+	-webkit-transition: width 1s ease 0.5s, opacity 1s ease 0s; /* Safari */
+    transition: width 1s ease 0.5s, opacity 1s ease 0s;
+}
+
+/* ############################################ status colors */
+
+.red{
+	border-left: 15px red solid !important;
+}
+
+.orange{
+	border-left: 15px orange solid !important;
+}
+
+.yellow{
+	border-left: 15px yellow solid !important;
+}
+
+.green{
+	border-left: 15px green solid !important;
+}
+
+.black{
+	border-left: 15px black solid !important;
+}
+
+/* ########################################## smaller screnen */
+
+@media screen and (max-width: 630px) {
+    #list a{
+		margin: 10px 0%;
+	}
+
+	#form .row div{
+	    width: auto !important;
+	    float: none !important;
+	    clear: both !important;
+	}
+
+	#form .row div.checkbox:nth-child(even) {
+	    width: auto !important;
+	    float: right !important;
+	}
+}
+
+/*@media screen and (max-width: 480px) {
+    #list a{
+		margin: 10px 0%;
+	}
+
+	#form form tr td{
+		width: auto !important;
+	}
+}*/

@@ -1,1 +1,0 @@
-SEND_MAIL_TO = "test@test.com"
