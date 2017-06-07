@@ -123,6 +123,26 @@ class Controller{
 		return $free_sensorunits_array;
 	}
 	
+	public function get_all_species(){
+		
+		// TODO logging
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$ids = $db_handler->fetch_all_species_ids();
+		$names = $db_handler->fetch_all_scientific_names();
+		$return_array = [];
+		
+		for ($i = 0; $i < count($ids); $i++){
+			$return_array[$ids[$i][0]] = $names[$i][0];
+			
+		}
+		
+		$db_handler->disconnect_sql();
+		return $return_array;
+		
+	}
+	
 	/**
 	 * Always execute this after restarting the script
 	 */
