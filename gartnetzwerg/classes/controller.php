@@ -1,7 +1,5 @@
 <?php
 
-define("WATER_PER_TIME", 150);
-define("LOG_TIME_FORMAT", '[Y-m-d H:i:s]');
 
 require_once 'sensorunit.php';
 require_once 'plant.php';
@@ -278,12 +276,15 @@ class Controller{
 		$status = $db_handler->fetch_sensorunit_status($sensorunit_id);
 		
 		if ($status != "free"){
-			$return_string = "Diese Sensorunit wird bereits verwendet oder ist nicht vorhanden.";
+			$return_string = "Fehler! Diese Sensorunit wird bereits verwendet oder ist nicht vorhanden.\n";
 		}else {
-			$db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
-			$db_handler->update_sensorunit_status($sensorunit_id, "active");
-			
-			$return_string = "";
+			$insert_result = $db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
+			if ($insert_result !== FALSE){
+				$return_string = "";
+				$db_handler->update_sensorunit_status($sensorunit_id, "active");
+			}else {
+				$return_string = "Fehler! Isert Query failed";				
+			}
 		}
 		$db_handler->disconnect_sql();
 		$this->refresh_local_objects();
@@ -466,7 +467,7 @@ class Controller{
 	 * @return string
 	 */
 	public function lookup_config($search_keyword){
-		$config = file('__FILE__/../config.txt');
+		$config = file(__DIR__.'/../config.txt');
 		$substr = "";
 		foreach ($config as $key => $line){
 			if (strpos($line, $search_keyword." =") !== FALSE){
@@ -486,7 +487,7 @@ class Controller{
 	 * @param unknown $value
 	 */
 	public function write_config($keyword, $value){
-		$config = file('__FILE__/../config.txt');
+		$config = file(__DIR__.'/../config.txt');
 		$substr = "";
 		$changed = FALSE;
 		foreach ($config as $key => $line){
@@ -498,7 +499,7 @@ class Controller{
 		if (!$changed){
 			$config[count($config)+1] = $keyword." = \""."$value"."\"\n";
 		}
-		file_put_contents('__FILE__/../config.txt', $config);	
+		file_put_contents(__DIR__.'/../config.txt', $config);	
 	}
 	
 	
