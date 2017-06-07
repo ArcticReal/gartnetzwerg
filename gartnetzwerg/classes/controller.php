@@ -977,7 +977,7 @@ class Controller{
 	
 	public function write_log($logtext){
 		
-		if (CONTROLLER_LOG){
+		if (CONTROLLER_LOGGING){
 			$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
 			
 			fwrite($logfile, $logtext);
