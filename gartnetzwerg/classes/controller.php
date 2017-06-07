@@ -111,7 +111,7 @@ class Controller{
 
 	/**
 	 * TODO:
-	 * Bei sämtlichen eingabestrings, die in die aatenbank kommen auf ' und " überprüfen, 
+	 * Bei sämtlichen eingabestrings, die in die datenbank kommen auf ' und " überprüfen, 
 	 * da diese die inserts kaputt machen
 	 * 
 	 * 
@@ -276,14 +276,19 @@ class Controller{
 		$status = $db_handler->fetch_sensorunit_status($sensorunit_id);
 		
 		if ($status != "free"){
-			$return_string = "Fehler! Diese Sensorunit wird bereits verwendet oder ist nicht vorhanden.\n";
+			$return_string = 0;
 		}else {
 			$insert_result = $db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
 			if ($insert_result !== FALSE){
-				$return_string = "";
+				if ($nickname != "Fehler"){
+					$return_string = " ".$nickname;
+				}else {
+					$return_string = 1;
+				}
+					
 				$db_handler->update_sensorunit_status($sensorunit_id, "active");
 			}else {
-				$return_string = "Fehler! Isert Query failed";				
+				$return_string = 0;				
 			}
 		}
 		$db_handler->disconnect_sql();
@@ -293,29 +298,35 @@ class Controller{
 	
 	public function add_sensor_unit($mac_address, $name){
 		
-		
-		$db_handler = new DB_Handler();
-		$db_handler->connect_sql();
-		$mac_error = $db_handler->check_sensorunit_mac_address($mac_address);
-		$name_error = $db_handler->check_sensorunit_name($name);
-		$return_string = "";
-		
-		if ($name_error == NULL & $mac_error == NULL){
-			$return_string .= $db_handler->insert_sensor_unit($mac_address, $name);
+		if (count($this->sensorunit_array)<32){
 			
-			$this->refresh_local_objects();
-		}else{
+			$db_handler = new DB_Handler();
+			$db_handler->connect_sql();
+			$mac_error = $db_handler->check_sensorunit_mac_address($mac_address);
+			$name_error = $db_handler->check_sensorunit_name($name);
 			
-			if ($name_error != NULL){
-				$return_string = "Fehler! Name. ".$name_error." bereits vorhanden\n";
+			
+			if ($name_error == NULL & $mac_error == NULL){
+				
+				//no error
+				$error_return = 1;
+				$return_string .= $db_handler->insert_sensor_unit($mac_address, $name);
+				
+				$this->refresh_local_objects();
+			}else{
+				
+				//error
+				$error_return = 0;
 			}
-			if ($mac_error){
-				$return_string .= "Fehler! Mac Adresse ".$mac_error." bereits vorhanden\n";
-			}
+			$db_handler->disconnect_sql();
+		}else {
+			
+			//error too much units
+			$error_return = 0;
 		}
-		$db_handler->disconnect_sql();
 		
-		return $return_string;
+		
+		return $error_return;
 	}
 	
 	public function delete_plant($plant_id){
@@ -501,6 +512,8 @@ class Controller{
 		}
 		file_put_contents(__DIR__.'/../config.txt', $config);	
 	}
+	
+	
 	
 	
 	/**
@@ -964,11 +977,14 @@ class Controller{
 	
 	public function write_log($logtext){
 		
-		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
-		
-		fwrite($logfile, $logtext);
-		
-		fclose($logfile);
+		if (CONTROLLER_LOG){
+			$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
+			
+			fwrite($logfile, $logtext);
+			
+			fclose($logfile);
+		}
+	
 	}
 }
 $test = new Controller();
