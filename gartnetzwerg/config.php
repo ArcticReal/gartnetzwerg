@@ -13,4 +13,5 @@ define("CONTROLLER_LOGGING", TRUE);				// TRUE or FALSE
 
 /* [COMMON] */
 define("WATER_PER_TIME", 150);
+define("MAX_SENSORUNITS", 32);
 ?>
