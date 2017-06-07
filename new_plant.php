@@ -16,15 +16,16 @@
 <body onload="state_tabs()">
 	<?php 
 		require_once 'gartnetzwerg/classes/controller.php'; 
+		$controller = new Controller();
 					
 		//insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
 	?>
 
-	<div id="header">
+	<div id="header" class="small">
 		<p><strong>Neue Pflanze hinzufügen</strong></p>
 	</div>
 
-	<div id="form">
+	<div id="form" class="small">
 		<div id="alert"></div>
 
 		<form name="new_plant" id="new" action="/index.php" method="get">
@@ -42,7 +43,7 @@
 				<div class="cell">
 					<select name="scientific_name">
 						<?php
-							$arten = ["Aloe Vera","2","3"];
+							$arten = $controller->get_all_species();
 							foreach($arten as $id => $scientific_name){
 								print("<option value=".$id.">".$scientific_name."</option>");
 							}
@@ -99,14 +100,19 @@
 				</div>
 
 				<div class="cell">
-					<select name="scientific_name">
-						<?php
-							$sensorunits = ["Aloe Vera","2","3"];
+					<?php
+						$sensorunits = $controller->get_free_sensorunits();
+						
+						if(count($sensorunit)>0){
+							print("<select name='sensorunit'>");
 							foreach($sensorunits as $id => $sensorunit){
 								print("<option value=".$id.">".$sensorunit."</option>");
 							}
-						?>
-					</select>
+							print("</select>");
+						} else {
+							print("<input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='mac_name' placeholder='XX:XX:XX:XX:XX:XX'>");
+						}
+					?>
 				</div>
 			</div>
 
