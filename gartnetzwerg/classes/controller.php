@@ -221,7 +221,20 @@ class Controller{
 		//logging
 		$this->write_log($logtext);
 
+		$this->refresh_local_objects();
 		
+		if ($this->get_vacation_start_date() != ""){
+			
+			//alle auto-bewässern werte umschalten
+			$this->turn_on_all_auto_watering();
+			
+		}
+		
+	}
+	
+	public function refresh_local_objects(){
+		
+		// logging
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -231,12 +244,7 @@ class Controller{
 		$this->sensorunit_array = $db_handler->get_sensorunits();
 		$db_handler->disconnect_sql();
 		
-		if ($this->get_vacation_start_date() != ""){
-			
-			//alle auto-bewässern werte umschalten
-			$this->turn_on_all_auto_watering();
-			
-		}
+		
 	}
 	
 	public function turn_on_all_auto_watering(){
@@ -278,7 +286,7 @@ class Controller{
 			$return_string = "";
 		}
 		$db_handler->disconnect_sql();
-		$this->init();
+		$this->refresh_local_objects();
 		return $return_string;
 	}
 	
@@ -292,9 +300,9 @@ class Controller{
 		$return_string = "";
 		
 		if ($name_error == NULL & $mac_error == NULL){
-			$db_handler->insert_sensor_unit($mac_address, $name);
+			$return_string .= $db_handler->insert_sensor_unit($mac_address, $name);
 			
-			$this->init();
+			$this->refresh_local_objects();
 		}else{
 			
 			if ($name_error != NULL){
@@ -382,7 +390,7 @@ class Controller{
 		$db_handler->update_plant_nickname($plant_id, $nickname);
 		$db_handler->disconnect_sql();
 		
-		$this->init();
+		$this->refresh_local_objects();
 	}
 	
 	public function change_plant_location($plant_id,$location,$is_indoor){
@@ -396,10 +404,28 @@ class Controller{
 		$db_handler->update_plant_location($plant_id, $location,$is_indoor);
 		$db_handler->disconnect_sql();
 		
-		$this->init();
+		$this->refresh_local_objects();
 		
 	}
 	
+	
+	/**
+	 * sets the new email and writes it to config
+	 * 
+	 * @param unknown $new_email_address
+	 */
+	public function change_email_address($new_email_address){
+		
+		$this->set_notification_receiving_email_address($new_email_address);
+		$this->write_config("SEND_MAIL_TO", $new_email_address);
+		
+	}
+	
+	public function change_openweathermap_location($new_location){
+		
+		$this->set_openweathermap_location($new_location);
+		$this->write_config("OPENWEATHERMAP_LOCATION", $new_location);
+	}
 	
 	
 	/**
@@ -925,16 +951,11 @@ class Controller{
 			
 		}
 		$db_handler->disconnect_sql();
-		$this->init();
+		$this->refresh_local_objects();
 	}
 	
 	public function test(){
-		$db_handler = new DB_Handler();
-		$db_handler->connect_sql();
-		$db_handler->update_sensorunit_status(4, "free");
-		$db_handler->disconnect_sql();
-		
-		$this->init();
+
 	}
 
 	
