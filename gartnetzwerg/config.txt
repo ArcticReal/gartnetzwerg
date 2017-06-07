@@ -1,0 +1,18 @@
+# This is the config.txt file
+# changing this file can cause the program to fail,
+# all settings in this file will be edited by the program only
+
+
+## Email-Settings
+SEND_MAIL_TO = "test@test.com"
+
+## Openweathermap-Settings
+OPENWEATHERMAP_API_KEY = ""
+OPENWEATHERMAP_LOCATION = "Kempten"
+
+## Vacation-Settings
+VACATION_FUNCTION = "OFF"
+VACATION_START_DATE = ""
+VACATION_END_DATE = ""
+
+## Other settings
