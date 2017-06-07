@@ -1472,13 +1472,14 @@ class DB_Handler{
 	
 	public function write_log($logtext){
 		
-		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
-		
-		fwrite($logfile, $logtext);
-		
-		fclose($logfile);
+		if(DB_HANDLER_LOGGING){			
+			$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
+			
+			fwrite($logfile, $logtext);
+			
+			fclose($logfile);
+		}
 	}
-	
 }
 
 ?>
