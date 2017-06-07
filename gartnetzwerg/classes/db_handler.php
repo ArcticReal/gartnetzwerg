@@ -1386,7 +1386,29 @@ class DB_Handler{
 		return $result;		
 		
 	}
+	
+	public function delet_sensors($sensor_unit_id){
+		
+		// TODO Logging
+		
+		$query = "DELETE FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		return $result;
+		
+	}
 
+	public function delete_sensor_unit($sensor_unit_id){
+		
+		// TODO Logging
+		
+		$query = "DELETE FROM sensor_unit WHERE sensor_unit_id = ".$sensor_unit_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		return $result;
+		
+	}
+	
 	//check functions
 	
 	public function check_sensorunit_mac_address($mac_address){
