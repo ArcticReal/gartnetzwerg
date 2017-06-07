@@ -296,7 +296,7 @@ class DB_Handler{
 			$needed_location = $this->fetch_needed_location($species_id);
 			$plant->set_needed_location($needed_location);
 			
-			$fertilizing_hints = $this->fetch_fertilizing_hints_($species_id);
+			$fertilizing_hints = $this->fetch_fertilizing_hints($species_id);
 			$plant->set_fertilizing_hints($fertilizing_hints);
 			
 			$summer_prep = $this->fetch_summer_prep($species_id);
