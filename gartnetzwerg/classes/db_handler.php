@@ -81,22 +81,30 @@ class DB_Handler{
 	
 	public function fetch_sensor_unit_ids(){
 		
-		// TODO Logging
-		
 		$query = "SELECT sensor_unit_id FROM sensor_unit;";
 		$result = mysqli_query($this->mysqli, $query);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_sensor_unit_ids()\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)." Result: ";
 		
 		$this->sensorunit_ids = [];
 		while($sensorunit_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
 			$this->sensorunit_ids[] = $sensorunit_ids[0];
+			$logtext = $logtext." [".$sensorunit_ids[0]."]";
 		}
+		
+		$logtext = $logtext."\n";
+		$this->write_log($logtext);
 		
 	}
 	
 	public function fetch_all_sensorunits(){
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_all_sensorunits()\n";
+		$this->write_log($logtext);
 		
 		$this->fetch_sensor_unit_ids();
 		$sensorunit_ids = $this->sensorunit_ids;
@@ -118,18 +126,25 @@ class DB_Handler{
 	
 	public function fetch_sensors($sensorunit_id){
 		
-		// TODO Logging
-		
 		$query = "SELECT sensor_id, type FROM sensor WHERE sensor_unit_id = ".$sensorunit_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_sensors(sensorunit_id: ".$sensorunit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ";
 		
 		$sensor_ids = [];
 		$sensor_types = [];
 		while($sensoor_ids = mysqli_fetch_array($result,MYSQLI_NUM)){
 			$sensor_ids[] = $sensoor_ids[0];
 			$sensor_types[] = $sensoor_ids[1];
+			
+			// Logging
+			$logtext = $logtext." [".$sensoor_ids[0]."] => [".$sensoor_ids[1]."]";
 		}
+		
+		$logtext = $logtext."\n";
 		
 		$this->sensorunits[$sensorunit_id]->set_sensor_ids($sensor_ids);
 		
@@ -138,30 +153,39 @@ class DB_Handler{
 			switch ($type[0]){
 				case "Air_humidity_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Air_humidity_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Air_humidity_sensor\n";
 					break;
 				case "Air_temperature_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Air_temperature_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Air_temperature_sensor\n";
 					break;
 				case "Light_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Light_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Light_sensor\n";
 					break;
 				case "Soil_humidity_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Soil_humidity_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Soil_humidity_sensor\n";
 					break;
 				case "Soil_temperature_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Soil_temperature_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Soil_temperature_sensor\n";
 					break;
 				case "Watertank_fillage_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Watertank_fillage_sensor());
 					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i])->set_position(intval($type[1]));
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Watertank_fillage_sensor\n";
 					break;
 				case "Waterlogging_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Waterlogging_sensor());
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Waterlogging_sensor\n";
 					break;
 				default:
 					echo "i dont know this kind o' sensor\n";
+					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Kein Passender Sensortyp\n";
 			}
 		}
+		$this->write_log($logtext);
 	}
 	
 	
@@ -282,19 +306,7 @@ class DB_Handler{
 		}
 		
 	}
-	
-	
-	public function fetch_family(){
 		
-	}
-	
-	public function fetch_genus(){
-		
-	}
-	
-	
-
-	
 	public function fetch_sensorunit_status($sensorunit_id){
 		
 		$query = "SELECT status FROM sensor_unit WHERE sensor_unit_id = ".$sensorunit_id.";";
@@ -545,10 +557,6 @@ class DB_Handler{
 		
 	}
 	
-	public function fetch_lux(){
-		
-	}
-	
 	public function fetch_min_watering_period($species_id, $season_id){
 		
 		$query = "SELECT min_watering_period FROM brawndo WHERE species_id = ".$species_id." AND season_id = ".$season_id.";";
@@ -667,7 +675,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_unit_id = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_sensor_unit_id(plant_id: ".$plant_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_unit_id[0]."\n";
 		
 		return $sensor_unit_id[0];
 	}
@@ -679,11 +690,19 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_id = mysqli_fetch_array($result);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_air_humidity(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
 		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_air_humidity = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$akt_air_humidity[0]."\n";
+		$this->write_log($logtext);
 		
 		return $akt_air_humidity[0];
 	}
@@ -694,11 +713,19 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_id = mysqli_fetch_array($result);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_soil_humidity(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
 		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_soil_humidity = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$akt_soil_humidity[0]."\n";
+		$this->write_log($logtext);
 		
 		return $akt_soil_humidity[0];
 	}
@@ -714,11 +741,19 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_id = mysqli_fetch_array($result);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_air_temperature(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
 		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_air_temperature = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$akt_air_temperature[0]."\n";
+		$this->write_log($logtext);
 		
 		return $akt_air_temperature[0];
 	}
@@ -729,11 +764,19 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensor_id = mysqli_fetch_array($result);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_soil_temperature(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
 		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_soil_temperature = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$akt_soil_temperature[0]."\n";
+		$this->write_log($logtext);
 		
 		return $akt_soil_temperature[0];
 	}
@@ -773,8 +816,6 @@ class DB_Handler{
 			if ($light_hours_row <= 50) $light_hours += 0.5;
 		}
 		
-		
-		//var_dump($light_hours);
 		// logging
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$light_hours."\n";
@@ -784,27 +825,39 @@ class DB_Handler{
 	
 	public function fetch_air_humidity($sensorunit_id, $date){
 		
-		
 		$query = "SELECT AVG(value) FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id";
 		$query = $query." WHERE sensor.sensor_unit_id = ".$sensorunit_id;
 		$query = $query." AND type = 'Air_humidity_sensor' AND DATE(date) = '".$date."'";
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
-		
 		$air_humidity = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_air_humidity(sensor_unit_id: ".$sensor_unit_id." date: ".$date.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$air_humidity[0]."\n";
+		$this->write_log($logtext);
+				
 		return intval($air_humidity[0]);
 	}
 	
 	public function fetch_soil_humidity($sensorunit_id, $date){
 		
+		// TODO Logging
 		
 		$query = "SELECT AVG(value) FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id";
 		$query = $query." WHERE sensor.sensor_unit_id = ".$sensorunit_id;
 		$query = $query." AND type = 'Soil_humidity_sensor' AND DATE(date) = '".$date."'";
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
-		
 		$soil_humidity = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_soil_humidity(sensor_unit_id: ".$sensor_unit_id." date: ".$date.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$soil_humidity[0]."\n";
+		$this->write_log($logtext);
+		
 		return intval($soil_humidity[0]);
 	}
 
@@ -816,8 +869,14 @@ class DB_Handler{
 		$query = $query." AND type = 'Air_temperature_sensor' AND DATE(date) = '".$date."'";
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
-		
 		$air_temperature = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_air_temperature(sensor_unit_id: ".$sensor_unit_id." date: ".$date.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$air_temperature[0]."\n";
+		$this->write_log($logtext);
+		
 		return intval($air_temperature[0]);
 	}
 
@@ -829,8 +888,14 @@ class DB_Handler{
 		$query = $query." AND type = 'Soil_temperature_sensor' AND DATE(date) = '".$date."'";
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
-		
 		$soil_temperature = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_soil_temperature(sensor_unit_id: ".$sensor_unit_id." date: ".$date.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$soil_temperature[0]."\n";
+		$this->write_log($logtext);
+		
 		return intval($soil_temperature[0]);
 	}
 	
@@ -842,15 +907,21 @@ class DB_Handler{
 		$query = $query." AND type = 'Waterlogging_sensor' AND DATE(date) = '".$date."'";
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
-		
 		$waterlogging = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_waterlogging(sensor_unit_id: ".$sensor_unit_id." date: ".$date.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$waterlogging[0]."\n";
+		$this->write_log($logtext);
+		
 		return intval($waterlogging[0]);
 	}
 	
 	public function fetch_last_watertank_level($sensorunit_id){
 		
 		// logging
-		$logtext = date(LOG_TIME_FORMAT)."DB_handler::fetch_last_watertank_level(Sensorunit_id: ".$sensorunit_id.")\n";
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::fetch_last_watertank_level(Sensorunit_id: ".$sensorunit_id.")\n";
 		
 		$query = "SELECT DISTINCT count(sensor_id) FROM sensor WHERE sensor_unit_id = ".$sensorunit_id;
 		$query = $query." AND type LIKE 'Watertank_fillage_sensor%';";
@@ -887,7 +958,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$winter_prep = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_winter_prep(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($winter_prep[0])."\n";
 		
 		return utf8_encode($winter_prep[0]);
 		
@@ -899,7 +973,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$how_to_water = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_how_to_water(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($how_to_water[0])."\n";
 		
 		return utf8_encode($how_to_water[0]);
 		
@@ -911,7 +988,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$caretaking_hints = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_caretaking_hints(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($caretaking_hints[0])."\n";
 		
 		return utf8_encode($caretaking_hints[0]);
 		
@@ -923,7 +1003,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$special_needs = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_special_needs(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($special_needs[0])."\n";
 		
 		return utf8_encode($special_needs[0]);
 		
@@ -935,7 +1018,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$transplanting = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_transplanting(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($transplanting[0])."\n";
 		
 		return utf8_encode($transplanting[0]);
 		
@@ -947,19 +1033,25 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$needed_location = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_needed_location(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($needed_location[0])."\n";
 		
 		return utf8_encode($needed_location[0]);
 		
 	}
 	
-	public function fetch_fertilizing_hints_($species_id){
+	public function fetch_fertilizing_hints($species_id){
 		
 		$query = "SELECT fertilizing_hints FROM species WHERE species_id = ".$species_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		$fertilizing_hints = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_fertilizing_hints(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($fertilizing_hints[0])."\n";
 		
 		return utf8_encode($fertilizing_hints[0]);
 		
@@ -971,7 +1063,10 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$summer_prep = mysqli_fetch_array($result);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_summer_prep(species_id: ".$species_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".utf8_encode($summer_prep[0])."\n";
 		
 		return utf8_encode($summer_prep[0]);
 		
@@ -979,15 +1074,21 @@ class DB_Handler{
 	
 	public function fetch_sensor_ids_from_sensorunit($sensor_unit_id){
 		
-		// TODO Logging
-		
 		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id.";";
 		$result = mysqli_query($this->mysqli, $query);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_sensor_ids_from_sensorunit(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ";
 		
 		$sensor_ids = [];
 		while($tmp = mysqli_fetch_array($result,MYSQLI_NUM)){
 			$sensor_ids[] = $tmp[0];
+			$logtext = $logtext.date(LOG_TIME_FORMAT)." [".$tmp[0]."]";
 		}
+		$logtext = $logtext."\n";
+		$this->write_log($logtext);
 		
 		return $sensor_ids;
 	}
@@ -1215,7 +1316,12 @@ class DB_Handler{
 		$query = "UPDATE plants SET nickname = '".$nickname."' WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::update_plant_nickname(plant_id: ".$plant_id.", nickname: ".$nickname.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		$this->write_log($logtext);
+		
 		
 	}
 	
@@ -1224,7 +1330,11 @@ class DB_Handler{
 		$query = "UPDATE plants SET location = '".$location."' ,is_indoor = ".$is_indoor." ' WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
-		// TODO Logging
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::update_plant_location(plant_id: ".$plant_id.", location: ".$location.", is_indoor: ".$is_indoor.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		$this->write_log($logtext);
 	}
 	
 	
@@ -1285,6 +1395,12 @@ class DB_Handler{
 		$result = mysqli_query($this->mysqli, $query);
 		$sensorunit_id = mysqli_fetch_array($result);
 		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::check_sensorunit_mac_address(mac_address: ".$mac_address.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensorunit_id[0]."\n";
+		$this->write_log($logtext);
+		
 		return $sensorunit_id[0];
 		
 	}
@@ -1294,6 +1410,12 @@ class DB_Handler{
 		$query = "SELECT sensor_unit_id FROM sensor_unit WHERE name = '".$name."';";
 		$result = mysqli_query($this->mysqli, $query);
 		$sensorunit_id = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::check_sensorunit_name(name: ".$name.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensorunit_id[0]."\n";
+		$this->write_log($logtext);
 		
 		return $sensorunit_id[0];
 		
