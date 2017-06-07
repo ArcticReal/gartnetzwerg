@@ -134,7 +134,7 @@ class Controller{
 		$return_array = [];
 		
 		for ($i = 0; $i < count($ids); $i++){
-			$return_array[$ids[$i][0]] = $names[$i][0];
+			$return_array[$ids[$i]] = $names[$i];
 			
 		}
 		
