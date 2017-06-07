@@ -760,7 +760,7 @@ class DB_Handler{
 	
 	public function fetch_light_hours($sensor_unit_id, $date){
 		
-		$logtext = "\n".date('c')."DB_handler::fetch_light_hours(sensorunit_id: ".$sensor_unit_id.", Date: ".$date.")\n";
+		$logtext = "\n".date('c')."	DB_handler::fetch_light_hours(sensorunit_id: ".$sensor_unit_id.", Date: ".$date.")\n";
 		
 		$query = "SELECT value FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id";
 		$query = $query." WHERE sensor.sensor_unit_id = ".$sensor_unit_id;
@@ -776,8 +776,8 @@ class DB_Handler{
 		
 		//var_dump($light_hours);
 		// logging
-		$logtext = $logtext.date('c')." SQL: ".$query."\n";
-		$logtext = $logtext.date('c')." Result: ".$light_hours."\n";
+		$logtext = $logtext.date('c')."	SQL: ".$query."\n";
+		$logtext = $logtext.date('c')."	Result: ".$light_hours."\n";
 		$this->write_log($logtext);
 		return $light_hours;
 	}
@@ -990,6 +990,51 @@ class DB_Handler{
 		}
 		
 		return $sensor_ids;
+	}
+	
+	public function fetch_all_scientific_names(){
+		
+		$query = "SELECT scientific_name from species;";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		$scientific_names = [];
+		while($tmp = mysqli_fetch_array($result,MYSQLI_NUM)){
+			$scientific_names[] = $tmp[0];
+		}
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::fetch_all_scientific_names()\n";
+		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
+		$logtext = $logtext.date('c')."  	Result:	";
+		for($i = 0; $i < count($this->plant_ids); $i++){
+			$logtext = $logtext."[".$scientific_names[$i][0]."]";
+		}
+		$logtext = $logtext."\n\n";
+		$this->write_log($logtext);
+		
+		
+	}
+	
+	public function fetch_all_species_ids(){
+				
+		$query = "SELECT species_id from species;";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		$species_ids = [];
+		while($tmp = mysqli_fetch_array($result,MYSQLI_NUM)){
+			$species_ids[] = $tmp[0];
+		}
+		
+		// Logging
+		$logtext = "\n".date('c')."	DB_handler::fetch_all_species_ids()\n";
+		$logtext = $logtext.date('c')."  	SQL Query: ".$query."\n";
+		$logtext = $logtext.date('c')."  	Result:	";
+		for($i = 0; $i < count($this->plant_ids); $i++){
+			$logtext = $logtext."[".$species_ids[$i][0]."]";
+		}
+		$logtext = $logtext."\n\n";
+		$this->write_log($logtext);
+		
 	}
 	
 	//insert functions
