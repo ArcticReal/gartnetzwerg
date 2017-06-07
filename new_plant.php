@@ -17,8 +17,7 @@
 	<?php 
 		require_once 'gartnetzwerg/classes/controller.php'; 
 		$controller = new Controller();
-					
-		//insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
+		$controller->init();
 	?>
 
 	<div id="header" class="small">
@@ -26,9 +25,9 @@
 	</div>
 
 	<div id="form" class="small">
-		<div id="alert"></div>
+		<div id="alert" class="alert-none"></div>
 
-		<form name="new_plant" id="new" action="/index.php" method="get">
+		<form name="new_plant" id="new" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 			<div class="row">
 				<div class="cell"><p>Pflanzenname</p></div>
 
@@ -42,6 +41,7 @@
 
 				<div class="cell">
 					<select name="scientific_name">
+						<option value="-1" selected> </option>
 						<?php
 							$arten = $controller->get_all_species();
 							foreach($arten as $id => $scientific_name){
@@ -59,7 +59,8 @@
 				</div>
 
 				<div class="cell">
-					<input type="checkbox" name="auto-watering">
+					<input type="hidden" name="auto_watering" value=0>
+					<input type="checkbox" name="auto_watering" value=1>
 				</div>
 			</div>
 
@@ -77,8 +78,8 @@
 				</div>
 
 				<div class="cell">
-					Drinnen <input type="radio" name="indoor" value="Drinnen" checked>
-					Draußen <input type="radio" name="indoor" value="Draußen">
+					Drinnen <input type="radio" name="indoor" value=1 checked>
+					Draußen <input type="radio" name="indoor" value=0>
 				</div>
 			</div>
 
@@ -89,7 +90,8 @@
 				</div>
 
 				<div class="cell">
-					<input type="checkbox" name="notifications">
+					<input type="hidden" name="notifications" value=0>
+					<input type="checkbox" name="notifications" value=0>
 				</div>
 			</div>
 
@@ -102,53 +104,80 @@
 				<div class="cell">
 					<?php
 						$sensorunits = $controller->get_free_sensorunits();
-						
-						if(count($sensorunit)>0){
-							print("<select name='sensorunit'>");
+
+						if(count($sensorunits)>0){
+							print("<div><select name='sensorunit'><option value='-1' selected> </option>");
 							foreach($sensorunits as $id => $sensorunit){
-								print("<option value=".$id.">".$sensorunit."</option>");
+								print("<option value=".$id.">".$sensorunit->get_name()." (".$sensorunit->get_mac_address().")</option>");
 							}
-							print("</select>");
+							print("</select></div>");
+
+							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='mac_name' placeholder='XX:XX:XX:XX:XX:XX'></div>");
 						} else {
-							print("<input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='mac_name' placeholder='XX:XX:XX:XX:XX:XX'>");
+							print("<div><select name='sensorunit'><option value='-1' selected> </option>");
+							foreach($sensorunits as $id => $sensorunit){
+								print("<option value=".$id.">".$sensorunit->get_name()." (".$sensorunit->get_mac_address().")</option>");
+							}
+							print("</select></div>");
+
+							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='sensorunit_mac' placeholder='XX:XX:XX:XX:XX:XX'></div>");
+						}
+
+						$plantname = $auto_watering = $standort = $indoor = $notifications = $su_name = $su_mac = "";
+						$su_id = $scientific_name = -1;
+						if ($_SERVER["REQUEST_METHOD"] == "POST") {
+							$plantname = test_input($_POST["plantname"]);
+							$scientific_name = test_input($_POST["scientific_name"]);
+							$auto_watering = test_input($_POST["auto_watering"]);
+							$standort = test_input($_POST["standort"]);
+							$indoor = test_input($_POST["indoor"]);
+							$notifications = test_input($_POST["notifications"]);
+							$su_id = test_input($_POST["sensorunit"]);
+							$su_name = test_input($_POST["sensorunit_name"]);
+							$su_mac = test_input($_POST["sensorunit_mac"]);
+						}
+
+						if($su_name=="" && $su_mac=="" && $su_id==-1){
+							print("no sensorunit selected");
+						} else if(($su_name=="" || $su_mac=="") && $su_id!=-1){
+							if($controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
+								print("plant ok");
+							}
+						} else if($su_name!="" && $su_mac!="" && $su_id==-1){
+							$id = $controller->add_sensor_unit($su_mac, $su_name);
+							if(strpos($id,'Fehler')===false){
+								if($controller->add_plant($id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
+									print("plant ok");
+								}
+							} else {
+								print("sensorunit adding error.");
+							}
+						}
+
+						/*if($su_name!="" && $su_mac!=""){
+							if($controller->add_sensor_unit($su_mac, $su_name)!=""){
+								print("sensorunit error");
+							} else {
+								print("alles ok");
+								if($controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
+									print("plant ok");
+								}
+							}
+						} else {
+							if($controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
+								print("plant ok");
+							}
+						}*/
+
+						function test_input($data){
+							$data = trim($data);
+							$data = stripslashes($data);
+							$data = htmlspecialchars($data);
+							return $data;
 						}
 					?>
 				</div>
 			</div>
-
-			<!--<table>
-				<tr>
-					<td>
-						Sensoreinheit
-						<a href="#"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
-					</td>
-					<td>
-						<div id="availSU">
-							Verfügbare Sensoreinheiten:<br/>
-							<select name="sensorunit">
-								<?php
-									//foreach
-									//print(<option value=".$value.">.$sensor_name.</option>);
-								?>
-
-								<option value="s1">Sensor#1</option>
-								<option value="s2">Sensor#2</option>
-								<option value="s3">Sensor#3</option>
-							</select><br/>
-						</div>
-
-						<div id="buttonSU">
-							<a href="#" onclick="toggle()"><i class="fa fa-plus-circle" aria-hidden="true"></i></a>
-						</div>
-
-						<div id="newSU">
-							Neue Sensoreinheit:<br/>
-							Name: <input type="text" name="sensorunit" placeholder="z.B. ..." required><br/>
-							MAC-Adresse: <input type="text" name="sensorunit" maxlength="17" size="17" pattern="[0-9A-F][0-9A-F]:{5}[0-9A-F][0-9A-F]" placeholder="XX:XX:XX:XX:XX:XX" required><br/>
-						</div>
-					</td>
-				</tr>
-			</table>-->
 		</form>
 	</div>
 	
