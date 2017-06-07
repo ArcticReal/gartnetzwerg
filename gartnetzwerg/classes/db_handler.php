@@ -1012,7 +1012,7 @@ class DB_Handler{
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
 		
-		
+		return $scientific_names;
 	}
 	
 	public function fetch_all_species_ids(){
@@ -1035,6 +1035,7 @@ class DB_Handler{
 		$logtext = $logtext."\n\n";
 		$this->write_log($logtext);
 		
+		return $species_ids;
 	}
 	
 	//insert functions
