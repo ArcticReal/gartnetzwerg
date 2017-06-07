@@ -141,7 +141,7 @@ class DB_Handler{
 			$sensor_types[] = $sensoor_ids[1];
 			
 			// Logging
-			$logtext = $logtext." [".$sensoor_ids[0]."] => [".$sensoor_ids[1]."]\n";
+			$logtext = $logtext." [".$sensoor_ids[0]."] => [".$sensoor_ids[1]."]\n				";
 		}
 		
 		$logtext = $logtext."\n";
@@ -1472,13 +1472,14 @@ class DB_Handler{
 	
 	public function write_log($logtext){
 		
-		$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
-		
-		fwrite($logfile, $logtext);
-		
-		fclose($logfile);
+		if(DB_HANDLER_LOGGING){			
+			$logfile = fopen("/var/log/gartnetzwerg/gartnetzwerg_log.".date('W'), "a");
+			
+			fwrite($logfile, $logtext);
+			
+			fclose($logfile);
+		}
 	}
-	
 }
 
 ?>
