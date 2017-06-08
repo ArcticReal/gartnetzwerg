@@ -278,6 +278,9 @@ class DB_Handler{
 			$akt_soil_temperature = $this->fetch_akt_soil_temperature($sensor_unit_id);
 			$plant->set_akt_soil_temperature($akt_soil_temperature);
 			
+			$last_watering = $this->fetch_last_watering($plant_id);
+			$plant->set_last_watering($last_watering);
+			
 			$winter_prep = $this->fetch_winter_prep($species_id);
 			$plant->set_winter_prep($winter_prep);
 			
@@ -932,6 +935,16 @@ class DB_Handler{
 		return $plant_id[0];
 	}
 	
+	public function fetch_last_watering($plant_id){
+		
+		$query = "SELECT date FROM water_usage WHERE plant_id = ".$plant_id." ORDER BY water_usage_id DESC LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$last_watering = mysqli_fetch_array($result);
+		
+		return $last_watering[0];
+		
+	}
+	
 	public function fetch_last_watertank_level($sensorunit_id){
 		
 		// logging
@@ -1164,7 +1177,7 @@ class DB_Handler{
 		
 		//logging
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
-		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$notification_settings."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$notification_settings[0]."\n";
 		$this->write_log($logtext);
 		
 		return $notification_settings[0];
