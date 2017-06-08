@@ -736,8 +736,8 @@ class Controller{
 			}
 		}
 	
-		if($color_value >= 3) return "red"; else if($color_value >= 2) return "orange";
-		else if($color_value >= 1) return "yellow"; else if($color_value >= 0.5) return "green"; else return "gold";
+		if($color_value >= 3) return "black"; else if($color_value >= 2) return "red";
+		else if($color_value >= 1) return "orange"; else if($color_value >= 0.5) return "yellow"; else return "green";
 	}
 	
 	/**
