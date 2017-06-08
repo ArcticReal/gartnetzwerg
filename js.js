@@ -41,7 +41,6 @@ function state_tabs(i){
 		case 1: 
 			document.getElementById("tab_diagramme").className = "current_tab";
 			document.getElementById("diagramme").className += " current_tab";
-			init_diagramms();
 			break;
 		case 2:
 			document.getElementById("tab_cam").className = "current_tab";
@@ -86,35 +85,42 @@ function toggle(){
 
 //# DIAGRAMM-FUNKTIONEN ########################################################################################
 
-var zfactor = 1;
-
 var c=[
 	document.getElementById("canvas1"),
 	document.getElementById("canvas2"),
 	document.getElementById("canvas3"),
-	document.getElementById("canvas4")
+	document.getElementById("canvas4"),
+	document.getElementById("canvas5"),
+	document.getElementById("canvas6"),
+	document.getElementById("canvas7")
 ];
 
 var diagramm = [
-	{c: c[0].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
-	{c: c[1].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
-	{c: c[2].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
-	{c: c[3].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0}];
+	//	canvas-object		   sensor-data		  plant-min-max   array-positions     min-max-values
+	{c: c[0].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[1].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[2].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[3].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[4].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[5].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1},
+	{c: c[6].getContext("2d"), data: new Array(), min: 0, max: 0, 
+	d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1}];
 
-/*htmlcanvas is the "this" object in the HTML part. 
-* cc is the id of one of the arrayobject above.
-*/
 function init_canvas(cc, width, height, days){
 	// Create gradient
 	var grd = diagramm[cc].c.createLinearGradient(0,0,0,250);
 	grd.addColorStop(0,"#FFFFFF");
-	grd.addColorStop(1,"#DDDDDD");
+	grd.addColorStop(1,"#FFFFFF");
 
 	// Fill with gradient
 	diagramm[cc].c.fillStyle = grd;
 	diagramm[cc].c.fillRect(0,0,width,height);
-
-	diagramm[cc].c.beginPath();
 
 	//balken color
 	var color = diagramm[cc].c.createLinearGradient(0,0,0,250);
@@ -123,40 +129,97 @@ function init_canvas(cc, width, height, days){
 	diagramm[cc].c.fillStyle = color;
 
 	for (var i = 0; i < diagramm[cc].data.length; i++) {
-		//c[cc].moveTo(i*10,100-canvas_data[cc][i]);
-		//c[cc].lineTo((i+1)*10,100-canvas_data[cc][i+1]);
-		diagramm[cc].c.fillRect(2+(i*(width/days)),150-diagramm[cc].data[i],10,diagramm[cc].data[i]);
+		if(diagramm[cc].data[i]!=0){
+			diagramm[cc].c.fillRect(20+(i*(width-20)/days),
+								5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
+								(width-20)/days,
+								diagramm[cc].data[i]*diagramm[cc].degreesize);
+		}
 	}
 
-	// 0 Degree
-	diagramm[cc].c.moveTo(0,150);
-	diagramm[cc].c.lineTo(500,150);
-	diagramm[cc].c.strokeStyle = "#0000FF";
+	// more Degrees
+	diagramm[cc].c.font = '10pt Helvetica';
+	diagramm[cc].c.fillStyle = '#444';
+	var text_m = 0;
+	var w_m = 0;
+
+	var amount = 0;
+	for (var i = 5; i < (diagramm[cc].max_v - diagramm[cc].min_v); i+=5){
+		if(((diagramm[cc].max_v - diagramm[cc].min_v)/i) <= 10){
+			amount = i; break;
+		}
+	}
+
+	for (var i = diagramm[cc].min_v; i < diagramm[cc].max_v; i++){
+		if(i % amount == 0 && i!=0 && i!=diagramm[cc].min && i!=diagramm[cc].max){
+			text_m = i;
+			w_m = diagramm[cc].c.measureText(text_m).width;
+			diagramm[cc].c.fillText(text_m, 5, 10+((diagramm[cc].max_v-i)*diagramm[cc].degreesize));
+
+			diagramm[cc].c.beginPath();
+			diagramm[cc].c.moveTo(w_m+10,	5+((diagramm[cc].max_v-i)*diagramm[cc].degreesize));
+			diagramm[cc].c.lineTo(width,	5+((diagramm[cc].max_v-i)*diagramm[cc].degreesize));
+			diagramm[cc].c.strokeStyle = "#444";
+			diagramm[cc].c.stroke();
+			diagramm[cc].c.closePath();
+		}
+	}
+
+	// zero Degree
+	diagramm[cc].c.font = '10pt Helvetica';
+	diagramm[cc].c.fillStyle = 'black';
+	var text_z = 0;
+	var w_z = diagramm[cc].c.measureText(text_z).width;
+	diagramm[cc].c.fillText(text_z, 5, 10+((diagramm[cc].max_v-0)*diagramm[cc].degreesize));
+
+	diagramm[cc].c.beginPath();
+	diagramm[cc].c.moveTo(w_z+10,	5+((diagramm[cc].max_v-0)*diagramm[cc].degreesize));
+	diagramm[cc].c.lineTo(width,	5+((diagramm[cc].max_v-0)*diagramm[cc].degreesize));
+	diagramm[cc].c.strokeStyle = "black";
 	diagramm[cc].c.stroke();
+	diagramm[cc].c.closePath();
 
 	// min Degree
-	diagramm[cc].c.moveTo(0,200-diagramm[cc].drawing_min-diagramm[cc].min);
-	diagramm[cc].c.lineTo(500,200-diagramm[cc].drawing_min-diagramm[cc].min);
-	diagramm[cc].c.strokeStyle = "#000000";
-	diagramm[cc].c.stroke();
+	if(diagramm[cc].min != 0){
+		diagramm[cc].c.font = '10pt Helvetica';
+		diagramm[cc].c.fillStyle = 'blue';
+		var text_min = diagramm[cc].min;
+		var w_min = diagramm[cc].c.measureText(text_min).width;
+		diagramm[cc].c.fillText(text_min, 5, 10+((diagramm[cc].max_v-diagramm[cc].min)*diagramm[cc].degreesize));
 
-	diagramm[cc].c.moveTo(0,200-diagramm[cc].drawing_max-diagramm[cc].max);
-	diagramm[cc].c.lineTo(500,200-diagramm[cc].drawing_max-diagramm[cc].max);
-	diagramm[cc].c.strokeStyle = "#FF0000";
-	diagramm[cc].c.stroke();
+		diagramm[cc].c.beginPath();
+		diagramm[cc].c.moveTo(w_min+10,	5+((diagramm[cc].max_v-diagramm[cc].min)*diagramm[cc].degreesize));
+		diagramm[cc].c.lineTo(width,	5+((diagramm[cc].max_v-diagramm[cc].min)*diagramm[cc].degreesize));
+		diagramm[cc].c.strokeStyle = "blue";
+		diagramm[cc].c.stroke();
+		diagramm[cc].c.closePath();
+	}
+
+	// max Degree
+	if(diagramm[cc].max != 0 && diagramm[cc].max != diagramm[cc].min){
+		diagramm[cc].c.font = '10pt Helvetica';
+		diagramm[cc].c.fillStyle = 'red';
+		var text_max = diagramm[cc].max;
+		var w_max = diagramm[cc].c.measureText(text_max).width;
+		diagramm[cc].c.fillText(text_max, 5, 10+((diagramm[cc].max_v-diagramm[cc].max)*diagramm[cc].degreesize));
+
+		diagramm[cc].c.beginPath();
+		diagramm[cc].c.moveTo(w_max+10,	5+((diagramm[cc].max_v-diagramm[cc].max)*diagramm[cc].degreesize));
+		diagramm[cc].c.lineTo(width,	5+((diagramm[cc].max_v-diagramm[cc].max)*diagramm[cc].degreesize));
+		diagramm[cc].c.strokeStyle = "red";
+		diagramm[cc].c.stroke();
+		diagramm[cc].c.closePath();
+	}
+
+	//document.getElementById("diadebug").innerHTML += "<br/> Degree-Size: "+diagramm[cc].degreesize;
 }
 
 function init_diagramms(days){
-	//changeZoom(0);
-	update_drawing_borders(0);
-	//update_drawing_borders(1);
-	//update_drawing_borders(2);
-	//update_drawing_borders(3);
-	init_canvas(0,500,200, days);
-	//init_canvas(1,500,200, days);
-	//init_canvas(2,500,200, days);
-	//init_canvas(3,500,200, days);
-	document.getElementById("diadebug").innerHTML = days;
+	for (var i = 0; i < diagramm.length; i++) {
+		update_drawing_borders(i);
+		update_degree_size(i,200);
+		init_canvas(i,500,200, days);
+	}
 }
 
 function add_data(array,data){
@@ -168,150 +231,47 @@ function set_min_max(array,min_data,max_data){
 	diagramm[array].max = max_data;
 }
 
+function update_degree_size(array,height){
+	diagramm[array].degreesize =(height-10)/(diagramm[array].max_v - diagramm[array].min_v);
+
+	//get the pixels for zero
+	if(diagramm[array].min_v == 0){
+		diagramm[array].zero = 5;
+	}
+	diagramm[array].zero = diagramm[array].max_v / diagramm[array].degreesize;
+	//document.getElementById("diadebug").innerHTML += "zero*dsize: "+diagramm[array].zero*diagramm[array].degreesize;
+}
+
 function update_drawing_borders(array){
-	diagramm[array].drawing_max = diagramm[array].max;
-	diagramm[array].drawing_min = 0;
+	var max_value = diagramm[array].max;
+	var min_value = 0;
 
-	if(diagramm[array].drawing_min > diagramm[array].min){
-		diagramm[array].drawing_min = diagramm[array].min;
+	if(diagramm[array].d_min > diagramm[array].min){
+		min_value = diagramm[array].min;
+		diagramm[array].d_min = diagramm[array].min;
 	}
 
 	for (var i = 0; i < diagramm[array].data.length; i++) {
-		if(diagramm[array].data[i] > diagramm[array].drawing_max){
-			diagramm[array].drawing_max = diagramm[array].data[i];
+		if(diagramm[array].data[i] > max_value){
+			max_value = diagramm[array].data[i];
+			diagramm[array].d_max = i;
 		}
 	}
 
 	for (var i = 0; i < diagramm[array].data.length; i++) {
-		if(diagramm[array].data[i] < diagramm[array].drawing_min){
-			diagramm[array].drawing_min = diagramm[array].data[i];
+		if(diagramm[array].data[i] < min_value){
+			min_value = diagramm[array].data[i];
+			diagramm[array].d_min = i;
 		}
 	}
-}
 
-function day_diff(date){
-	var t = Date.parse(weight[0].date) - Date.parse(weight[date].date);
-	var x = Math.floor(t/(1000*60*60*24));
+	diagramm[array].max_v = max_value;
+	diagramm[array].min_v = min_value;
 
-	return Math.abs(x);
-}
-
-function min_weight(){
-	var x = 100;
-	for (var i = 0; i < weight.length; i++) {
-		if(weight[i].weight <= x)
-			x = weight[i].weight;
-	}
-	return x;
-}
-
-function max_weight(){
-	var x = 0;
-	for (var i = 0; i < weight.length; i++) {
-		if(weight[i].weight >= x)
-			x = weight[i].weight;
-	}
-	return x;
-}
-
-function max_weightID(){
-	var x = 0;
-	var ii = i;
-	for (var i = 0; i < weight.length; i++) {
-		if(weight[i].weight >= x){
-			x = weight[i].weight;
-			ii = i;
-		}
-	}
-	return ii;
-}
-
-function min_weightID(){
-	var x = 100;
-	var ii = i;
-	for (var i = 0; i < weight.length; i++) {
-		if(weight[i].weight <= x){
-			x = weight[i].weight;
-			ii = i;
-		}
-	}
-	return ii;
-}
-
-function zoom_factor(){
-	var x = 0;
-	for (var i = 0; i < 200; i++) {
-		if((280 - max_weight()*i + min_weight()*i - 20)<=0){
-			x = i-1;
-			break;
-		}
-	}
-	//document.getElementById("demo").innerHTML = "Zoomfactor "+x+".";
-	return x;
-}
-
-function weight_zoom(d){
-	x = weight[d].weight;
-	return 280 - x*zoom_factor() + min_weight()*zoom_factor() - 10;
-}
-
-function markMaxWeight(zoom){
-	//cc2.moveTo(0,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-	//cc2.lineTo(430,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-
-	cc.font = '10pt Calibri';
-	cc.fillStyle = 'red';
-	var text = max_weight()+" kg";
-	var w = cc.measureText(text).width;
-	cc.fillText(text, day_diff(max_weightID())*10*zoom-(w/2), 
-		280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-}
-
-function markMinWeight(zoom){
-	//cc2.moveTo(0,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-	//cc2.lineTo(430,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-
-	cc.font = '10pt Calibri';
-	cc.fillStyle = 'green';
-	var text = min_weight()+" kg";
-	var w = cc.measureText(text).width;
-	cc.fillText(text, day_diff(min_weightID())*10*zoom-(w/2), 
-		280 - min_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-}
-
-function markCurrentWeight(zoom){
-	//cc2.moveTo(0,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-	//cc2.lineTo(430,
-	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
-
-	cc.font = '10pt Calibri';
-	cc.fillStyle = 'blue';
-	var text = weight[weight.length-1].weight +" kg";
-	var w = cc.measureText(text).width;
-	cc.fillText(text, day_diff(weight.length-1)*10*zoom, 
-		280 - weight[weight.length-1].weight*zoom_factor() + min_weight()*zoom_factor() - 10);
-}
-
-function changeZoom(x){
-	cc.clearRect(0, 0, c.width, c.height);
-
-	if(x > 0){
-		zfactor *= 1.5;
-	} else if(x < 0){
-		zfactor /= 1.5;
-	} else if(x == 0){
-		zfactor = 0.4;
-	}
-
-	canvas(zfactor);
-	markCurrentWeight(zfactor);
-	if(weight[weight.length-1].weight != max_weight())
-		markMaxWeight(zfactor);
-	if(weight[weight.length-1].weight != min_weight())
-		markMinWeight(zfactor);
+	/*document.getElementById("diadebug").innerHTML = "min_v: "+diagramm[array].min_v+"<br/>"+
+													"max_v: "+diagramm[array].max_v+"<br/>"+
+													"d_min: "+diagramm[array].d_min+"<br/>"+
+													"d_max: "+diagramm[array].d_max+"<br/>"+
+													"min: "+diagramm[array].min+"<br/>"+
+													"max: "+diagramm[array].max;*/
 }

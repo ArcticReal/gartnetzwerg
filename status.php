@@ -158,7 +158,7 @@
 				$waterlogging_array = $controller->waterlogging_per_day($_GET["plant_id"], $days);
 			?>
 
-			<p>Temperatur-Verlauf</p>
+			<p>Luftfemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas1" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
@@ -166,7 +166,7 @@
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
-			<p>Feuchtigkeitsverlauf</p>
+			<p>Bodentemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas2" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
@@ -174,7 +174,7 @@
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
-			<p>Lichtstundenverlauf</p>
+			<p>Luftfeuchtigkeitsverlauf</p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas3" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
@@ -182,9 +182,33 @@
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
-			<p>Wasserverbrauch</p>
+			<p>Bodenfeuchtigkeitsverlauf</p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas4" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Lichtstundenverlauf</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas5" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Wasserverbrauch</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas6" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Staunässe</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas7" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 				<button id="canvasm" onclick="changeZoom(-1)"></button>
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
@@ -251,39 +275,46 @@
 			?>
 		</div>
 	</div>
+
 	<script src="js.js"></script>
 
 	<?php
 		foreach ($air_temperature_array as $i => $value) {
-			echo '<script>add_data(0,'.$value.')</script>';
+			echo '<script>add_data(0,'.$value.');</script>';
 		}
-		echo '<script>set_min_max(0,'.$min_air_temperature.','.$max_air_temperature.')</script>';
+		echo '<script>set_min_max(0,'.$min_air_temperature.','.$max_air_temperature.');</script>';
 
-		//foreach ($soil_temperature_array as $i => $value) {
-		//	echo '<script>add_data(3,'.$value.')</script>';
-		//}
+		foreach ($soil_temperature_array as $i => $value) {
+			echo '<script>add_data(1,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(1,'.$min_soil_temperature.','.$max_soil_temperature.');</script>';
 
 		foreach ($air_humidity_array as $i => $value) {
-			echo '<script>add_data(1,'.$value.')</script>';
+			echo '<script>add_data(2,'.$value.');</script>';
 		}
+		echo '<script>set_min_max(2,'.$min_air_humidity.','.$max_air_humidity.');</script>';
 
-		//foreach ($soil_humidity_array as $i => $value) {
-		//	echo '<script>add_data(3,'.$value.')</script>';
-		//}
+		foreach ($soil_humidity_array as $i => $value) {
+			echo '<script>add_data(3,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(3,'.$min_soil_humidity.','.$max_soil_humidity.');</script>';
 
 		foreach ($lighthours_array as $i => $value) {
-			echo '<script>add_data(2,'.$value.')</script>';
+			echo '<script>add_data(4,'.$value.');</script>';
 		}
+		echo '<script>set_min_max(4,'.$min_light_hours.','.$max_light_hours.');</script>';
 
 		foreach ($water_usage_array as $i => $value) {
-			echo '<script>add_data(3,'.$value.')</script>';
+			echo '<script>add_data(5,'.$value.');</script>';
 		}
+		echo '<script>set_min_max(5,'.$days.','.$days.');</script>';
 
-		/*foreach ($waterlogging_array as $i => $value) {
-			echo '<script>add_data(x,'.$value.')</script>';
-		}*/
+		foreach ($waterlogging_array as $i => $value) {
+			echo '<script>add_data(6,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(6,'.$tolerates_waterlogging.','.$tolerates_waterlogging.');</script>';
 
-		echo '<script>init_diagramms('.$days.')</script>';
+		echo "<script>init_diagramms(".$days.");</script>";
 	?>
 </body>
 </html>
