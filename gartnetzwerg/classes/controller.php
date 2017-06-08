@@ -291,12 +291,13 @@ class Controller{
 				$return_string = 0;				
 			}
 		}
+				
+		$plant_id = $db_handler->fetch_last_plant_id();
+		$command = "/var/www/html/gartnetzwerg/add_picture_folder.sh ".$plant_id."_".$nickname;
+		shell_exec($command);
+		
 		$db_handler->disconnect_sql();
 		$this->refresh_local_objects();
-		
-		$plant_id = $db_handler->fetch_last_plant_id();
-		$command = "../add_picture_folder.sh ".$plant_id."_".$nickname;
-		exec($command);
 		
 		return $return_string;
 	}
