@@ -17,7 +17,8 @@ class Controller{
 	private $notification_receiving_email_address;
 	private $vacation_start_date;
 	private $vacation_end_date;
-		
+	private $general_notification_settings;
+	
 	
 	//constructor
 	
@@ -70,6 +71,10 @@ class Controller{
 		$this->openweathermap_location = $new_location;
 	}
 	
+	public function set_general_notification_settings($new_settings){
+		$this->general_notification_settings = $new_settings;
+	}
+	
 	//getters:
 	
 	public function get_sensorunit($sensorunitid){
@@ -108,7 +113,11 @@ class Controller{
 		return $this->openweathermap_location;
 	}
 	
+	public function get_general_notification_settings(){
+		return $this->general_notification_settings;
+	}
 
+	
 	/**
 	 * TODO:
 	 * Bei sämtlichen eingabestrings, die in die datenbank kommen auf ' und " überprüfen, 
@@ -163,8 +172,13 @@ class Controller{
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::init()\n";
 		
 		
-		//read config file 
-		$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
+		//read notification settings
+		$this->set_general_notification_settings($this->lookup_config("SEND_NOTIFICATIONS"));
+		if ($this->get_general_notification_settings() == "ON"){
+			$this->set_notification_receiving_email_address($this->lookup_config("SEND_MAIL_TO"));
+		}else{
+			$this->set_notification_receiving_email_address("");
+		}
 		//read openweathermap info
 		$this->set_openweathermap_api_key($this->lookup_config("OPENWEATHERMAP_API_KEY"));
 		$this->set_openweathermap_location($this->lookup_config("OPENWEATHERMAP_LOCATION"));
@@ -445,6 +459,19 @@ class Controller{
 		$this->write_config("OPENWEATHERMAP_LOCATION", $new_location);
 	}
 	
+	
+	/**
+	 * 
+	 * @param unknown $new_settings has to be "ON" or "OFF"
+	 */
+	public function change_general_notification_settings($new_settings){
+		
+		$this->set_notification_receiving_email_address("");
+		$this->set_general_notification_settings($new_settings);
+		$this->write_config("SEND_NOTIFICATIONS", $new_settings);
+		
+	}
+	
 	public function turn_on_vacation($new_vacation_start, $new_vacation_end){
 		
 		//logging
@@ -477,6 +504,8 @@ class Controller{
 		
 		if ($result == NULL){
 			$result = 0;
+		}else {
+			$this->get_plant($plant_id)->set_notification_settings($new_settings);
 		}
 
 		return $result;

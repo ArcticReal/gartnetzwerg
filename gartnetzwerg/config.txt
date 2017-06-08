@@ -3,7 +3,8 @@
 # all settings in this file will be edited by the program only
 
 
-## Email-Settings
+## Notification-Settings
+SEND_NOTIFICATIONS = "ON"
 SEND_MAIL_TO = "test@test.com"
 
 ## Openweathermap-Settings
