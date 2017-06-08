@@ -1377,22 +1377,29 @@ class DB_Handler{
 	}
 	
 	public function delete_sensor_data($sensor_id){
-		
-		// TODO Logging
-		
+				
 		$query = "DELETE FROM sensor_data WHERE sensor_id = ".$sensor_id.";";
 		$result = mysqli_query($this->mysqli, $query);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::delete_sensor_date(sensor_id: ".$sensor_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		
 		
 		return $result;		
 		
 	}
 	
-	public function delet_sensors($sensor_unit_id){
-		
-		// TODO Logging
+	public function delete_sensors($sensor_unit_id){
 		
 		$query = "DELETE FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id.";";
 		$result = mysqli_query($this->mysqli, $query);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::delete_sensors(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		
 		return $result;
 		
@@ -1400,10 +1407,13 @@ class DB_Handler{
 
 	public function delete_sensor_unit($sensor_unit_id){
 		
-		// TODO Logging
-		
 		$query = "DELETE FROM sensor_unit WHERE sensor_unit_id = ".$sensor_unit_id.";";
 		$result = mysqli_query($this->mysqli, $query);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::delete_sensor_unit(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		
 		return $result;
 		
