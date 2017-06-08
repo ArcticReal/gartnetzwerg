@@ -445,6 +445,34 @@ class Controller{
 		$this->write_config("OPENWEATHERMAP_LOCATION", $new_location);
 	}
 	
+	public function turn_on_vacation($new_vacation_start, $new_vacation_end){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::turn_on_vacation(New Start: ".$new_vacation_start.", New End: ".$new_vacation_end.")\n";
+		$this->write_log($logtext);
+		
+		$this->write_config("VACATION_FUNCTION", "ON");
+		$this->write_config("VACATION_START_DATE", $new_vacation_start);
+		$this->write_config("VACATION_END_DATE", $new_vacation_end);
+		
+		$this->set_vacation_start_date($new_vacation_start);
+		$this->set_vacation_end_date($new_vacation_end);
+		
+		
+	}
+	
+	public function turn_off_vacation(){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::turn_off_vacation()\n";
+		$this->write_log($logtext);
+		
+		$this->write_config("VACATION_FUNCTION", "OFF");
+		
+		$this->set_vacation_start_date("");
+		$this->set_vacation_end_date("");
+		
+	}
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
@@ -924,24 +952,33 @@ class Controller{
 	 * @param unknown $manual if this flag is set this means that the sensor data wont be used for diagrams, set this flag if the meassurement got triggered manually and not by cron
 	 * 
 	 */
-	public function update_sensor_data($manual){
+	public function update_all_sensor_data($manual){
 		//TODO damit das hier funktioniert muss das updaten der sensorwerte funktionieren 
+		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
+			$this->update_sensor_data($sensorunit_id, $manual);
+		}
+	}
+	
+	public function update_sensor_data($sensorunit_id, $manual){
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
-			$this->sensorunit_array[$sensorunit_id]->update_all();
-			$sensor_ids = $this->sensorunit_array[$sensorunit_id]->get_sensor_ids();
-			foreach ($sensor_ids as $sensor_id){
-				$value = $this->sensorunit_array[$sensorunit_id]->get_sensor($sensor_id)->get_value();
-				
-				$db_handler->insert_sensor_data($sensor_id, $value, $manual);
-				
-			}
+		
+		
+		$this->sensorunit_array[$sensorunit_id]->update_all();
+		$sensor_ids = $this->sensorunit_array[$sensorunit_id]->get_sensor_ids();
+		
+		foreach ($sensor_ids as $sensor_id){
+			$value = $this->sensorunit_array[$sensorunit_id]->get_sensor($sensor_id)->get_value();
+			
+			$db_handler->insert_sensor_data($sensor_id, $value, $manual);
 			
 		}
+		
 		$db_handler->disconnect_sql();
 		$this->refresh_local_objects();
+		
 	}
+	
 	
 	public function test(){
 
