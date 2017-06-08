@@ -918,6 +918,17 @@ class DB_Handler{
 		return intval($waterlogging[0]);
 	}
 	
+	public function fetch_last_plant_id(){
+		
+		$query = "SELECT plant_id from plants ORDER BY plant_id DESC LIMIT 1;";
+		$result = mysqli_query($this->mysqli, $query);
+		$plant_id = mysqli_fetch_array($result);
+		
+		
+		
+		return $plant_id[0];
+	}
+	
 	public function fetch_last_watertank_level($sensorunit_id){
 		
 		// logging
