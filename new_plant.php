@@ -13,7 +13,7 @@
 	<link rel="stylesheet" type="text/css" href="./css/status.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
-<body onload="state_tabs()">
+<body>
 	<?php 
 		require_once 'gartnetzwerg/classes/controller.php'; 
 		$controller = new Controller();
@@ -154,21 +154,6 @@
 							}
 						}
 
-						/*if($su_name!="" && $su_mac!=""){
-							if($controller->add_sensor_unit($su_mac, $su_name)!=""){
-								print("sensorunit error");
-							} else {
-								print("alles ok");
-								if($controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
-									print("plant ok");
-								}
-							}
-						} else {
-							if($controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering)==""){
-								print("plant ok");
-							}
-						}*/
-
 						function test_input($data){
 							$data = trim($data);
 							$data = stripslashes($data);
@@ -182,7 +167,7 @@
 	</div>
 	
 	<div id="footer">
-		<div id="info" class="button w2">
+		<div id="back_to_menu" class="button w2">
 			<a href="index.php"><i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i></a>
 		</div>
 

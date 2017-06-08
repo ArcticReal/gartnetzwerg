@@ -1,9 +1,3 @@
-function init_new_plant_page(){
-	document.getElementById("alert").className = "alert-none";
-	document.getElementById("alert").innerHTML = "";
-	toggle();
-}
-
 function init_settings_page(){
 	document.getElementById("alert").className = "alert-none";
 	document.getElementById("alert").innerHTML = "";
@@ -14,21 +8,49 @@ var su = false;
 var state = 0; //status site tab
 
 function state_tabs(i){
-	state = i;
-
+	if(i>=0 && i<=3)
+		state = i;
+	else{
+		var currentUrl = document.URL;
+		var urlParts   = currentUrl.split('#');
+		var string = (urlParts.length > 1) ? urlParts[1] : 0;
+		switch(string){
+			case "state": state = 0; break;
+			case "diagramms": state = 1; break;
+			case "cam": state = 2; break;
+			case "info": state = 3; break;
+			default: state = 0;
+		}
+	}
+	
 	document.getElementById("tab_status").className = "";
 	document.getElementById("tab_diagramme").className = "";
-	document.getElementById("tab_webcam").className = "";
+	document.getElementById("tab_cam").className = "";
 	document.getElementById("tab_info").className = "";
 
+	document.getElementById("status").className = "item";
+	document.getElementById("diagramme").className = "item";
+	document.getElementById("cam").className = "item";
+	document.getElementById("info").className = "item";
+
 	switch(state){
-		case 0: document.getElementById("tab_status").className = "current_tab"; break;
+		case 0:
+			document.getElementById("tab_status").className = "current_tab";
+			document.getElementById("status").className += " current_tab";
+			break;
 		case 1: 
-			document.getElementById("tab_diagramme").className = "current_tab"; 
+			document.getElementById("tab_diagramme").className = "current_tab";
+			document.getElementById("diagramme").className += " current_tab";
 			init_diagramms();
 			break;
-		case 2: document.getElementById("tab_webcam").className = "current_tab"; break;
-		case 3: document.getElementById("tab_info").className = "current_tab"; break;
+		case 2:
+			document.getElementById("tab_cam").className = "current_tab";
+			document.getElementById("cam").className += " current_tab";
+			break;
+		case 3:
+			document.getElementById("tab_info").className = "current_tab";
+			document.getElementById("info").className += " current_tab";
+			break;
 		default:;
 	}
 }
@@ -36,13 +58,17 @@ function state_tabs(i){
 function new_plant_submit(){
 	if(document.forms["new_plant"]["plantname"].value == ""){
 		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Der Nickname deiner Pflanze darf nicht leer sein.";
+		document.getElementById("alert").innerHTML = "Der Pflanzenname deiner Pflanze darf nicht leer sein.";
 	} else if(document.forms["new_plant"]["standort"].value == ""){
 		document.getElementById("alert").className = "";
 		document.getElementById("alert").innerHTML = "Der Standort deiner Pflanze darf nicht leer sein.";
 	} else {
 		document.getElementById("new").submit();
 	}
+}
+
+function settings_submit(){
+	document.getElementById("settings").submit();
 }
 
 function toggle(){
@@ -61,11 +87,106 @@ function toggle(){
 //# DIAGRAMM-FUNKTIONEN ########################################################################################
 
 var zfactor = 1;
-var c = document.getElementById("canvas");
-var cc = c.getContext("2d");
 
-function init_diagramms(){
-	changeZoom(0);
+var c=[
+	document.getElementById("canvas1"),
+	document.getElementById("canvas2"),
+	document.getElementById("canvas3"),
+	document.getElementById("canvas4")
+];
+
+var diagramm = [
+	{c: c[0].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
+	{c: c[1].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
+	{c: c[2].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0},
+	{c: c[3].getContext("2d"), data: new Array(), min: 0, max: 0, drawing_min:0, drawing_max:0}];
+
+/*htmlcanvas is the "this" object in the HTML part. 
+* cc is the id of one of the arrayobject above.
+*/
+function init_canvas(cc, width, height, days){
+	// Create gradient
+	var grd = diagramm[cc].c.createLinearGradient(0,0,0,250);
+	grd.addColorStop(0,"#FFFFFF");
+	grd.addColorStop(1,"#DDDDDD");
+
+	// Fill with gradient
+	diagramm[cc].c.fillStyle = grd;
+	diagramm[cc].c.fillRect(0,0,width,height);
+
+	diagramm[cc].c.beginPath();
+
+	//balken color
+	var color = diagramm[cc].c.createLinearGradient(0,0,0,250);
+	color.addColorStop(0,"#00FF00");
+	color.addColorStop(1,"#00FF00");
+	diagramm[cc].c.fillStyle = color;
+
+	for (var i = 0; i < diagramm[cc].data.length; i++) {
+		//c[cc].moveTo(i*10,100-canvas_data[cc][i]);
+		//c[cc].lineTo((i+1)*10,100-canvas_data[cc][i+1]);
+		diagramm[cc].c.fillRect(2+(i*(width/days)),150-diagramm[cc].data[i],10,diagramm[cc].data[i]);
+	}
+
+	// 0 Degree
+	diagramm[cc].c.moveTo(0,150);
+	diagramm[cc].c.lineTo(500,150);
+	diagramm[cc].c.strokeStyle = "#0000FF";
+	diagramm[cc].c.stroke();
+
+	// min Degree
+	diagramm[cc].c.moveTo(0,200-diagramm[cc].drawing_min-diagramm[cc].min);
+	diagramm[cc].c.lineTo(500,200-diagramm[cc].drawing_min-diagramm[cc].min);
+	diagramm[cc].c.strokeStyle = "#000000";
+	diagramm[cc].c.stroke();
+
+	diagramm[cc].c.moveTo(0,200-diagramm[cc].drawing_max-diagramm[cc].max);
+	diagramm[cc].c.lineTo(500,200-diagramm[cc].drawing_max-diagramm[cc].max);
+	diagramm[cc].c.strokeStyle = "#FF0000";
+	diagramm[cc].c.stroke();
+}
+
+function init_diagramms(days){
+	//changeZoom(0);
+	update_drawing_borders(0);
+	//update_drawing_borders(1);
+	//update_drawing_borders(2);
+	//update_drawing_borders(3);
+	init_canvas(0,500,200, days);
+	//init_canvas(1,500,200, days);
+	//init_canvas(2,500,200, days);
+	//init_canvas(3,500,200, days);
+	document.getElementById("diadebug").innerHTML = days;
+}
+
+function add_data(array,data){
+	diagramm[array].data.push(data);
+}
+
+function set_min_max(array,min_data,max_data){
+	diagramm[array].min = min_data;
+	diagramm[array].max = max_data;
+}
+
+function update_drawing_borders(array){
+	diagramm[array].drawing_max = diagramm[array].max;
+	diagramm[array].drawing_min = 0;
+
+	if(diagramm[array].drawing_min > diagramm[array].min){
+		diagramm[array].drawing_min = diagramm[array].min;
+	}
+
+	for (var i = 0; i < diagramm[array].data.length; i++) {
+		if(diagramm[array].data[i] > diagramm[array].drawing_max){
+			diagramm[array].drawing_max = diagramm[array].data[i];
+		}
+	}
+
+	for (var i = 0; i < diagramm[array].data.length; i++) {
+		if(diagramm[array].data[i] < diagramm[array].drawing_min){
+			diagramm[array].drawing_min = diagramm[array].data[i];
+		}
+	}
 }
 
 function day_diff(date){
@@ -134,27 +255,6 @@ function weight_zoom(d){
 	return 280 - x*zoom_factor() + min_weight()*zoom_factor() - 10;
 }
 
-function canvas(zoom){
-	// Create gradient
-	var grd = cc.createLinearGradient(0,0,0,250);
-	grd.addColorStop(0,"#fff");
-	grd.addColorStop(1,"#d2ebf9");
-
-	// Fill with gradient
-	cc.fillStyle = grd;
-	cc.fillRect(0,0,448,280);
-
-	cc.beginPath();
-
-	for (var i = 0; i < weight.length-1; i++) {
-		cc.moveTo(day_diff(i)*10*zoom,weight_zoom(i));
-		cc.lineTo(day_diff(i+1)*10*zoom,weight_zoom(i+1));
-	}
-
-	cc.strokeStyle = "#6698FF";
-	cc.stroke();
-}
-
 function markMaxWeight(zoom){
 	//cc2.moveTo(0,
 	//	280 - max_weight()*zoom_factor() + min_weight()*zoom_factor() - 10);
@@ -215,161 +315,3 @@ function changeZoom(x){
 	if(weight[weight.length-1].weight != min_weight())
 		markMinWeight(zfactor);
 }
-
-var weight = [
-	{weight: 78.3, date: new Date("2017-01-01")},
-	{weight: 77.3, date: new Date("2017-01-02")},
-	{weight: 77.7, date: new Date("2017-01-03")},
-	{weight: 78.2, date: new Date("2017-01-04")},
-	{weight: 78.6, date: new Date("2017-01-05")},
-	{weight: 78.3, date: new Date("2017-01-06")},
-	{weight: 78.2, date: new Date("2017-01-07")},
-	{weight: 76.8, date: new Date("2017-01-08")},
-	{weight: 77.6, date: new Date("2017-01-09")},
-	{weight: 77.3, date: new Date("2017-01-10")},
-	{weight: 76.8, date: new Date("2017-01-11")},
-	{weight: 77.25, date: new Date("2017-01-12")}, //estimated
-	{weight: 77.7, date: new Date("2017-01-13")},
-	{weight: 77.7, date: new Date("2017-01-14")},
-	{weight: 77.8, date: new Date("2017-01-15")},
-	{weight: 76.8, date: new Date("2017-01-16")},
-	{weight: 77.7, date: new Date("2017-01-17")},
-	{weight: 77.8, date: new Date("2017-01-18")},
-	{weight: 78.0, date: new Date("2017-01-19")},
-	{weight: 77.2, date: new Date("2017-01-20")},
-	{weight: 77.2, date: new Date("2017-01-21")},
-	{weight: 77.3, date: new Date("2017-01-22")},
-	{weight: 77.4, date: new Date("2017-01-23")},
-	{weight: 77.2, date: new Date("2017-01-24")},
-	{weight: 77.8, date: new Date("2017-01-25")},
-	{weight: 77.6, date: new Date("2017-01-26")},
-	{weight: 77.7, date: new Date("2017-01-27")},
-	{weight: 78.0, date: new Date("2017-01-28")},
-	{weight: 77.7, date: new Date("2017-01-29")},
-	{weight: 77.7, date: new Date("2017-01-30")},
-	{weight: 77.7, date: new Date("2017-01-31")},
-
-	{weight: 77.9, date: new Date("2017-02-01")},
-	{weight: 77.93, date: new Date("2017-02-02")},
-	{weight: 77.95, date: new Date("2017-02-03")},
-	{weight: 77.8, date: new Date("2017-02-04")},
-	{weight: 78.0, date: new Date("2017-02-05")},
-	{weight: 77.7, date: new Date("2017-02-06")},
-	{weight: 77.5, date: new Date("2017-02-07")},
-	{weight: 77.2, date: new Date("2017-02-08")},
-	{weight: 77.7, date: new Date("2017-02-09")},
-	{weight: 78.2, date: new Date("2017-02-10")},
-	{weight: 78.5, date: new Date("2017-02-11")},
-	{weight: 78.2, date: new Date("2017-02-12")}, //estimated
-	{weight: 78.2, date: new Date("2017-02-13")},
-	{weight: 77.7, date: new Date("2017-02-14")},
-	{weight: 78.0, date: new Date("2017-02-15")},
-	{weight: 77.7, date: new Date("2017-02-16")},
-	{weight: 77.7, date: new Date("2017-02-17")},
-	{weight: 77.7, date: new Date("2017-02-18")},
-	{weight: 77.7, date: new Date("2017-02-19")},
-	{weight: 77.6, date: new Date("2017-02-20")},
-	{weight: 76.7, date: new Date("2017-02-21")},
-	{weight: 77.8, date: new Date("2017-02-22")},
-	{weight: 77.6, date: new Date("2017-02-23")},
-	{weight: 78.0, date: new Date("2017-02-24")},
-	{weight: 77.9, date: new Date("2017-02-25")},
-	{weight: 77.3, date: new Date("2017-02-26")},
-	{weight: 77.2, date: new Date("2017-02-27")},
-	{weight: 77.7, date: new Date("2017-02-28")},
-
-	{weight: 77.7, date: new Date("2017-03-01")},
-	{weight: 77.2, date: new Date("2017-03-02")}, //estimated
-	{weight: 76.7, date: new Date("2017-03-03")},
-	{weight: 76.8, date: new Date("2017-03-04")},
-	{weight: 77.4, date: new Date("2017-03-05")},
-	{weight: 77.1, date: new Date("2017-03-06")},
-	{weight: 76.9, date: new Date("2017-03-07")},
-	{weight: 77.4, date: new Date("2017-03-08")},
-	{weight: 76.9, date: new Date("2017-03-09")},
-	{weight: 77.0, date: new Date("2017-03-10")}, //estimated
-	{weight: 77.1, date: new Date("2017-03-11")}, //estimated
-	{weight: 77.2, date: new Date("2017-03-12")}, //estimated
-	{weight: 77.3, date: new Date("2017-03-13")}, //estimated
-	{weight: 77.4, date: new Date("2017-03-14")}, //estimated
-	{weight: 77.5, date: new Date("2017-03-15")}, //estimated
-	{weight: 77.6, date: new Date("2017-03-16")}, //estimated
-	{weight: 77.7, date: new Date("2017-03-17")}, //estimated
-	{weight: 77.8, date: new Date("2017-03-18")},
-	{weight: 78.2, date: new Date("2017-03-19")},
-	{weight: 78.125, date: new Date("2017-03-20")}, //estimated
-	{weight: 78.05, date: new Date("2017-03-21")}, //estimated
-	{weight: 77.975, date: new Date("2017-03-22")}, //estimated
-	{weight: 77.9, date: new Date("2017-03-23")},
-	{weight: 78.5, date: new Date("2017-03-24")},
-	{weight: 77.6, date: new Date("2017-03-25")},
-	{weight: 77.5, date: new Date("2017-03-26")}, //estimated
-	{weight: 78.6, date: new Date("2017-03-27")}, //estimated
-	{weight: 78.54, date: new Date("2017-03-28")}, //estimated
-	{weight: 78.48, date: new Date("2017-03-29")}, //estimated
-	{weight: 78.42, date: new Date("2017-03-30")}, //estimated
-	{weight: 78.36, date: new Date("2017-03-31")}, //estimated
-
-	{weight: 78.30, date: new Date("2017-04-01")}, //estimated
-	{weight: 78.2, date: new Date("2017-04-02")},
-	{weight: 77.3, date: new Date("2017-04-03")},
-	{weight: 76.8, date: new Date("2017-04-04")},
-	{weight: 77.2, date: new Date("2017-04-05")},
-	{weight: 77.4, date: new Date("2017-04-06")},
-	{weight: 77.7, date: new Date("2017-04-07")},
-	{weight: 78.2, date: new Date("2017-04-08")},
-	{weight: 78.4, date: new Date("2017-04-09")},
-	{weight: 77.8, date: new Date("2017-04-10")},
-	{weight: 76.8, date: new Date("2017-04-11")},
-	{weight: 77.4, date: new Date("2017-04-12")},
-	{weight: 77.4, date: new Date("2017-04-13")},
-	{weight: 77.08, date: new Date("2017-04-14")}, //estimated
-	{weight: 76.75, date: new Date("2017-04-15")}, //estimated
-	{weight: 76.43, date: new Date("2017-04-16")}, //estimated
-	{weight: 76.1, date: new Date("2017-04-17")},
-	{weight: 75.96, date: new Date("2017-04-18")}, //estimated
-	{weight: 75.83, date: new Date("2017-04-19")}, //estimated
-	{weight: 75.7, date: new Date("2017-04-20")},
-	{weight: 75.9, date: new Date("2017-04-21")},
-	{weight: 76.1, date: new Date("2017-04-22")},
-	{weight: 76.3, date: new Date("2017-04-23")},
-	{weight: 76.5, date: new Date("2017-04-24")},
-	{weight: 76.7, date: new Date("2017-04-25")},
-	{weight: 75, date: new Date("2017-04-26")},
-	{weight: 75, date: new Date("2017-04-27")},
-	{weight: 75, date: new Date("2017-04-28")},
-	{weight: 75, date: new Date("2017-04-29")},
-	{weight: 75, date: new Date("2017-04-30")},
-
-	{weight: 75, date: new Date("2017-05-01")}, //estimated
-	{weight: 75, date: new Date("2017-05-02")},
-	{weight: 77.6, date: new Date("2017-05-03")},
-	{weight: 75, date: new Date("2017-05-04")},
-	{weight: 75, date: new Date("2017-05-05")},
-	{weight: 75, date: new Date("2017-05-06")},
-	{weight: 75, date: new Date("2017-05-07")},
-	{weight: 75, date: new Date("2017-05-08")},
-	{weight: 75, date: new Date("2017-05-09")},
-	{weight: 75, date: new Date("2017-05-10")},
-	{weight: 75, date: new Date("2017-05-11")},
-	{weight: 78.4, date: new Date("2017-05-12")},
-	{weight: 75, date: new Date("2017-05-13")},
-	{weight: 75, date: new Date("2017-05-14")}, //estimated
-	{weight: 75, date: new Date("2017-05-15")}, //estimated
-	{weight: 75, date: new Date("2017-05-16")}, //estimated
-	{weight: 75, date: new Date("2017-05-17")},
-	{weight: 75, date: new Date("2017-05-18")}, //estimated
-	{weight: 75, date: new Date("2017-05-19")}, //estimated
-	{weight: 75, date: new Date("2017-05-20")},
-	{weight: 75, date: new Date("2017-05-21")},
-	{weight: 75, date: new Date("2017-05-22")},
-	{weight: 75, date: new Date("2017-05-23")},
-	{weight: 77.8, date: new Date("2017-05-24")}
-	/*{weight: 76.7, date: new Date("2017-05-25")},
-	{weight: 60, date: new Date("2017-05-26")},
-	{weight: 60, date: new Date("2017-05-27")},
-	{weight: 60, date: new Date("2017-05-28")},
-	{weight: 60, date: new Date("2017-05-29")},
-	{weight: 60, date: new Date("2017-05-30")},
-	{weight: 60, date: new Date("2017-05-31")}*/
-	];

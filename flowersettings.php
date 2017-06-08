@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>GartNetzwerg — Blumeneinstellungen</title>
+	<title>Blumeneinstellungen — GartNetzwerg</title>
 
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,69 +9,91 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
-	<link rel="stylesheet" type="text/css" href="./css/status.css">
+	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
-	<div id="header">
-		<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"];?>><div id="back_to_menu" class="item">
-			<i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i>
-		</div></a>
-		<div id="nick_name" class="item item2">
-			<p></p>
-		</div>
-		<a href="save.php"><div id="flowersettings" class="item">
-			<i class="fa fa-check-circle fa-3x" aria-hidden="true"></i>
-		</div></a>
+	<?php 
+		require_once 'gartnetzwerg/classes/controller.php'; 
+		$controller = new Controller();
+		$plants = $controller->get_plants();		
+
+		$plantname = $plants[$_GET["plant_id"]]->get_nickname();
+		$plantname = $plants[$_GET["plant_id"]]->get_nickname();
+	?>
+
+	<div id="header" class="small">
+		<p><strong>Blumeneinstellungen</strong></p>
 	</div>
 
-	<div id="form">
-		<form name="settings">
-			<table>
-				<tr>
-					<td>Pflanze favorisieren</td>
-					<td><input type="checkbox" name="favorite"></td>
-				</tr>
-				<tr>
-					<td>Nickname ändern</td>
-					<td><input type="text" name="name" size="16" maxlength="16" autocomplete="off" width="20" placeholder="Mercy" autofocus></td>
-				</tr>
-				<tr>
-					<td>Art ändern</td>
-					<td>
-						<select name="scientific_name">
-							<option value="s1">Aloe Vera</option>
-							<option value="s2">Lumos Maxima</option>
-							<option value="s3">Crucio</option>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td>Auto-Bewässerung an/aus</td>
-					<td><input type="checkbox" name="auto-watering"></td>
-				</tr>
-				<tr>
-					<td>Standort anpassen</td>
-					<td>
-						<input type="text" name="name" placeholder="Wohnzimmer"><br/>
-						Drinnen <input type="radio" name="indoor" value="Drinnen" checked>
-						Draußen <input type="radio" name="indoor" value="Draußen">
-					</td>
-				</tr>
-				<tr>
-					<td>Notifications einstellen</td>
-					<td><input type="checkbox" name="notifications"></td>
-				</tr>
-				<tr>
-					<td>Mit Sensoreinheit verknüpfen</td>
-					<td>...</td>
-				</tr>
-				<tr>
-					<td>Pflanze löschen</td>
-					<td><input type="button" name="delete" value="Pflanze löschen"></td>
-				</tr>
-			</table>
+	<div id="form" class="small">
+		<div id="alert" class="alert-none"></div>
+
+		<form name="flowersettings" id="flowersettings" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+			<!--<div class="row">
+				<div class="cell"><p>Pflanze favorisieren</p></div>
+
+				<div class="cell">
+					<input type="checkbox" name="favorite">
+				</div>
+			</div>-->
+			<div class="row">
+				<div class="cell"><p>Pflanzenname ändern</p></div>
+
+				<div class="cell">
+				<?php
+					print("<input type='text' name='name' autocomplete='off' placeholder='".$plantname."' autofocus>");
+				?>
+				</div>
+			</div>
+			<div class="row">
+				<div class="cell"><p>Pflanzenart ändern</p></div>
+
+				<div class="cell">
+					<select name="scientific_name">
+						<option value="s1">Aloe Vera</option>
+						<option value="s2">Lumos Maxima</option>
+						<option value="s3">Crucio</option>
+					</select>
+				</div>
+			</div>
+			<div class="row">
+				<div class="cell"><p>Auto-Bewässerung</p></div>
+				<div class="cell"><input type="checkbox" name="auto-watering"></div>
+			</div>
+			<div class="row">
+				<div class="cell"><p>Standort anpassen</p></div>
+				<div class="cell">
+					<input type="text" name="name" placeholder="Wohnzimmer">
+				</div>
+			</div>
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell">
+					Drinnen <input type="radio" name="indoor" value="Drinnen" checked>
+					Draußen <input type="radio" name="indoor" value="Draußen">
+				</div>
+			</div>
+			<div class="row">
+				<div class="cell"><p>Notifications einstellen</p></div>
+				<div class="cell"><input type="checkbox" name="notifications"></div>
+			</div>
+			<div class="row">
+				<div class="cell"></div>
+				<div class="cell"><input type="button" name="delete" value="Pflanze löschen"></div>
+			</div>
 		</form>
 	</div>
+
+	<div id="footer">
+		<div id="status" class="button w2">
+			<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"];?>><i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i></a>
+		</div>
+
+		<div id="submit" class="button w2">
+			<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> onclick="flowersettings_submit()"><i class="fa fa-check-circle fa-3x" aria-hidden="true"></i></a>
+		</div>
+	</div>
+
 	<script src="js.js"></script>
 </body>
 </html>
