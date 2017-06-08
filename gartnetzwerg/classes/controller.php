@@ -461,6 +461,29 @@ class Controller{
 		
 	}
 	
+	public function change_plant_notfication_settings($plant_id, $new_settings){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::change_plant_notification_settings(Plant Id: ".$plant_id.", New Settings: ".$new_settings.")\n";
+		$this->write_log($logtext);
+		
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$result = $db_handler->update_notification_settings($plant_id, $new_settings);
+		
+		$db_handler->disconnect_sql();
+		
+		if ($result == NULL){
+			$result = 0;
+		}
+
+		return $result;
+		
+		
+	}
+	
 	public function turn_off_vacation(){
 		
 		//logging
@@ -953,6 +976,11 @@ class Controller{
 	 * 
 	 */
 	public function update_all_sensor_data($manual){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::update_all_sensor_data(Manual: ".$manual.")\n";
+		$this->write_log($logtext);
+		
 		//TODO damit das hier funktioniert muss das updaten der sensorwerte funktionieren 
 		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
 			$this->update_sensor_data($sensorunit_id, $manual);
@@ -960,12 +988,16 @@ class Controller{
 	}
 	
 	public function update_sensor_data($sensorunit_id, $manual){
-		$db_handler = new DB_Handler();
-		$db_handler->connect_sql();
 		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::update_sensor_data(Sensorunit Id: ".$sensorunit_id.", Manual: ".$manual.")\n";
+		$this->write_log($logtext);
 		
 		$this->sensorunit_array[$sensorunit_id]->update_all();
 		$sensor_ids = $this->sensorunit_array[$sensorunit_id]->get_sensor_ids();
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
 		
 		foreach ($sensor_ids as $sensor_id){
 			$value = $this->sensorunit_array[$sensorunit_id]->get_sensor($sensor_id)->get_value();

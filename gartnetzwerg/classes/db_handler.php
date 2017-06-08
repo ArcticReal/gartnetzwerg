@@ -301,6 +301,9 @@ class DB_Handler{
 			
 			$summer_prep = $this->fetch_summer_prep($species_id);
 			$plant->set_summer_prep($summer_prep);
+			
+			$notification_settings = $this->fetch_notification_settings($plant_id);
+			$plant->set_notification_settings($notification_settings);
 					
 			$this->plants[$plant_id] = $plant;
 		}
@@ -1150,6 +1153,23 @@ class DB_Handler{
 		return $species_ids;
 	}
 	
+	public function fetch_notification_settings($plant_id){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::fetch_notification_settings(Plant Id: ".$plant_id.")\n";
+		
+		$query = "SELECT notification FROM plants WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$notification_settings = mysqli_fetch_array($result);
+		
+		//logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$notification_settings."\n";
+		$this->write_log($logtext);
+		
+		return $notification_settings[0];
+	}
+	
 	//insert functions
 	
 	public function insert_water_usage($plant_id, $water_usage){
@@ -1346,6 +1366,22 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		$this->write_log($logtext);
+	}
+	
+	public function update_notification_settings($plant_id, $new_settings){
+		
+		$query = "UPDATE plants SET notification = '".$new_settings."' WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::update_notification_settings(Plant Id: ".$plant_id.", New Settings: ".$new_settings.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		$this->write_log($logtext);
+		
+		return $result;
+		
 	}
 	
 	

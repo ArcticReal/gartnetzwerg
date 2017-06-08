@@ -46,6 +46,7 @@ class Plant{
 	private $needed_location;
 	private $fertilizing_hints;
 	private $summer_prep;
+	private $notification_settings;
 
 	
 	//setters
@@ -199,6 +200,10 @@ class Plant{
 	
 	public function set_summer_prep($summer_prep){
 		$this->summer_prep = $summer_prep;
+	}
+	
+	public function set_notification_settings($new_settings){
+		$this->notification_settings = $new_settings;
 	}
 	
 	//getters
@@ -374,6 +379,11 @@ class Plant{
 	public function get_summer_prep(){
 		return $this->summer_prep;
 	}
+
+	public function get_notification_settings(){
+		return $this->notification_settings;		
+	}
+	
 }
 
 ?>
