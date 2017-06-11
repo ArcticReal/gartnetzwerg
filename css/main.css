@@ -27,6 +27,11 @@ body{
 	position: fixed;
 	top: 0;
 	background-color: white;
+	box-shadow: 0px -25px 50px 25px #AAA;
+}
+
+#header.small{
+	height: 50px;
 }
 
 #header #helper{
@@ -43,7 +48,7 @@ body{
 	margin: 20px 0px;
 }
 
-#header .item, #nav .item{
+#header .item{
 	height: 50px;
 	margin: 8px;
 	width: calc(25% - 18px);
@@ -79,6 +84,39 @@ body{
 	height: 50px;
 	width: 100%;
 	margin: 0 auto;
+	margin-top: 75px;
+}
+
+#nav .item{
+	height: 50px;
+	margin: 0px;
+	width: 25%;
+
+	float: left;
+
+	background-color: #CCC;
+	color: #222;
+
+	text-align: center;
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9;
+
+    box-shadow: 0px -30px 20px -25px #333 inset; 
+
+    -webkit-transition: border-top 0.1s ease 0.5s,
+    					background-color 0.5s ease 0s; /* Safari */
+    transition: border-top 0.1s ease 0.5s,
+    			background-color 0.5s ease 0s;
+}
+
+#nav .item.current_tab{
+	border-top: 3px indigo solid;
+	box-shadow: 0px 10px 20px;
+
+	background-color: #EEE;
+	color: #333;
 }
 
 #header #logo{
@@ -114,10 +152,15 @@ body{
 	padding: 25px;
 }
 
+#list.small, #form.small{
+	margin-top: 50px;
+	height: calc(100vh - 150px);
+}
+
 #list.status{
-	margin-top: 145px;
-	height: calc(100vh - 145px);
-	position: relative;
+	margin-top: 125px;
+	height: calc(100vh - 125px);
+	position: absolute;
 }
 
 #list #img{
@@ -196,6 +239,18 @@ body{
 
 #list.infos small{
 	padding-bottom: 25px;
+}
+
+#tab_info p{
+	padding: 0px;
+	margin: auto;
+	padding-top: 5px;
+}
+
+#tab_info strong{
+	padding: 0px;
+	margin: auto;
+	padding-top: 25px;
 }
 
 #buttonSU{
@@ -277,6 +332,10 @@ input, select, textarea {
           box-sizing: border-box;
 }
 
+#form input{
+	margin: 4px;
+}
+
 #form input[type="text"],
 #form input[type="email"],
 #form input[type="button"],
@@ -284,15 +343,14 @@ input, select, textarea {
 	width: 90%;
 }
 
-/*#alert{
-	background-color: #AA6666;
-	border: 1px darkred solid;
-	color: darkred;
+#alert{
+	background-color: #FFEEEE;
+	border: 3px red solid;
+	color: #995555;
 	padding: 8px;
 	margin-top: 8px;
 	margin-bottom: 8px;
 	opacity: 1;
-	width: 100%;
 }
 
 #alert.alert-none{
@@ -301,9 +359,7 @@ input, select, textarea {
 	margin-bottom: 0px;
 	border: none;
 	opacity: 0;
-
-	width: 100% !important;
-}*/
+}
 
 #form form tr td:nth-child(2){
 	width: 100px;
@@ -322,7 +378,7 @@ input, select, textarea {
 
 #tab_status.current_tab,
 #tab_diagramme.current_tab,
-#tab_webcam.current_tab,
+#tab_cam.current_tab,
 #tab_info.current_tab{
 	width: 100%;
 	opacity: 1;
@@ -330,7 +386,7 @@ input, select, textarea {
 	height: auto;
 }
 
-#tab_status, #tab_diagramme, #tab_webcam, #tab_info{
+#tab_status, #tab_diagramme, #tab_cam, #tab_info{
 	width: 0%;
 	height: 100%;
 	opacity: 0;
@@ -338,6 +394,27 @@ input, select, textarea {
 
 	-webkit-transition: width 1s ease 0.5s, opacity 1s ease 0s; /* Safari */
     transition: width 1s ease 0.5s, opacity 1s ease 0s;
+}
+
+/* ################################################### urlaub */
+
+#urlaub{
+	height: auto;
+	width: 50%;
+	position: relative;
+	margin: 20px auto;
+}
+
+#urlaub *{
+	margin: 5px;
+	width: 100%;
+}
+
+#urlaub input[type="button"]{
+	height: 100px;
+	width: 100%;
+	background-color: #AAFFAA;
+	border: 3px #55FF55 solid;
 }
 
 /* ############################################ status colors */

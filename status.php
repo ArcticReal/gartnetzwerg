@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
-<body onload="state_tabs(0)">
+<body onload="state_tabs(-1)">
 	<?php 
 		require_once 'gartnetzwerg/classes/controller.php'; 
 			
@@ -61,19 +61,19 @@
 	</div>
 
 	<div id="nav">
-		<a href="#status" onclick="state_tabs(0)"><div id="status" class="item">
+		<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
 			<p>
 				<i class="fa fa-table" aria-hidden="true"></i>
 				Übersicht
 			</p>
 		</div></a>
-		<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramms" class="item">
+		<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
 			<p>
 				<i class="fa fa-area-chart" aria-hidden="true"></i>
 				Diagramme
 			</p>
 		</div></a>
-		<a href="#webcam" onclick="state_tabs(2)"><div id="webcam" class="item">
+		<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
 			<p>
 				<i class="fa fa-camera" aria-hidden="true"></i>
 				Kamera</p>
@@ -88,9 +88,22 @@
 
 	<div id="list" class="status">
 		<div id="tab_status">
-			<div id="img"></div>
+			<!--<div id="img"></div>-->
 		
 			<div id="sensordaten">
+				<button>Jetzt gießen</button>
+
+				<form action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="POST">
+					<input type="submit" name="update_data" value="update_data" onclick="update_data()">
+				</form>
+				
+				<?php
+					function update_data(){
+						$controller->update_sensor_data(1);
+					}
+				?>
+
+				<small>Zuletzt gemessen: xx.xx.xxxx</small>
 				<table>
 					<tr>
 						<th>Sensor</th>
@@ -132,17 +145,46 @@
 		</div>
 
 		<div id="tab_diagramme">
-			<p>Temperatur-Verlauf</p>
+			<div id="diadebug">x</div>
+			<?php 
+				$days = 14;
+
+				$water_usage_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
+				$lighthours_array = $controller->lighthours_per_day($_GET["plant_id"], $days);
+				$air_humidity_array = $controller->air_humidity_per_day($_GET["plant_id"], $days);
+				$soil_humidity_array = $controller->soil_humidity_per_day($_GET["plant_id"], $days);
+				$air_temperature_array = $controller->air_temperature_per_day($_GET["plant_id"], $days);
+				$soil_temperature_array = $controller->soil_temperature_per_day($_GET["plant_id"], $days);
+				$waterlogging_array = $controller->waterlogging_per_day($_GET["plant_id"], $days);
+			?>
+
+			<p>Luftfemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas1" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 				<button id="canvasm" onclick="changeZoom(-1)"></button>
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
-			<p>Feuchtigkeitsverlauf</p>
+			<p>Bodentemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas2" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Luftfeuchtigkeitsverlauf</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas3" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Bodenfeuchtigkeitsverlauf</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas4" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 				<button id="canvasm" onclick="changeZoom(-1)"></button>
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
@@ -150,85 +192,129 @@
 
 			<p>Lichtstundenverlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas5" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Wasserverbrauch</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas6" width="500px" height="200px" style="border:1px solid #000000;">
+				</canvas>
+				<button id="canvasm" onclick="changeZoom(-1)"></button>
+				<button id="canvasp" onclick="changeZoom(+1)"></button>
+			</div>
+
+			<p>Staunässe</p>
+			<div id="diagramm1" class="diagramm">
+				<canvas id="canvas7" width="500px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 				<button id="canvasm" onclick="changeZoom(-1)"></button>
 				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 		</div>
 
-		<div id="tab_webcam">
-			<p>Webcam</p>
+		<div id="tab_cam">
+			<button>Jetzt schießen</button>
+			<button>Live View?</button><br/>
+			
+			<p>letztes Bild:</p>
+			<img src="./img/aloeveratopf.jpg" width="300"><br/>
+
+			<img src="./img/aloeveratopf.jpg" width="100">
+			<img src="./img/aloeveratopf.jpg" width="100">
+			<img src="./img/aloeveratopf.jpg" width="100"><br/>
+
+			<img src="./img/aloeveratopf.jpg" width="100">
+			<img src="./img/aloeveratopf.jpg" width="100">
+			<img src="./img/aloeveratopf.jpg" width="100">
 		</div>
 
 		<div id="tab_info">
 			<h1>Tipps zur Pflanzenpflege einer Aloe Vera</h1>
 
 			<strong>Richtig Gießen</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_how_to_water()."</p>");
+			?>
 
 			<strong>Richtige Position</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_needed_location()."</p>");
+			?>
 
 			<strong>Dünger-Tipps</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_fertilizing_hints()."</p>");
+			?>
 		
 			<strong>Winter-Vorbereitungen</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_winter_prep()."</p>");
+			?>
 
 			<strong>Sommer-Vorbereitungen</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_summer_prep()."</p>");
+			?>
 
 			<strong>Ungeziefer und Pflege</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_caretaking_hints()."</p>");
+			?>
 
 			<strong>Umtopfen und Vermehren</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_transplanting()."</p>");
+			?>
 
 			<strong>Spezielle Bedürfnisse</strong>
-			<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
-			tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
-			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
-			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
-			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+			<?php 
+				print("<p>".$plant->get_special_needs()."</p>");
+			?>
 		</div>
 	</div>
+
 	<script src="js.js"></script>
+
+	<?php
+		foreach ($air_temperature_array as $i => $value) {
+			echo '<script>add_data(0,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(0,'.$min_air_temperature.','.$max_air_temperature.');</script>';
+
+		foreach ($soil_temperature_array as $i => $value) {
+			echo '<script>add_data(1,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(1,'.$min_soil_temperature.','.$max_soil_temperature.');</script>';
+
+		foreach ($air_humidity_array as $i => $value) {
+			echo '<script>add_data(2,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(2,'.$min_air_humidity.','.$max_air_humidity.');</script>';
+
+		foreach ($soil_humidity_array as $i => $value) {
+			echo '<script>add_data(3,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(3,'.$min_soil_humidity.','.$max_soil_humidity.');</script>';
+
+		foreach ($lighthours_array as $i => $value) {
+			echo '<script>add_data(4,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(4,'.$min_light_hours.','.$max_light_hours.');</script>';
+
+		foreach ($water_usage_array as $i => $value) {
+			echo '<script>add_data(5,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(5,'.$days.','.$days.');</script>';
+
+		foreach ($waterlogging_array as $i => $value) {
+			echo '<script>add_data(6,'.$value.');</script>';
+		}
+		echo '<script>set_min_max(6,'.$tolerates_waterlogging.','.$tolerates_waterlogging.');</script>';
+
+		echo "<script>init_diagramms(".$days.");</script>";
+	?>
 </body>
 </html>
