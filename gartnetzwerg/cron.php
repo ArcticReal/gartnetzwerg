@@ -6,7 +6,6 @@
 
 require_once 'classes/controller.php';
 $controller = new Controller();
-$controller->init();
 $controller->update_all_sensor_data(0);
 
 

@@ -268,9 +268,8 @@ class DB_Handler{
 			$akt_soil_humidity = $this->fetch_akt_soil_humidity($sensor_unit_id);
 			$plant->set_akt_soil_humidity($akt_soil_humidity);
 			
-			/* TODO Methode noch nicht implementiert
-			 $akt_waterlogging = $this->fetch_akt_waterlogging($sensor_unit_id);
-			 $plant->set_akt_waterlogging($akt_waterlogging); */
+			$akt_waterlogging = $this->fetch_akt_waterlogging($sensor_unit_id);
+			$plant->set_akt_waterlogging($akt_waterlogging);
 			
 			$akt_air_temperature = $this->fetch_akt_air_temperature($sensor_unit_id);
 			$plant->set_akt_air_temperature($akt_air_temperature);
@@ -738,7 +737,27 @@ class DB_Handler{
 	
 	public function fetch_akt_waterlogging($sensor_unit_id){
 		
-		// TODO
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Waterlogging_sensor';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_waterlogging(sensor_unit_id: ".$sensor_unit_id.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$akt_waterlogging = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$akt_waterlogging[0]."\n";
+		$this->write_log($logtext);
+		
+		return $akt_waterlogging[0];
+		
 	}
 	
 	public function fetch_akt_air_temperature($sensor_unit_id){
@@ -849,7 +868,6 @@ class DB_Handler{
 	
 	public function fetch_soil_humidity($sensorunit_id, $date){
 		
-		// TODO Logging
 		
 		$query = "SELECT AVG(value) FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id";
 		$query = $query." WHERE sensor.sensor_unit_id = ".$sensorunit_id;
@@ -1204,7 +1222,7 @@ class DB_Handler{
 	
 	public function insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering){
 		
-		// TODO ordner für bilder
+		
 		
 		//logging
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::insert_plant(Sensorunit Id: ".$sensorunit_id;

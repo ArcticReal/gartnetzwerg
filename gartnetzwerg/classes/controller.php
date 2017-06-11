@@ -119,7 +119,7 @@ class Controller{
 
 	
 	/**
-	 * TODO:
+	 * TODO: eingabeüberprüfung
 	 * Bei sämtlichen eingabestrings, die in die datenbank kommen auf ' und " überprüfen, 
 	 * da diese die inserts kaputt machen
 	 * 
@@ -145,8 +145,9 @@ class Controller{
 	
 	public function get_all_species(){
 		
-		// TODO logging
-		
+		// logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Cntroller::get_all_species()\n";
+		$this->write_log($logtext);
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		$ids = $db_handler->fetch_all_species_ids();
@@ -222,10 +223,7 @@ class Controller{
 			// vacation function OFF
 			
 			//logging
-			$logtext = $logtext."VACATION_FUNCTION:		ON\n";
-			$logtext = $logtext."					VACATION_START_DATE:		".$this->get_vacation_start_date()."\n";
-			$logtext = $logtext."					VACATION_END_DATE:		".$this->get_vacation_end_date()."\n";
-			
+			$logtext = $logtext."VACATION_FUNCTION:		OFF\n";
 			
 		}
 		
@@ -826,6 +824,10 @@ class Controller{
 		else if($color_value >= 1) return "orange"; else if($color_value >= 0.5) return "yellow"; else return "green";
 	}
 	
+	
+	//messwerte
+
+	
 	/**
 	 * return the sum of used water during $days from plant with $plant_id
 	 * @param  $plant_id
@@ -886,13 +888,16 @@ class Controller{
 	}
 	
 	
-	//messwerte
 	
 	/**
 	 * takes data from the DB, counts the values of hours of light per day
 	 * @returns hours of light in an array indexed on days, 
 	 */
 	public function lighthours_per_day($sensor_unit_id, $days){
+		
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::lighthours_per_day_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -916,6 +921,10 @@ class Controller{
 
 	public function air_humidity_per_day($sensor_unit_id, $days){
 		
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::air_humidity_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
+		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		
@@ -931,6 +940,11 @@ class Controller{
 	}
 	
 	public function soil_humidity_per_day($sensor_unit_id, $days){
+
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::soil_humidity_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
+		
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
@@ -948,6 +962,10 @@ class Controller{
 	
 	public function air_temperature_per_day($sensor_unit_id, $days){
 		
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::air_temperature_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
+		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		
@@ -964,6 +982,10 @@ class Controller{
 	
 	public function soil_temperature_per_day($sensor_unit_id, $days){
 		
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::soil_temperature_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
+		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		
@@ -979,6 +1001,10 @@ class Controller{
 	}
 	
 	public function waterlogging_per_day($sensor_unit_id, $days){
+		
+		//  Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::waterlogging_per_day(Sensorunit ID: ".$sensor_unit_id.", Days: ".$days.")\n";
+		$this->write_log($logtext);
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
