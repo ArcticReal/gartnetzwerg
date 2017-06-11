@@ -17,6 +17,7 @@ body{
 	padding: 0px;
 	margin: 0px;
 	font-family: sans-serif;
+	overflow-x: hidden;
 }
 
 /* #################################################### HEADER */
@@ -28,6 +29,7 @@ body{
 	top: 0;
 	background-color: white;
 	box-shadow: 0px -25px 50px 25px #AAA;
+	overflow: hidden;
 }
 
 #header.small{
@@ -51,11 +53,11 @@ body{
 #header .item{
 	height: 50px;
 	margin: 8px;
-	width: calc(25% - 18px);
+	width: calc(25% - 16px);
 
 	float: left;
-	background-color: #AAA;
-	border: 1px #777 solid; 
+	/*background-color: #AAA;
+	border: 1px #777 solid; */
 	text-align: center;
 
 	display: flex;
@@ -81,10 +83,11 @@ body{
 
 #nav{
 	position: fixed;
-	height: 50px;
+	height: 55px;
 	width: 100%;
 	margin: 0 auto;
 	margin-top: 75px;
+	overflow: hidden;
 }
 
 #nav .item{
@@ -102,6 +105,8 @@ body{
     align-items: center;
     justify-content: center;
     z-index: 9;
+
+    border: none;
 
     box-shadow: 0px -30px 20px -25px #333 inset; 
 
@@ -152,6 +157,11 @@ body{
 	padding: 25px;
 }
 
+#sensor_list{
+	background-color: #EEE;
+	padding: 25px;
+}
+
 #list.small, #form.small{
 	margin-top: 50px;
 	height: calc(100vh - 150px);
@@ -159,8 +169,12 @@ body{
 
 #list.status{
 	margin-top: 125px;
-	height: calc(100vh - 125px);
+	height: 100%;
+	height: calc(100vh - 175px);
 	position: absolute;
+
+	width: 90vw;
+	width: calc(100vw - 50px);
 }
 
 #list #img{
@@ -202,6 +216,7 @@ body{
 	bottom: 0;
 	width: 100%;
 	height: 50px;
+	overflow: hidden;
 }
 
 #footer .button{
@@ -290,6 +305,10 @@ body{
 	border: 1px #777 solid;
 }
 
+#sensordaten table{
+	margin-top: 10px;
+}
+
 #list table th, td, #form table th{
 	padding: 10px;
 	text-align: left;
@@ -299,7 +318,7 @@ body{
     background-color: #DDD;
 }
 
-#form .row{
+#form .row, #sensor_list .row{
 	overflow: auto;
 }
 
@@ -307,18 +326,34 @@ body{
 	background-color: #DDD;
 }
 
-#form .row div{
+#form .row .cell,
+#sensor_list .row .cell{
 	padding: 8px;
 	float: left;
 }
 
-#form .row div:nth-child(even) {
+#form .row .cell:nth-child(even),
+#sensor_list .row .cell:nth-child(even){
     width: 45%;
     float: right;
 }
 
+/*#form .row .cell3:nth-child(even){
+    width: 30%;
+    float: left;
+}*/
+
 .cell{
 	width: 48%;
+}
+
+.cell3{
+	width: 30%;
+}
+
+.cell1{
+	width: 100%;
+	text-align: center;
 }
 
 .cell .tooltip{
@@ -332,15 +367,21 @@ input, select, textarea {
           box-sizing: border-box;
 }
 
-#form input{
+#form input, #sensor_list input{
 	margin: 4px;
 }
 
 #form input[type="text"],
 #form input[type="email"],
 #form input[type="button"],
-#form select{
+#form select,
+#form input[type="submit"],
+#sensor_list input{
 	width: 90%;
+}
+
+#cam_buttons .w2{
+	width: 45%;
 }
 
 #alert{
@@ -361,7 +402,8 @@ input, select, textarea {
 	opacity: 0;
 }
 
-#form form tr td:nth-child(2){
+#form form tr td:nth-child(2),
+#sensor_list form tr td:nth-child(2){
 	width: 100px;
 }
 
@@ -369,7 +411,9 @@ input, select, textarea {
 	margin-top: 10px;
 }
 
-#form form input[type="button"]{
+#form form input[type="button"],
+#form form input[type="submit"],
+#sensor_list form input[type="submit"]{
 	background-color: darkred;
 	color: white;
 	border: 1px #660000 solid;
@@ -380,7 +424,10 @@ input, select, textarea {
 #tab_diagramme.current_tab,
 #tab_cam.current_tab,
 #tab_info.current_tab{
+	position: relative;
+	display: block;
 	width: 100%;
+	max-width: 800px;
 	opacity: 1;
 	overflow: hidden;
 	height: auto;
@@ -400,7 +447,7 @@ input, select, textarea {
 
 #urlaub{
 	height: auto;
-	width: 50%;
+	width: 100%;
 	position: relative;
 	margin: 20px auto;
 }
@@ -413,8 +460,10 @@ input, select, textarea {
 #urlaub input[type="button"]{
 	height: 100px;
 	width: 100%;
-	background-color: #AAFFAA;
-	border: 3px #55FF55 solid;
+	background-color: lightgreen;
+	border: 2px green solid;
+	color: green;
+	font-size: large;
 }
 
 /* ############################################ status colors */
@@ -439,6 +488,17 @@ input, select, textarea {
 	border-left: 15px black solid !important;
 }
 
+/**/
+
+.grey{
+	color: 
+}
+
+#canvasm, #dayfactor, #canvasp{
+	width: 30%;
+	float: left;
+}
+
 /* ########################################## smaller screnen */
 
 @media screen and (max-width: 630px) {
@@ -446,24 +506,21 @@ input, select, textarea {
 		margin: 10px 0%;
 	}
 
-	#form .row div{
+	#form .row div,
+	#sensor_list .row div{
 	    width: auto !important;
 	    float: none !important;
 	    clear: both !important;
 	}
 
-	#form .row div.checkbox:nth-child(even) {
+	#form .row div.checkbox:nth-child(even){
 	    width: auto !important;
 	    float: right !important;
 	}
 }
 
-/*@media screen and (max-width: 480px) {
-    #list a{
-		margin: 10px 0%;
-	}
-
-	#form form tr td{
-		width: auto !important;
-	}
-}*/
+@media screen and (max-width: 480px) {
+    #nav .item *{
+    	font-size: smaller;
+    }
+}

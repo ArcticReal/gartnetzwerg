@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 	<title>GartNetzwerg — Pflanzenstatus</title>
 
@@ -7,7 +7,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-
+    <meta http-equiv="refresh" content="1800" >
+    <!--3600-->
+    
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
@@ -58,52 +60,68 @@
 		<a href=<?php echo "flowersettings.php?plant_id=".$_GET["plant_id"];?>><div id="flowersettings" class="item">
 			<i class="fa fa-cog fa-3x" aria-hidden="true"></i>
 		</div></a>
-	</div>
 
-	<div id="nav">
-		<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
-			<p>
-				<i class="fa fa-table" aria-hidden="true"></i>
-				Übersicht
-			</p>
-		</div></a>
-		<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
-			<p>
-				<i class="fa fa-area-chart" aria-hidden="true"></i>
-				Diagramme
-			</p>
-		</div></a>
-		<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
-			<p>
-				<i class="fa fa-camera" aria-hidden="true"></i>
-				Kamera</p>
-		</div></a>
-		<a href="#info" onclick="state_tabs(3)"><div id="info" class="item">
-			<p>
-				<i class="fa fa-info" aria-hidden="true"></i>
-				Info
-			</p>
-		</div></a>
+		<div id="nav">
+			<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
+				<p>
+					<i class="fa fa-table" aria-hidden="true"></i>
+					Übersicht
+				</p>
+			</div></a>
+			<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
+				<p>
+					<i class="fa fa-area-chart" aria-hidden="true"></i>
+					Diagramme
+				</p>
+			</div></a>
+			<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
+				<p>
+					<i class="fa fa-camera" aria-hidden="true"></i>
+					Kamera</p>
+			</div></a>
+			<a href="#info" onclick="state_tabs(3)"><div id="info" class="item">
+				<p>
+					<i class="fa fa-info" aria-hidden="true"></i>
+					Info
+				</p>
+			</div></a>
+		</div>
+
 	</div>
 
 	<div id="list" class="status">
 		<div id="tab_status">
 			<!--<div id="img"></div>-->
-		
+
+			<?php
+
+			if (isset($_POST['action'])) {
+				switch ($_POST['action']) {
+				case 'manual_water': print("manual_water"); break;
+				case 'manual_data': print("manual_data"); break;
+				}
+			}
+
+			?>
+
 			<div id="sensordaten">
-				<button>Jetzt gießen</button>
-
 				<form action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="POST">
-					<input type="submit" name="update_data" value="update_data" onclick="update_data()">
+					<div id="sensor_list">
+						<div class="row">
+							<div class="cell">
+								<input type="submit" class="button" name="manual_water" value="manual_water" />
+							</div>
+							<div class="cell">Zuletzt gegossen: <?php $plant->get_last_watering(); ?></div>
+						</div>
+						<div class="row">
+							<div class="cell">
+								<input type="submit" class="button" name="manual_data" value="manual_data" />
+							</div>
+							<div class="cell">Zuletzt gemessen: xx.xx.xxxx</div>
+						</div>
+					</div>
 				</form>
-				
-				<?php
-					function update_data(){
-						$controller->update_sensor_data(1);
-					}
-				?>
 
-				<small>Zuletzt gemessen: xx.xx.xxxx</small>
 				<table>
 					<tr>
 						<th>Sensor</th>
@@ -141,13 +159,30 @@
 						<td><?php echo $akt_waterlogging; ?></td>
 					</tr>
 				</table>
+
+				<table>
+					<tr>
+						<th></th>
+						<th>Aktuell</th>
+					</tr>
+					<tr>
+						<td>Füllstand Wassertank</td>
+						<td><?php 
+							/*$su = $controller->get_sensorunit($plant->get_sensor_unit_id());
+							echo $su->get_watertank_level();*/?></td>
+					</tr>
+					<tr>
+						<td>Wasserbedarf</td>
+						<td><!--<?php //echo $controller->sum_water_usage($_GET["plant_id"], 1);?>--></td>
+					</tr>
+				</table>
 			</div>
 		</div>
 
 		<div id="tab_diagramme">
 			<div id="diadebug">x</div>
 			<?php 
-				$days = 14;
+				$days = 365;
 
 				$water_usage_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
 				$lighthours_array = $controller->lighthours_per_day($_GET["plant_id"], $days);
@@ -155,84 +190,108 @@
 				$soil_humidity_array = $controller->soil_humidity_per_day($_GET["plant_id"], $days);
 				$air_temperature_array = $controller->air_temperature_per_day($_GET["plant_id"], $days);
 				$soil_temperature_array = $controller->soil_temperature_per_day($_GET["plant_id"], $days);
-				$waterlogging_array = $controller->waterlogging_per_day($_GET["plant_id"], $days);
+				$waterlogging_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
 			?>
 
-			<p>Luftfemperatur-Verlauf</p>
+			<br/><br/><input type="button" id="canvasm" onclick="change_days(-1)" value="-">
+			<span id="dayfactor">x</span>
+			<input type="button" id="canvasp" onclick="change_days(1)" value="+">
+
+			<p>Lufttemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas1" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas1" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
 			<p>Bodentemperatur-Verlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas2" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas2" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
 			<p>Luftfeuchtigkeitsverlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas3" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas3" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
 			<p>Bodenfeuchtigkeitsverlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas4" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas4" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
 			<p>Lichtstundenverlauf</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas5" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas5" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 
 			<p>Wasserverbrauch</p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas6" width="500px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas6" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
-			</div>
-
-			<p>Staunässe</p>
-			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas7" width="500px" height="200px" style="border:1px solid #000000;">
-				</canvas>
-				<button id="canvasm" onclick="changeZoom(-1)"></button>
-				<button id="canvasp" onclick="changeZoom(+1)"></button>
 			</div>
 		</div>
 
 		<div id="tab_cam">
-			<button>Jetzt schießen</button>
-			<button>Live View?</button><br/>
-			
+			<?php 
+				if (isset($_GET['manual_photo'])) {
+					print('Manual Photo');
+					//$controller->();
+				} else if (isset($_GET['live'])) {
+					print('Live');
+					//$controller->();
+				}
+			?>
+
+			<form name="cam_buttons" id="cam_buttons">
+				<button class="w2"><a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=manual_photo";?>>Manuelle Fotoaufnahme</a></button>
+				<button class="w2"><a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=live";?>>Live View</a></button>
+			</form>
+
 			<p>letztes Bild:</p>
-			<img src="./img/aloeveratopf.jpg" width="300"><br/>
+			<img src="./img/aloeveratopf.jpg" width="300" alt="letztes Bild"><br/>
 
-			<img src="./img/aloeveratopf.jpg" width="100">
-			<img src="./img/aloeveratopf.jpg" width="100">
-			<img src="./img/aloeveratopf.jpg" width="100"><br/>
+			<?php
+				function f_zero($par){
+					if($par < 10)
+						return 0;
+				}
 
-			<img src="./img/aloeveratopf.jpg" width="100">
-			<img src="./img/aloeveratopf.jpg" width="100">
-			<img src="./img/aloeveratopf.jpg" width="100">
+				$day = 02;
+				$hour = 04;
+				$min = 48;
+				$sec = 18;
+
+				$path = "/var/www/html/img/testpics/2017-06-02_".$hour."_".$min."_".$sec.".jpg";
+				for ($i = 0; $i < -999999; $i++) { 
+					$path = "/var/www/html/img/testpics/2017-06-".f_zero($day).$day."_".f_zero($hour).$hour."_".f_zero($min).$min."_".f_zero($sec).$sec.".jpg";
+				
+					if(file_exists($path)==1){
+						print("<img src='./img/testpics/2017-06-".f_zero($day).$day."_".f_zero($hour).$hour."_".f_zero($min).$min."_".f_zero($sec).$sec.".jpg' alt='".$path."' width='30%'>");
+					}
+
+					$sec += 1;
+					if($sec>59){
+						$min += 1;
+						$sec = 0;
+					}
+
+					if($min>60){
+						$min %= 60;
+						$hour += 1;
+					}
+
+					if($hour >= 22){
+						$day += 1;
+					}
+				}
+			?>
 		</div>
 
 		<div id="tab_info">
-			<h1>Tipps zur Pflanzenpflege einer Aloe Vera</h1>
+			<h1>Tipps zur Pflanzenpflege einer <?php echo($plant->get_name());?></h1>
 
 			<strong>Richtig Gießen</strong>
 			<?php 
@@ -279,42 +338,46 @@
 	<script src="js.js"></script>
 
 	<?php
+		echo '<script>init_diagrams();</script>';
+		echo '<script>change_days(0);</script>';
+
 		foreach ($air_temperature_array as $i => $value) {
-			echo '<script>add_data(0,'.$value.');</script>';
+			echo "<script>add_data(0,'$i',$value);</script>";
 		}
 		echo '<script>set_min_max(0,'.$min_air_temperature.','.$max_air_temperature.');</script>';
 
 		foreach ($soil_temperature_array as $i => $value) {
-			echo '<script>add_data(1,'.$value.');</script>';
+			echo '<script>add_data(1,"'.$i.'",'.$value.');</script>';
 		}
 		echo '<script>set_min_max(1,'.$min_soil_temperature.','.$max_soil_temperature.');</script>';
 
 		foreach ($air_humidity_array as $i => $value) {
-			echo '<script>add_data(2,'.$value.');</script>';
+			echo '<script>add_data(2,"'.$i.'",'.$value.');</script>';
 		}
 		echo '<script>set_min_max(2,'.$min_air_humidity.','.$max_air_humidity.');</script>';
 
 		foreach ($soil_humidity_array as $i => $value) {
-			echo '<script>add_data(3,'.$value.');</script>';
+			echo '<script>add_data(3,"'.$i.'",'.$value.');</script>';
 		}
 		echo '<script>set_min_max(3,'.$min_soil_humidity.','.$max_soil_humidity.');</script>';
 
 		foreach ($lighthours_array as $i => $value) {
-			echo '<script>add_data(4,'.$value.');</script>';
+			echo '<script>add_data(4,"'.$i.'",'.$value.');</script>';
 		}
 		echo '<script>set_min_max(4,'.$min_light_hours.','.$max_light_hours.');</script>';
 
 		foreach ($water_usage_array as $i => $value) {
-			echo '<script>add_data(5,'.$value.');</script>';
+			echo '<script>add_data(5,"'.$i.'",'.$value.');</script>';
 		}
-		echo '<script>set_min_max(5,'.$days.','.$days.');</script>';
-
-		foreach ($waterlogging_array as $i => $value) {
-			echo '<script>add_data(6,'.$value.');</script>';
-		}
-		echo '<script>set_min_max(6,'.$tolerates_waterlogging.','.$tolerates_waterlogging.');</script>';
-
-		echo "<script>init_diagramms(".$days.");</script>";
+		echo "<script>set_min_max(5,0,0);</script>";
+		
+		$days = 7;
+		echo "<script>init_diagramm(0,$days);</script>";
+		echo "<script>init_diagramm(1,$days);</script>";
+		echo "<script>init_diagramm(2,$days);</script>";
+		echo "<script>init_diagramm(3,$days);</script>";
+		echo "<script>init_diagramm(4,$days);</script>";
+		echo "<script>init_diagramm(5,$days);</script>";
 	?>
 </body>
 </html>

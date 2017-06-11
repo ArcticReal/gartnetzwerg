@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 	<title>Blumeneinstellungen — GartNetzwerg</title>
 
@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
-
+    
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>

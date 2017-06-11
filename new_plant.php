@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
 	<title>GartNetzwerg</title>
 
@@ -18,6 +18,8 @@
 		require_once 'gartnetzwerg/classes/controller.php'; 
 		$controller = new Controller();
 		$controller->init();
+
+		$notifications = $controller->get_general_notification_settings();
 	?>
 
 	<div id="header" class="small">
@@ -40,7 +42,7 @@
 				<div class="cell"><p>Pflanzenart</p></div>
 
 				<div class="cell">
-					<select name="scientific_name">
+					<select id="scientific_name" name="scientific_name">
 						<option value="-1" selected> </option>
 						<?php
 							$arten = $controller->get_all_species();
@@ -55,7 +57,7 @@
 			<div class="row">
 				<div class="cell">
 					<span>Auto-Bewässerung</span>
-					<a href="#" class="tooltip"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					<a href="#" class="tooltip" title="Falls die Sensoreinheit an deiner Pflanze einen Wassertank hat, ist Auto-Bewässerung eine gute Einstellung."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 				</div>
 
 				<div class="cell">
@@ -83,7 +85,13 @@
 				</div>
 			</div>
 
-			<div class="row">
+			<?php
+			if($notifications == "OFF"){
+				print('<div class="row grey">');
+			} else {
+				print('<div class="row">');
+			}
+			?>
 				<div class="cell">
 					<span>Notifications</span>
 					<a href="#" class="tooltip"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
@@ -91,7 +99,13 @@
 
 				<div class="cell">
 					<input type="hidden" name="notifications" value=0>
-					<input type="checkbox" name="notifications" value=0>
+					<?php
+					if($notifications == "OFF"){
+						print('<input type="checkbox" name="notifications" value=1 disabled>');
+					} else {
+						print('<input type="checkbox" name="notifications" value=1>');
+					}
+					?>
 				</div>
 			</div>
 
@@ -112,7 +126,8 @@
 							}
 							print("</select></div>");
 
-							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='mac_name' placeholder='XX:XX:XX:XX:XX:XX'></div>");
+							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' name='mac_name' 
+								pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'></div>");
 						} else {
 							print("<div><select name='sensorunit'><option value='-1' selected> </option>");
 							foreach($sensorunits as $id => $sensorunit){
@@ -120,7 +135,7 @@
 							}
 							print("</select></div>");
 
-							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. UNIT2'><br/><input type='text' name='sensorunit_mac' placeholder='XX:XX:XX:XX:XX:XX'></div>");
+							print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' name='sensorunit_mac' placeholder='XX:XX:XX:XX:XX:XX'></div>");
 						}
 
 						$plantname = $auto_watering = $standort = $indoor = $notifications = $su_name = $su_mac = "";
