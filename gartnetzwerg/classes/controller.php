@@ -376,6 +376,9 @@ class Controller{
 		foreach ($this->plant_array as $plant) {
 			if($plant->is_indoor() == false){
 				//TODO: plant is outdoor, check for weather and watering stuff
+				$data = $this->get_openweathermap_data();
+				
+				
 			} else {
 				//TODO: plant is indoor, no owm rain check (still check for sun though)
 			}
@@ -1086,6 +1089,21 @@ class Controller{
 	
 	}
 }
-$test = new Controller();
+/*$test = new Controller();
+$data = $test->get_openweathermap_data();
+for ($i = 0; $i <= 39; $i++){
+	echo "\n".$data["list"][$i]["dt_txt"]."\n";
+	echo "	".$data["list"][$i]["weather"][0]["description"]."\n";
+	if (count($data["list"][$i])>7){
+		
+		if (count($data["list"][$i]["rain"])>0){
+			
+			echo "	Rain: ".$data["list"][$i]["rain"]["3h"]."\n";
+		}
+		
+			
+	}
+}
 
+//var_dump($data);*/
 ?>
