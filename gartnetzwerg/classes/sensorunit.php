@@ -84,14 +84,14 @@ class Sensorunit{
 	//functions
 	
 	public function update_sensor($sensor_id){
-		echo("update Sensor ".$sensor_id."\n");
+		//echo("update Sensor ".$sensor_id."\n");
 		$this->sensor_array[$sensor_id]->update();
 	}
 
 	public function update_all(){
 		foreach ($this->sensor_array as $key => $value){
 			$this->update_sensor($key);
-			echo ("Key: ".$key." Value: ".$value->get_value()."\n\n");
+			//echo ("Key: ".$key." Value: ".$value->get_value()."\n\n");
 		}	
 		$this->calculate_watertank_level();
 	}
