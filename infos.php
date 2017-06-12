@@ -26,37 +26,34 @@
 		</p><br/>
 
 		<strong>Hinzufügen einer neuen Pflanze</strong>
-		<p>Über den <i class="fa fa-info-circle" aria-hidden="true"></i>-Button im Hauptmenü kannst du eine neue Pflanze hinzufügen. Wähle eine die Art deiner Pflanze aus, gib ihr einen Namen und einen Standort, verknüpfe deine Pflanze mit der Sensoreinheit, und leg los!
+		<p>Über den <i class="fa fa-plus-circle" aria-hidden="true"></i>-Button im Hauptmenü kannst du eine neue Pflanze hinzufügen. Wähle eine die Art deiner Pflanze aus, gib ihr einen Namen und einen Standort, verknüpfe deine Pflanze mit der Sensoreinheit, und leg los!
 		</p><br/>
 
 		<strong>Hinzufügen einer neuen Sensoreinheit</strong>
-		<p>Um deine Pflanze überwachen zu können, muss GartNetzwerg wissen, welche Sensoreinheit deine Pflanze überwacht; und dafür musst du einen Sensoreinheit anlegen. Dies kannst du in den Einstellungen (<i class="fa fa-info-cog" aria-hidden="true"></i>) tun. Unsere Einheiten haben alle eine Nummer, die du eingeben musst. </p><br/>
+		<p>Um deine Pflanze überwachen zu können, muss GartNetzwerg wissen, welche Sensoreinheit deine Pflanze überwacht; und dafür musst du einen Sensoreinheit anlegen. Dies kannst du im <i>Neue Pflanzen</i>-Menü (<i class="fa fa-plus-circle" aria-hidden="true"></i>) machen. Unsere Einheiten haben alle eine Nummer, die du eingeben musst. </p><br/>
 
 		<strong>Statusübersicht</strong>
-		<p>Berührst du einen der Pflanzen in der Liste im Hauptmenü, gelangst du auf die jeweile Statusseite der Pflanze. Dort findest du unter anderem eine Tabelle der aktuellen und idealen Werte der Sensoreinheit deiner Pflanze.
+		<p>Wählst du eine der Pflanzen in der Liste im Hauptmenü, gelangst du auf die jeweile Statusseite der Pflanze. Dort findest du unter anderem eine Tabelle der aktuellen und idealen Werte der Sensoreinheit deiner Pflanze, und einige Buttons zur manuellen Bewässerung und Messung.
 		</p><br/>
 
 		<strong>Statusübersicht — Diagramme</strong>
-		<p>Über den <i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zu den Diagrammen. Dort kann du den Verlauf der jeweiligen Sensoren genauer unter die Lupe nehmen.
+		<p>Über den <i class="fa fa-bar-chart" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zu den Diagrammen. Dort kann du den Verlauf der jeweiligen Sensoren genauer unter die Lupe nehmen.
 		</p><br/>
 
 		<strong>Statusübersicht — Kamera</strong>
-		<p>Über den <i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zur Kamera. Dort kannst du das letzte geschossene Bild deiner Pflanze sehen, in der Galerie die  älteren Bilder deiner Pflanze sehen, ein Bild manuell schießen und die Kamera einstellen. Außerdem kannst du deine Galerie als Zeitraffer darstellen lassen.
+		<p>Über den <i class="fa fa-camera" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zur Kamera. Dort kannst du das letzte geschossene Bild deiner Pflanze sehen, in der Galerie die  älteren Bilder deiner Pflanze sehen, ein Bild manuell schießen und die Kamera einstellen. Außerdem kannst du deine Galerie als Zeitraffer darstellen lassen.
 		</p><br/>
 
 		<strong>Statusübersicht — Pflegetipps</strong>
-		<p>
-			x
+		<p>Über den <i class="fa fa-info" aria-hidden="true"></i>-Button in der Statusübersicht sieht zu verschiedene Informationen über deine Pflanze, beginnend mit Gieß-Anweisungen, über Umtopfen, bis hin zu speziellen Bedürfnissen. 
 		</p><br/>
 
 		<strong>Pflanzen- und allgemeine Einstellungen</strong>
-		<p>
-			x 
+		<p>Mit dem <i class="fa fa-cog" aria-hidden="true"></i>-Button im Hauptmenü gelangst du zu den allgemeinen Einstellungen; über den gleichen Button in der Statusübersicht zu den Pflanzeneinstellungen. Dort kannst du unter anderem Notifications einstellen.
 		</p><br/>
 
 		<strong>Urlaubsfunktion</strong>
-		<p>
-			x
+		<p>Der <i class="fa fa-plane"></i>-Button leitet zur Urlaubsfunktion weiter. Sobald du eine Zeitspanne einfügst und die Funktion aktivierst, werden alle Pflanzen (die eine automatische Bewässerung besitzen), automatisch gegossen.
 		</p><br/>
 
 		<strong>Sonstiges</strong>

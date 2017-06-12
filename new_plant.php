@@ -57,7 +57,7 @@
 			<div class="row">
 				<div class="cell">
 					<span>Auto-Bewässerung</span>
-					<a href="#" class="tooltip" title="Falls die Sensoreinheit an deiner Pflanze einen Wassertank hat, ist Auto-Bewässerung eine gute Einstellung."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					<a href="#" class="tooltip" tooltip="Falls die Sensoreinheit an deiner Pflanze einen Wassertank hat, ist Auto-Bewässerung eine gute Einstellung." tooltip-persistent><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 				</div>
 
 				<div class="cell">
@@ -94,7 +94,7 @@
 			?>
 				<div class="cell">
 					<span>Notifications</span>
-					<a href="#" class="tooltip"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					<a href="#" class="tooltip" tooltip="Sind Notifications hier (und in den allgemeinen Einstellungen) aktiviert, bekommst du eine E-Mail, falls es deiner Pflanze nicht mehr so gut gehen sollte." tooltip-persistent><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 				</div>
 
 				<div class="cell">
@@ -112,7 +112,7 @@
 			<div class="row">
 				<div class="cell">
 					<span>Sensoreinheit</span>
-					<a href="#" class="tooltip"><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					<a href="#" class="tooltip" tooltip="Damit wir deine Pflanze überwachen können, müssen wir wissen, welche Sensoreinheit deine Pflanze überwacht. Den Namen der Sensoreinheit solltest du auf der Einheit finden; die MAC-Adresse sollte im Handbuch stehen." tooltip-persistent><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 				</div>
 
 				<div class="cell">

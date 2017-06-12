@@ -22,6 +22,8 @@
 		$plants = $controller->get_plants();		
 		$plant = $plants[$_GET["plant_id"]];
 
+		print("<input type='hidden' name='plant_id' value='".$_GET["plant_id"]."'/>");
+
 		$scientific_name = $plant->get_scientific_name();
 		$nickname = $plant->get_nickname();
 		$name = $plant->get_name();
@@ -65,24 +67,25 @@
 			<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
 				<p>
 					<i class="fa fa-table" aria-hidden="true"></i>
-					Übersicht
+					<span>Übersicht</span>
 				</p>
 			</div></a>
 			<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
 				<p>
-					<i class="fa fa-area-chart" aria-hidden="true"></i>
-					Diagramme
+					<i class="fa fa-bar-chart" aria-hidden="true"></i>
+					<span>Diagramme</span>
 				</p>
 			</div></a>
 			<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
 				<p>
 					<i class="fa fa-camera" aria-hidden="true"></i>
-					Kamera</p>
+					<span>Kamera</span>
+				</p>
 			</div></a>
 			<a href="#info" onclick="state_tabs(3)"><div id="info" class="item">
 				<p>
 					<i class="fa fa-info" aria-hidden="true"></i>
-					Info
+					<span>Info</span>
 				</p>
 			</div></a>
 		</div>
@@ -105,19 +108,29 @@
 			?>
 
 			<div id="sensordaten">
+				<?php
+					//if($controller-> correction_text($plant)!=-1){
+						//print('<div id="alert">'.$controller->correction_text($plant).'</div>');
+					//}
+				?>
+
 				<form action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="POST">
 					<div id="sensor_list">
 						<div class="row">
 							<div class="cell">
-								<input type="submit" class="button" name="manual_water" value="manual_water" />
+								<input type="submit" class="button" name="a" value="Manuelle Bewässerung" />
+								<?php
+									if($plant->get_last_watering() != ""){
+										print('<small>Zuletzt gegossen:'.$plant->get_last_watering().'</small>');
+									}
+								?>
 							</div>
-							<div class="cell">Zuletzt gegossen: <?php $plant->get_last_watering(); ?></div>
-						</div>
-						<div class="row">
 							<div class="cell">
-								<input type="submit" class="button" name="manual_data" value="manual_data" />
+								<input type="submit" class="button" name="a" value="Manuelle Messung" />
+								<small>
+									Zuletzt gemessen: xx.xx.xxxx
+								</small>
 							</div>
-							<div class="cell">Zuletzt gemessen: xx.xx.xxxx</div>
 						</div>
 					</div>
 				</form>
@@ -125,38 +138,42 @@
 				<table>
 					<tr>
 						<th>Sensor</th>
-						<th>Ideal</th>
+						<th colspan="2">Ideal (min - max)</th>
 						<th>Aktuell</th>
 					</tr>
 					<tr>
-						<td>Bodenfeuchtigkeit</td>
-						<td><?php echo $min_soil_humidity."% - ".$max_soil_humidity."%"; ?></td>
-						<td><?php echo $akt_soil_humidity."%"; ?></td>
-					</tr>
-					<tr>
-						<td>Luftfeuchtigkeit</td>
-						<td><?php echo $min_air_humidity."% - ".$max_air_humidity."%"; ?></td>
-						<td><?php echo $akt_air_humidity."%"; ?></td>
-					</tr>
-					<tr>
 						<td>Temperatur</td>
-						<td><?php echo $min_air_temperature." °C - ".$max_air_temperature." °C"; ?></td>
+						<td><?php echo $min_air_temperature." °C"; ?></td>
+						<td><?php echo $max_air_temperature." °C"; ?></td>
 						<td><?php echo $akt_air_temperature." °C"; ?></td>
 					</tr>
 					<tr>
 						<td>Bodentemperatur</td>
-						<td><?php echo $min_soil_temperature." °C - ".$max_soil_temperature." °C"; ?></td>
+						<td><?php echo $min_soil_temperature." °C"; ?></td>
+						<td><?php echo $max_soil_temperature." °C"; ?></td>
 						<td><?php echo $akt_soil_temperature." °C"; ?></td>
 					</tr>
 					<tr>
+						<td>Luftfeuchtigkeit</td>
+						<td><?php echo $min_air_humidity."%"; ?></td>
+						<td><?php echo $max_air_humidity."%"; ?></td>
+						<td><?php echo $akt_air_humidity."%"; ?></td>
+					</tr>
+					<tr>
+						<td>Bodenfeuchtigkeit</td>
+						<td><?php echo $min_soil_humidity."%"; ?></td>
+						<td><?php echo $max_soil_humidity."%"; ?></td>
+						<td><?php echo $akt_soil_humidity."%"; ?></td>
+					</tr>
+					<tr>
 						<td>Lichtstunden</td>
-						<td><?php echo $min_light_hours." h - ".$max_light_hours." h"; ?></td>
+						<td><?php echo $min_light_hours." h"; ?></td>
+						<td><?php echo $max_light_hours." h"; ?></td>
 						<td><?php echo $akt_light_hours." h"; ?></td>
 					</tr>
 					<tr>
 						<td>Staunässe</td>
-						<td><?php echo $waterlogging; ?></td>
-						<td><?php echo $akt_waterlogging; ?></td>
+						<td id="sn" colspan="3"><?php echo $akt_waterlogging; ?></td>
 					</tr>
 				</table>
 
@@ -180,7 +197,7 @@
 		</div>
 
 		<div id="tab_diagramme">
-			<div id="diadebug">x</div>
+			<div id="diadebug"></div>
 			<?php 
 				$days = 365;
 
@@ -193,41 +210,41 @@
 				$waterlogging_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
 			?>
 
-			<br/><br/><input type="button" id="canvasm" onclick="change_days(-1)" value="-">
-			<span id="dayfactor">x</span>
-			<input type="button" id="canvasp" onclick="change_days(1)" value="+">
+			<input type="button" id="canvasm" onclick="change_days(-1)" value="-">
+			<span><small id="dayfactor">x</small></span>
+			<input type="button" id="canvasp" onclick="change_days(1)" value="+"><br/>
 
-			<p>Lufttemperatur-Verlauf</p>
+			<p>Lufttemperatur-Verlauf <small>(in Celsius)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas1" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas1" height="200px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Bodentemperatur-Verlauf</p>
+			<p>Bodentemperatur-Verlauf <small>(in Celsius)</small></p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas2" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Luftfeuchtigkeitsverlauf</p>
+			<p>Luftfeuchtigkeitsverlauf <small>(in 10er Schritten)</small></p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas3" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Bodenfeuchtigkeitsverlauf</p>
+			<p>Bodenfeuchtigkeitsverlauf <small>(in 10er Schritten)</small></p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas4" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Lichtstundenverlauf</p>
+			<p>Lichtstundenverlauf <small>(in vollen Stunden)</small></p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas5" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Wasserverbrauch</p>
+			<p>Wasserverbrauch <small>(in Liter)</small></p>
 			<div id="diagramm1" class="diagramm">
 				<canvas id="canvas6" width="600px" height="200px" style="border:1px solid #000000;">
 				</canvas>
@@ -246,8 +263,14 @@
 			?>
 
 			<form name="cam_buttons" id="cam_buttons">
-				<button class="w2"><a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=manual_photo";?>>Manuelle Fotoaufnahme</a></button>
-				<button class="w2"><a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=live";?>>Live View</a></button>
+				<div class="row">
+					<div class="cell">
+						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=manual_photo";?>><input type="submit" class="button" name="a" value="Manuelle Fotoaufnahme" /></a>
+					</div>
+					<div class="cell">
+						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=live";?>><input type="submit" class="button" name="a" value="Live View" /></a>
+					</div>
+				</div>
 			</form>
 
 			<p>letztes Bild:</p>
@@ -291,7 +314,7 @@
 		</div>
 
 		<div id="tab_info">
-			<h1>Tipps zur Pflanzenpflege einer <?php echo($plant->get_name());?></h1>
+			<h1>Tipps zur Pflanzenpflege</h1>
 
 			<strong>Richtig Gießen</strong>
 			<?php 

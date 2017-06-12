@@ -114,9 +114,16 @@ var current_factor = 0;
 var c = new Array();
 var diagramm = new Array();
 
+var w = window.innerWidth
+	|| document.documentElement.clientWidth
+	|| document.body.clientWidth;
+w -= 48;
+
 function init_diagrams(){
 	for (var i = 1; i <= 6; i++){
 		c.push(document.getElementById("canvas"+i));
+		c[i-1].style.width = "calc(100% - 2px)";
+		c[i-1].width = w
 	}
 
 	diagramm = [
@@ -135,14 +142,6 @@ function init_diagrams(){
 		d_min:-1, d_max:-1, min_v: -1, max_v: -1, degreesize: 0, zero: -1}];
 
 }
-
-/*var w = window.innerWidth
-	|| document.documentElement.clientWidth
-	|| document.body.clientWidth;
-w -= 50;*/
-
-var w = "600";
-//c[canvas].style.width = w;
 
 function init_canvas(cc, height, width, days){
 	// Create gradient
@@ -178,6 +177,10 @@ function init_canvas(cc, height, width, days){
 			diagramm[cc].c.fillStyle = 'black';
 			var date_text = diagramm[cc].dates[i];
 			var w_d = diagramm[cc].c.measureText(date_text).width;
+			if(w_d >= ((width-20)/days)){
+				var str = diagramm[cc].dates[i];
+				date_text = str.substring(5,11);
+			}
 			diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20+(w_d/Math.pow(2,(3-current_factor))), height - 5);
 		} else {
 			if(i % (days/7) == 0){

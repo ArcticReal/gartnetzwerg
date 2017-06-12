@@ -20,6 +20,10 @@ body{
 	overflow-x: hidden;
 }
 
+a{
+	text-decoration: none;
+}
+
 /* #################################################### HEADER */
 
 #header{
@@ -28,7 +32,7 @@ body{
 	position: fixed;
 	top: 0;
 	background-color: white;
-	box-shadow: 0px -25px 50px 25px #AAA;
+	box-shadow: 0px -30px 75px 10px #000;
 	overflow: hidden;
 }
 
@@ -56,8 +60,7 @@ body{
 	width: calc(25% - 16px);
 
 	float: left;
-	/*background-color: #AAA;
-	border: 1px #777 solid; */
+	background-color: white;
 	text-align: center;
 
 	display: flex;
@@ -65,6 +68,32 @@ body{
     justify-content: center;
 
     color: #333;
+}
+
+#header #back_to_menu *{
+	-webkit-transition: margin 0.5s ease 0s; /* Safari */
+    transition: margin 0.5s ease 0s;
+}
+
+#header #back_to_menu:hover *{
+	margin-left: -5px;
+	margin-right: 13px;
+}
+
+#header #flowersettings{
+	overflow: hidden;
+}
+
+#header #flowersettings *{
+	-webkit-transition: transform 0.5s ease 0s;
+	transform: transform 0.5s ease 0s;
+}
+
+#header #flowersettings:hover *{
+	-moz-transform: rotate(90deg);
+	-webkit-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
 }
 
 #header .item a, #nav .item a{
@@ -107,7 +136,7 @@ body{
     z-index: 9;
 
     border: none;
-
+    
     box-shadow: 0px -30px 20px -25px #333 inset; 
 
     -webkit-transition: border-top 0.1s ease 0.5s,
@@ -159,7 +188,7 @@ body{
 
 #sensor_list{
 	background-color: #EEE;
-	padding: 25px;
+	padding: 10px;
 }
 
 #list.small, #form.small{
@@ -188,23 +217,33 @@ body{
 	margin-bottom: 50px;
 }
 
-#list a{
+#list > a{
 	display: block;
 	margin: 10px 25%;
 	color: black;
 	text-decoration: none;
 	text-align: center;
 
-	-webkit-transition: margin 0.5s ease 0s; /* Safari */
-    transition: margin 0.5s ease 0s;
+	box-shadow: 0px 0px 30px -15px #000;
+
+	-webkit-transition: box-shadow 0.5s ease 0s, margin 0.5s ease 0s; /* Safari */
+    transition: box-shadow 0.5s ease 0s, margin 0.5s ease 0s;
+}
+
+#list > a:hover{
+	box-shadow: 0px 0px 30px 0px #FFF;
+
 }
 
 #list > a > .flower{
 	padding: 20px 10px;
 	background-color: white;
 	border: 1px #777 solid;
-	box-shadow: 0px 10px 20px #AAA;
 	border-left: 15px green solid;
+}
+
+#list > a > .flower{
+	background-color: white;
 }
 
 #list small{
@@ -224,6 +263,11 @@ body{
 	background-color: white;
 	width: 25%;
 	text-align: center;
+
+	-webkit-transition: background-color 0.5s ease 0s; /* Safari */
+    transition: background-color 0.5s ease 0s;
+
+    cursor: pointer;
 }
 
 #footer .button.w2{
@@ -242,10 +286,23 @@ body{
 #footer .button *{
 	padding: 0px 10px;
 	color: #AAA;
+
+	-webkit-transition: color 0.5s ease 0s; /* Safari */
+    transition: color 0.5s ease 0s;
+}
+
+#footer .button:hover{
+	background-color: #333;
+}
+
+#footer .button:hover *{
+	color: #EEE !important;
 }
 
 #list.infos > p{
 	padding-top: 5px;
+	text-align: justify;
+    text-justify: inter-word;
 }
 
 #list.infos strong{
@@ -309,8 +366,13 @@ body{
 	margin-top: 10px;
 }
 
-#list table th, td, #form table th{
-	padding: 10px;
+#list table th, td, #form table th, td#sn{
+	padding: 5px;
+	text-align: center;
+}
+
+td{
+	padding: 5px;
 	text-align: left;
 }
 
@@ -318,7 +380,9 @@ body{
     background-color: #DDD;
 }
 
-#form .row, #sensor_list .row{
+#form .row, 
+#sensor_list .row,
+#cam_buttons .row{
 	overflow: auto;
 }
 
@@ -327,13 +391,15 @@ body{
 }
 
 #form .row .cell,
-#sensor_list .row .cell{
+#sensor_list .row .cell,
+#cam_buttons .row .cell{
 	padding: 8px;
 	float: left;
 }
 
 #form .row .cell:nth-child(even),
-#sensor_list .row .cell:nth-child(even){
+#sensor_list .row .cell:nth-child(even),
+#cam_buttons .row .cell:nth-child(even){
     width: 45%;
     float: right;
 }
@@ -367,7 +433,7 @@ input, select, textarea {
           box-sizing: border-box;
 }
 
-#form input, #sensor_list input{
+#form input, #sensor_list input, #cam_buttons input{
 	margin: 4px;
 }
 
@@ -375,13 +441,17 @@ input, select, textarea {
 #form input[type="email"],
 #form input[type="button"],
 #form select,
-#form input[type="submit"],
-#sensor_list input{
+#form input[type="submit"]{
 	width: 90%;
 }
 
-#cam_buttons .w2{
-	width: 45%;
+#sensor_list input,
+#cam_buttons input{
+	width: 100%;
+}
+
+#sensor_list .row .cell{
+	text-align: center;
 }
 
 #alert{
@@ -413,11 +483,23 @@ input, select, textarea {
 
 #form form input[type="button"],
 #form form input[type="submit"],
-#sensor_list form input[type="submit"]{
-	background-color: darkred;
-	color: white;
+#sensor_list input[type="submit"],
+#cam_buttons input{
+	background-color: #8B0000;
+	color: #FFDDDD;
 	border: 1px #660000 solid;
 	padding: 5px;
+}
+
+#form form input[type="button"]:hover,
+#form form input[type="submit"]:hover,
+#sensor_list input[type="submit"]:hover,
+#cam_buttons input:hover{
+	color: #FFFFFF;
+	background-color: #CE0000;
+
+	-webkit-transition: color 0s ease 0.5s, background-color 1s ease 0s; /* Safari */
+    transition: color 0s ease 0.5s, background-color 1s ease 0s;
 }
 
 #tab_status.current_tab,
@@ -429,18 +511,20 @@ input, select, textarea {
 	width: 100%;
 	max-width: 800px;
 	opacity: 1;
-	overflow: hidden;
-	height: auto;
+	overflow-y: auto;
+	overflow-x: hidden;
+	height: 100%;
 }
 
 #tab_status, #tab_diagramme, #tab_cam, #tab_info{
-	width: 0%;
-	height: 100%;
+	/*width: 0%;*/
+	height: 0%;
 	opacity: 0;
-	float: left;
+	/*float: left;*/
+	overflow: hidden;
 
-	-webkit-transition: width 1s ease 0.5s, opacity 1s ease 0s; /* Safari */
-    transition: width 1s ease 0.5s, opacity 1s ease 0s;
+	-webkit-transition: height 1s ease 0.5s, opacity 1s ease 0s; /* Safari */
+    transition: height 1s ease 0.5s, opacity 1s ease 0s;
 }
 
 /* ################################################### urlaub */
@@ -494,9 +578,63 @@ input, select, textarea {
 	color: 
 }
 
-#canvasm, #dayfactor, #canvasp{
-	width: 30%;
+#canvasm, #canvasp{
+	width: 25%;
 	float: left;
+}
+
+#tab_diagramme p{
+	margin-top: 25px;
+}
+
+#dayfactor{
+	width: 50%;
+	float: left;
+	text-align: center;
+	margin-top: 0px;
+}
+
+.diagramm canvas{
+	position: relative;
+	margin: 0 auto;
+}
+
+/* ################################################## tooltip */
+
+[tooltip]:before {
+    content: attr(tooltip);
+    position: fixed;
+    opacity: 0;
+    
+    -webkit-transition: all 0.25s ease 5s;
+    transition: all 0.25s ease 5s;    
+
+    padding: 5px;
+    color: #FFF;
+    border-radius: 5px;
+    box-shadow: 2px 2px 1px silver;  
+
+    margin: 10px;
+    right: 5px;
+    bottom: 0px;
+    width: 75%
+    width: calc(100% - 75px);  
+    font-size: small;
+}
+
+[tooltip]:focus:before,
+[tooltip]:active:before{
+    opacity: 0;
+
+    background-color: #333;
+    margin-bottom: : 50px;
+
+    -webkit-transition: all 0.25s ease 0s;
+    transition: all 0.25s ease 0s;    
+}
+
+[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
 }
 
 /* ########################################## smaller screnen */
@@ -507,7 +645,8 @@ input, select, textarea {
 	}
 
 	#form .row div,
-	#sensor_list .row div{
+	#sensor_list .row div,
+	#cam_buttons .row div{
 	    width: auto !important;
 	    float: none !important;
 	    clear: both !important;
@@ -523,4 +662,8 @@ input, select, textarea {
     #nav .item *{
     	font-size: smaller;
     }
+
+    #sensordaten table *{
+		font-size: small;
+	}
 }
