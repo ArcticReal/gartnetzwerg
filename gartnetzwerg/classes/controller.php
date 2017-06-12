@@ -857,7 +857,7 @@ class Controller{
 		
 		// Logging
 		$logtext = "\n".date(LOG_TIME_FORMAT)."Controller::sum_water_usage(Plant Id: ".$plant_id.", days: ".$days.")\n";
-		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Datum: ".$date."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Datum: ".$date->format("Y-m-d")."\n";
 		
 		$this->write_log($logtext);
 		
@@ -1103,7 +1103,9 @@ class Controller{
 	}
 }
 /*$test = new Controller();
-$data = $test->get_openweathermap_data();
+$test->sum_water_usage(2, 2);
+
+/*$data = $test->get_openweathermap_data();
 for ($i = 0; $i <= 39; $i++){
 	echo "\n".$data["list"][$i]["dt_txt"]."\n";
 	echo "	".$data["list"][$i]["weather"][0]["description"]."\n";
