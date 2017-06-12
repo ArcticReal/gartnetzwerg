@@ -473,6 +473,15 @@ class Controller{
 		$this->write_config("OPENWEATHERMAP_LOCATION", $new_location);
 	}
 	
+	public function change_openweathermap_api_key($new_api_key){
+
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::change_openweathermap_api_key(New Key; ".$new_api_key.")\n";
+		$this->write_log($logtext);
+		
+		$this->set_openweathermap_api_key($new_api_key);
+		$this->write_config("OPENWEATHERMAP_API_KEY", $new_api_key);
+	}
 	
 	/**
 	 * 
@@ -486,22 +495,7 @@ class Controller{
 		
 	}
 	
-	public function turn_on_vacation($new_vacation_start, $new_vacation_end){
-		
-		//logging
-		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::turn_on_vacation(New Start: ".$new_vacation_start.", New End: ".$new_vacation_end.")\n";
-		$this->write_log($logtext);
-		
-		$this->write_config("VACATION_FUNCTION", "ON");
-		$this->write_config("VACATION_START_DATE", $new_vacation_start);
-		$this->write_config("VACATION_END_DATE", $new_vacation_end);
-		
-		$this->set_vacation_start_date($new_vacation_start);
-		$this->set_vacation_end_date($new_vacation_end);
-		
-		
-	}
-	
+
 	public function change_plant_notfication_settings($plant_id, $new_settings){
 		
 		//logging
@@ -526,6 +520,23 @@ class Controller{
 		
 		
 	}
+	
+	public function turn_on_vacation($new_vacation_start, $new_vacation_end){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::turn_on_vacation(New Start: ".$new_vacation_start.", New End: ".$new_vacation_end.")\n";
+		$this->write_log($logtext);
+		
+		$this->write_config("VACATION_FUNCTION", "ON");
+		$this->write_config("VACATION_START_DATE", $new_vacation_start);
+		$this->write_config("VACATION_END_DATE", $new_vacation_end);
+		
+		$this->set_vacation_start_date($new_vacation_start);
+		$this->set_vacation_end_date($new_vacation_end);
+		
+		
+	}
+	
 	
 	public function turn_off_vacation(){
 		
