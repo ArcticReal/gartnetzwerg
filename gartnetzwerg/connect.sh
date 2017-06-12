@@ -1,11 +1,10 @@
-#!/bin/bash
+#!/bin/sh
 
-subnet=""
-nmap_output=""
-test_old_ip=""
+output=""
+ip=""
 VERBOSE=1
 DEVICE=$1
-REMOTE=$2 #the remote kommand to execute
+REMOTE=$2 #the remote command to execute
 
 # if parameter 3 (debug) is there, set VERBOSE-Mode
 if [ "$#" -gt "2" ]; then
@@ -18,22 +17,6 @@ if [ "$#" -gt "2" ]; then
     VERBOSE=0
 fi
 
-# get's the hosts-device IP and greps it into a file (without \n at the end and without the last number)
-# adds 0/24 instead of the last number, for later subnet-search
-find_host_id () {
-    if [ "$VERBOSE" -eq 1 ]; then
-        echo "         asking hostname..."
-    fi
-    
-    host_ip=`hostname -I | grep -Eo -m 1 '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'| head -1`
-    ip_append="0/24" #TODO 0/24
-    #ip_append2="1/24"
-    #ip_append3="*"
-    subnet=$host_ip$ip_append
-    #subnet2=$host_ip$ip_append2
-    #subnet3=$host_ip$ip_append3
-}
-
 # searches subnet from the host-device 
 # (internally prints all the devices that are in that subnet)
 # saves output into variable
@@ -42,30 +25,22 @@ search_nmap () {
         echo "         searching subnet \"$subnet\" (this might take a while) ..."
     fi
     
-    nmap_output=`sudo nmap -sn $subnet`
+    output=`sudo arp-scan -l -T $DEVICE`
 }
 
 # greps the nmap_output (all the devices in the subnet) and seperates it into a single IP (for the remote-device)
 grep_remote_ip () {
     if [ "$VERBOSE" -eq 1 ]; then
-        echo "         searching nmap_output..."
+        echo "         searching output..."
     fi
+   
     
-    #fritz_test=`$nmap_output | grep -Eo -i "fritz.box"`
-    #echo $nmap_output | grep -i "Intel"
-    #if [ echo "$nmap_output" | grep -q "fritz.box" ]; then
-        #if router == something else (Hochschule/Pierre's)
-        #node_ip=`echo $nmap_output | tr ')' '\n' | grep -B 1 -i "$1"` #SensorEinheit #Basiseinheit
-      #else
-        #if router == fritz.box (Horn's/Bratrich's)
-    node_ip=`echo $nmap_output | tr ')' '\n' | grep -B 2 -i "$DEVICE"` #SensorEinheit #Basiseinheit
-    #fi
-
     if [ "$VERBOSE" -eq 1 ]; then
-        echo "         cleaning up nmap_output..."
+        echo "         cleaning up output..."
     fi
     
-    test_old_ip=`echo $node_ip | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tr -d '\n'`
+    ip=`echo $output | grep -m1 -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | tr -d '\n'`
+    
 }
 
 # connects to Basisstation via ssh and executes the remote command
@@ -74,14 +49,13 @@ connect () {
         echo "         trying to connect to saved ip..."
     fi
    
-    old_ip=`cat last_ip.txt`
     pi="pi@"
-    old_ip_with_user=$pi$old_ip
+    ip_with_user=$pi$ip
 
     if [ "$#" -eq 1 ]; then
-        ssh $old_ip_with_user -p 22
+        ssh $ip_with_user -p 22
       else
-        ssh $old_ip_with_user -p 22 -t "$REMOTE"
+        ssh $ip_with_user -p 22 -t "$REMOTE"
     fi
 }
 
@@ -91,20 +65,10 @@ save_last_ip () {
         echo "         check nmap_output..."
     fi
 
-    if [ -z "$test_old_ip" ]
-      then
-        echo -e "\n         Gartnetzerg-Fehlercode #RC2 -- Das Gerät '$DEVICE' konnte"
-        echo -e "         nicht gefunden werden. Bitte stellen Sie sicher, dass das"
-        echo -e "         '$DEVICE' korrekt angeschlossen und aktiviert ist,"
-        echo -e "         und dass diese sich auch im gleichen Netzwerk wie"
-        echo -e "         ihr Endgerät befindet.\n"
-      else
-        if [ "$VERBOSE" -eq 1 ]; then
-            echo "         IP saved."
-        fi
-        echo $test_old_ip > last_ip.txt
-        connect
+    if [ "$VERBOSE" -eq 1 ]; then
+        echo "         IP saved."
     fi
+    connect
 }
 
 # cleans up all variables
@@ -112,22 +76,13 @@ clean_up () {
     if [ "$VERBOSE" -eq 1 ]; then
         echo "         cleaning up variables..."
     fi
-
-    unset host_ip
-    unset ip_append
-    unset subnet
-
-    unset old_ip
+    
     unset pi
-    unset old_ip_with_user
+    unset ip_with_user
 
-    unset nmap_output
+    unset output
     unset node_ip
-    unset test_old_ip
-
-    unset host_ip_connection_test
-
-    unset fritz_test
+    unset ip
 
     if [ "$VERBOSE" -eq 1 ]; then
         echo "         bye."
@@ -135,7 +90,6 @@ clean_up () {
 }
 
 search_thingy () {
-    find_host_id
     search_nmap
     grep_remote_ip
     save_last_ip
