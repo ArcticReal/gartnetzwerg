@@ -54,7 +54,7 @@ function state_tabs(i){
 	}
 }
 
-function new_plant_submit(){
+function new_plant_submit(free_su){
 	if(document.forms["new_plant"]["plantname"].value == ""){
 		document.getElementById("alert").className = "";
 		document.getElementById("alert").innerHTML = "Der Pflanzenname deiner Pflanze darf nicht leer sein.";
@@ -64,11 +64,13 @@ function new_plant_submit(){
 	} else if(document.forms["new_plant"]["standort"].value == ""){
 		document.getElementById("alert").className = "";
 		document.getElementById("alert").innerHTML = "Der Standort deiner Pflanze darf nicht leer sein.";
-	} else if(document.forms["new_plant"]["sensorunit"].value == -1 &&
-		document.forms["new_plant"]["sensorunit_name"].value &&
-		document.forms["new_plant"]["mac_name"].value){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Der Standort deiner Pflanze darf nicht leer sein.";
+	} else if(free_su > 0 && document.forms["new_plant"]["sensorunit"].value == -1 &&
+		(document.forms["new_plant"]["sensorunit_name"].value == "" ||
+		document.forms["new_plant"]["sensorunit_mac"].value == "")){
+		//alles is leer, irgendwas passt nicht
+	} else if(free_su <= 0 && (document.forms["new_plant"]["sensorunit_name"].value == "" ||
+		document.forms["new_plant"]["sensorunit_mac"].value == "")){
+		//neue su is leer, passt nicht
 	} else {
 		document.getElementById("new").submit();
 	}
@@ -78,7 +80,7 @@ function settings_submit(){
 	var email = document.forms["settings"]["email"].value;
 	var n = email.search(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 	
-	if(n < -1){
+	if(email!="" && n == -1){
 		document.getElementById("alert").className = "";
 		document.getElementById("alert").innerHTML = "Ungültige Email.";
 	} else {
