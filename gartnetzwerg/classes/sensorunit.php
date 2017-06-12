@@ -85,7 +85,7 @@ class Sensorunit{
 	
 	public function update_sensor($sensor_id){
 		//echo("update Sensor ".$sensor_id."\n");
-		$this->sensor_array[$sensor_id]->update();
+		$this->sensor_array[$sensor_id]->update($this->get_mac_address());
 	}
 
 	public function update_all(){

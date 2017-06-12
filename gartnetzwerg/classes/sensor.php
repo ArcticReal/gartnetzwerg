@@ -33,7 +33,7 @@ abstract class Sensor{
 	
 	//functions
 	
-	public function update(){
+	public function update($mac_address){
 		//hab jeweils in die Unterklassen die exec reingehaufen, hoffe das passt so
 	}
 }

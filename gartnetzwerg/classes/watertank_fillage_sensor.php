@@ -16,7 +16,8 @@ class Watertank_fillage_sensor extends Sensor{
 		
 	}
 	
-	public function update(){
+	public function update($mac_addres){
+		$this->update_value();
 		/*TODO: theoretisch hab ich ein python-file für sensor_ws (Wassersensor), 
 		        aber ich glaube das ist der zweite Bodenfeuchtigkeitssensor, weil der ne andere Bauart hat, als der obere.
 		*/

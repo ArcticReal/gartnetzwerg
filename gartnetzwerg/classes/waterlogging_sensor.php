@@ -2,7 +2,7 @@
 require_once 'sensor.php';
 class Waterlogging_sensor extends Sensor{
 	
-	public function update(){
+	public function update($mac_addres){
 		exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_ws.py", $rReturn, $err);
 		
 		if($rReturn != ""){
