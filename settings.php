@@ -21,8 +21,7 @@
 		require_once 'gartnetzwerg/classes/controller.php'; 
 			
 		$controller = new Controller();
-		$controller->init();
-
+		
 		$email = $controller->get_notification_receiving_email_address();
 		$wohnort = $controller->get_openweathermap_location();
 		$owm_key = $controller->get_openweathermap_api_key();
@@ -48,81 +47,81 @@
 		}
 
 		if($v_owm_key != "" && $v_owm_key != $owm_key){
-			$controller->change_openweathermap_location($v_owm_key);
+			//$controller->change_openweathermap_api_key($v_owm_key);
 		}
 
 		if($v_notifications != "" && $v_notifications != $notifications){
-			$controller->set_general_notification_settings($v_notifications);
+			$controller->change_general_notification_settings($v_notifications);
 		}
 	?>
 
 	<div id="form" class="small">
-		<div id="alert" class="alert-none"></div>
+		<div id="wrap">
+			<div id="alert" class="alert-none"></div>
 
-		<form name="settings" id="settings" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
-			<div class="row">
-				<div class="cell"><p>Email-Adresse</p></div>
-				<div class="cell">
-					<?php
-						print("<input type='email' name='email' placeholder='$email' autofocus>");
-					?>
-				</div>
-			</div>
-			<div class="row">
-				<div class="cell"><p>Wohnort</p></div>
-				<div class="cell">
-					<?php
-						print("<input type='text' name='wohnort' autocomplete='off' placeholder='$wohnort'>");
-					?>
-				</div>
-			</div>
-			<div class="row">
-				<div class="cell"><p>OpenWeatherMap Key</p></div>
-				<div class="cell">
-					<?php
-						print("<input type='text' name='owm_key' autocomplete='off' placeholder='$owm_key'>");
-					?>
-				</div>
-			</div>
-
-			<div class="row">
-				<div class="cell">Notifications</div>
-				<div class="cell">
-					<select name="notifications">
+			<form name="settings" id="settings" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+				<div class="row">
+					<div class="cell"><p>Email-Adresse</p></div>
+					<div class="cell">
 						<?php
-							if($notifications=="ON"){
-								print("<option value='OFF'>Keine Notifications</option>");
-								print("<option value='ON' selected>Kleine Notifications (Reine Sensordaten)</option>");
-								print("<option value='BOTH'>Große Notifications (Konkrete Arbeitsanweisungen)</option>");
+							print("<input type='text' name='email' placeholder='$email'>");
+						?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell"><p>Wohnort</p></div>
+					<div class="cell">
+						<?php
+							print("<input type='text' name='wohnort' autocomplete='off' placeholder='$wohnort'>");
+						?>
+					</div>
+				</div>
+				<div class="row">
+					<div class="cell"><p>OpenWeatherMap Key</p></div>
+					<div class="cell">
+						<?php
+							print("<input type='text' name='owm_key' autocomplete='off' placeholder='$owm_key'>");
+						?>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="cell">Notifications</div>
+					<div class="cell">
+						<?php
+							if($v_notifications=="ON"){
+								print('<input type="hidden" name="notifications" value="OFF">');
+								print('<input type="checkbox" name="notifications" value="ON" checked>');
 							} else {
-								print("<p>$notifications</p>");
+								print('<input type="hidden" name="notifications" value="OFF" checked>');
+								print('<input type="checkbox" name="notifications" value="ON">');
 							}
 						?>
-					</select>
+					</div>
 				</div>
-			</div>
 
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell">
-					<input type="button" name="delete_images" value="Bilder löschen">
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell">
+						<input type="button" name="delete_images" value="Bilder löschen">
+					</div>
 				</div>
-			</div>
 
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell">
-					<input type="button" name="delete_sensordata" value="Sensordaten löschen">
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell">
+						<input type="button" name="delete_sensordata" value="Sensordaten löschen">
+					</div>
 				</div>
-			</div>
 
-			<div class="row">
-				<div class="cell"></div>
-				<div class="cell">
-					<input type="button" name="delete_sensorunit" value="Sensorunit löschen">
+				<div class="row">
+					<div class="cell"></div>
+					<div class="cell">
+						<input type="button" name="delete_sensorunit" value="Sensorunit löschen">
+					</div>
 				</div>
-			</div>
-		</form>
+			</form>
+		</div>
 	</div>
 
 	<?php

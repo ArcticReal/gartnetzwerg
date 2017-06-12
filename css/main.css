@@ -177,6 +177,11 @@ a{
 
 /* ################################################# MAIN PART */
 
+#wrap{
+	max-width: 800px;
+	margin: 0 auto;
+}
+
 #list, #form{
 	margin-top: 95px;
 	background-color: #EEE;
@@ -284,8 +289,9 @@ a{
 }
 
 #footer .button *{
-	padding: 0px 10px;
+	padding: 0px;
 	color: #AAA;
+	width: 100%;
 
 	-webkit-transition: color 0.5s ease 0s; /* Safari */
     transition: color 0.5s ease 0s;
@@ -433,7 +439,7 @@ input, select, textarea {
           box-sizing: border-box;
 }
 
-#form input, #sensor_list input, #cam_buttons input{
+#form input, #sensor_list button, #cam_buttons button{
 	margin: 4px;
 }
 
@@ -445,8 +451,8 @@ input, select, textarea {
 	width: 90%;
 }
 
-#sensor_list input,
-#cam_buttons input{
+#sensor_list button, 
+#cam_buttons button{
 	width: 100%;
 }
 
@@ -482,8 +488,8 @@ input, select, textarea {
 }
 
 #form form input[type="button"],
-#form form input[type="submit"],
-#sensor_list input[type="submit"],
+#form form input[type="submit"],,
+#sensor_list button, 
 #cam_buttons input{
 	background-color: #8B0000;
 	color: #FFDDDD;
@@ -493,7 +499,7 @@ input, select, textarea {
 
 #form form input[type="button"]:hover,
 #form form input[type="submit"]:hover,
-#sensor_list input[type="submit"]:hover,
+#sensor_list button:hover,
 #cam_buttons input:hover{
 	color: #FFFFFF;
 	background-color: #CE0000;
@@ -514,6 +520,7 @@ input, select, textarea {
 	overflow-y: auto;
 	overflow-x: hidden;
 	height: 100%;
+	margin: 0 auto;
 }
 
 #tab_status, #tab_diagramme, #tab_cam, #tab_info{
@@ -522,6 +529,8 @@ input, select, textarea {
 	opacity: 0;
 	/*float: left;*/
 	overflow: hidden;
+	margin: 0 auto;
+	max-width: 800px;
 
 	-webkit-transition: height 1s ease 0.5s, opacity 1s ease 0s; /* Safari */
     transition: height 1s ease 0.5s, opacity 1s ease 0s;

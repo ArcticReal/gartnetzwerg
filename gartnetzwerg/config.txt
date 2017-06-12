@@ -5,15 +5,15 @@
 
 ## Notification-Settings
 SEND_NOTIFICATIONS = "ON"
-SEND_MAIL_TO = "test@test.com"
+SEND_MAIL_TO = "aenderungs@test.com"
 
 ## Openweathermap-Settings
 OPENWEATHERMAP_API_KEY = ""
-OPENWEATHERMAP_LOCATION = "Kempten"
+OPENWEATHERMAP_LOCATION = "New York"
 
 ## Vacation-Settings
 VACATION_FUNCTION = "OFF"
-VACATION_START_DATE = "2017-06-02"
-VACATION_END_DATE = "2017-06-03"
+VACATION_START_DATE = "01.10.2017"
+VACATION_END_DATE = "01.01.2017"
 
 ## Other settings

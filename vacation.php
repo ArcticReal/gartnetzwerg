@@ -17,72 +17,74 @@
 	</div>
 		
 	<div id="form" class="small">
-		<?php
-			require_once 'gartnetzwerg/classes/controller.php'; 
-			$controller = new Controller();
-			$vacation_on = $controller->lookup_config("VACATION_FUNCTION");
-
-			if($vacation_on == "OFF"){
-				print("<p>Wenn Sie den Urlaubsmodus aktivieren, werden alle Pflanzen (die eine automatische Bewässerung besitzen) automatisch bewässert.</p>");
-			} else {
-				print("<p>[Insert Allgemeine Tipps hier]</p>");
-			}
-		?>
-
-		<div id="alert" class="alert-none"></div>
-
-		<form name="vacation" id="vacation" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+		<div id="wrap">
 			<?php
-				$s_date = $controller->get_vacation_start_date();
-				$e_date = $controller->get_vacation_end_date();
-
-				if($s_date == ""){
-					$s_date = "Startdatum";
-				}
-
-				if($e_date == ""){
-					$e_date = "Enddatum";
-				}
-
+				require_once 'gartnetzwerg/classes/controller.php'; 
+				$controller = new Controller();
+				$vacation_on = $controller->lookup_config("VACATION_FUNCTION");
 
 				if($vacation_on == "OFF"){
-					print ("<div class='row'><div class='cell'><p>Startdatum</p></div><div class='cell'><input type='date' name='start_date' placeholder='$s_date'></div></div>");
-					print ("<div class='row'><div class='cell'><p>Enddatum</p></div><div class='cell'><input type='date' name='end_date' placeholder='$e_date'></div></div>");
+					print("<p>Wenn Sie den Urlaubsmodus aktivieren, werden alle Pflanzen (die eine automatische Bewässerung besitzen) automatisch bewässert.</p>");
+				} else {
+					print("<p>[Insert Allgemeine Tipps hier]</p>");
 				}
 			?>
-			<div class="row">
-				<div class="cell1">
-					<?php
-						if($vacation_on == "OFF"){
-							print ("<input type='button' name='vacation' onclick='vacation_submit(1)' value='Urlaubsmodus aktivieren'>");
-						} else {
-							print ("<input type='button' name='vacation' onclick='vacation_submit(0)' value='Urlaubsmodus frühzeitig deaktivieren'>");
-						}
-					?>
+
+			<div id="alert" class="alert-none"></div>
+
+			<form name="vacation" id="vacation" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
+				<?php
+					$s_date = $controller->get_vacation_start_date();
+					$e_date = $controller->get_vacation_end_date();
+
+					if($s_date == ""){
+						$s_date = "Startdatum";
+					}
+
+					if($e_date == ""){
+						$e_date = "Enddatum";
+					}
+
+
+					if($vacation_on == "OFF"){
+						print ("<div class='row'><div class='cell'><p>Startdatum</p></div><div class='cell'><input type='date' name='start_date' placeholder='$s_date'></div></div>");
+						print ("<div class='row'><div class='cell'><p>Enddatum</p></div><div class='cell'><input type='date' name='end_date' placeholder='$e_date'></div></div>");
+					}
+				?>
+				<div class="row">
+					<div class="cell1">
+						<?php
+							if($vacation_on == "OFF"){
+								print ("<input type='button' name='vacation' onclick='vacation_submit(1)' value='Urlaubsmodus aktivieren'>");
+							} else {
+								print ("<input type='button' name='vacation' onclick='vacation_submit(0)' value='Urlaubsmodus frühzeitig deaktivieren'>");
+							}
+						?>
+					</div>
 				</div>
-			</div>
 
-			<?php
-				function test_input($data){
-					$data = trim($data);
-					$data = stripslashes($data);
-					$data = htmlspecialchars($data);
-					return $data;
-				}
+				<?php
+					function test_input($data){
+						$data = trim($data);
+						$data = stripslashes($data);
+						$data = htmlspecialchars($data);
+						return $data;
+					}
 
-				$start_date = $end_date = -1;
-				if ($_SERVER["REQUEST_METHOD"] == "POST") {
-					$start_date = test_input($_POST["start_date"]);
-					$end_date = test_input($_POST["end_date"]);
-				}
+					$start_date = $end_date = -1;
+					if ($_SERVER["REQUEST_METHOD"] == "POST") {
+						$start_date = test_input($_POST["start_date"]);
+						$end_date = test_input($_POST["end_date"]);
+					}
 
-				if(($start_date != -1 && $end_date != -1) && $vacation_on == "OFF"){
-					$controller->turn_on_vacation($start_date,$end_date);
-				} else if($vacation_on == "ON"){
-					$controller->turn_off_vacation();
-				} 
-			?>
-		</form>
+					if(($start_date != -1 && $end_date != -1) && $vacation_on == "OFF"){
+						$controller->turn_on_vacation($start_date,$end_date);
+					} else if($vacation_on == "ON"){
+						$controller->turn_off_vacation();
+					} 
+				?>
+			</form>
+		</div>
 	</div>
 	
 	<div id="footer">

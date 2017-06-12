@@ -26,7 +26,6 @@
 			require_once 'gartnetzwerg/classes/controller.php'; 
 			
 			$controller = new Controller();
-			$controller->init();
 			$plants = $controller->get_plants();		
 
 			foreach($plants as $plant){

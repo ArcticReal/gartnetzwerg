@@ -18,11 +18,9 @@
 		require_once 'gartnetzwerg/classes/controller.php'; 
 			
 		$controller = new Controller();
-		$controller->init();
+		
 		$plants = $controller->get_plants();		
 		$plant = $plants[$_GET["plant_id"]];
-
-		print("<input type='hidden' name='plant_id' value='".$_GET["plant_id"]."'/>");
 
 		$scientific_name = $plant->get_scientific_name();
 		$nickname = $plant->get_nickname();
@@ -98,10 +96,10 @@
 
 			<?php
 
-			if (isset($_POST['action'])) {
-				switch ($_POST['action']) {
-				case 'manual_water': print("manual_water"); break;
-				case 'manual_data': print("manual_data"); break;
+			if (isset($_GET['action'])) {
+				switch ($_GET['action']) {
+				case 'mb': $controller->water($_GET['plant_id']); break;
+				case 'mm': $controller->update_all_sensor_data(1); break;
 				}
 			}
 
@@ -114,26 +112,37 @@
 					//}
 				?>
 
-				<form action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="POST">
-					<div id="sensor_list">
-						<div class="row">
-							<div class="cell">
-								<input type="submit" class="button" name="a" value="Manuelle Bewässerung" />
-								<?php
-									if($plant->get_last_watering() != ""){
-										print('<small>Zuletzt gegossen:'.$plant->get_last_watering().'</small>');
-									}
-								?>
-							</div>
-							<div class="cell">
-								<input type="submit" class="button" name="a" value="Manuelle Messung" />
-								<small>
-									Zuletzt gemessen: xx.xx.xxxx
-								</small>
-							</div>
+			
+				<div id="sensor_list">
+					<div class="row">
+						<div class="cell">
+							<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&action=mb";?>>
+								<button class="button">Manuelle Bewässerung</button>
+							</a>
+
+							<?php
+								if($plant->get_last_watering() != ""){
+									print('<small>Zuletzt gegossen:'.$plant->get_last_watering().'</small>');
+								} else {
+									print('<small>Noch nie per Einheit gegossen.</small>');
+								}
+							?>
+						</div>
+						<div class="cell">
+							<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&action=mm";?>>
+								<button class="button">Manuelle Messung</button>
+							</a>
+
+							<?php
+								if($controller->get_last_sensor_update($_GET["plant_id"]) != ""){
+									print('<small>Zuletzt gemessen:'.$controller->get_last_sensor_update($_GET["plant_id"]).'</small>');
+								} else {
+									print('<small>Noch nie gemessen.</small>');
+								}
+							?>
 						</div>
 					</div>
-				</form>
+				</div>
 
 				<table>
 					<tr>
@@ -185,12 +194,27 @@
 					<tr>
 						<td>Füllstand Wassertank</td>
 						<td><?php 
-							/*$su = $controller->get_sensorunit($plant->get_sensor_unit_id());
-							echo $su->get_watertank_level();*/?></td>
+								$su = $controller->get_sensorunit($plant->get_sensor_unit_id());
+								$su->calculate_watertank_level();
+								$wtl = $su->get_watertank_level();
+								if(is_nan($wtl)){
+									print("<p><small>keine Daten vorhanden</small></p>");
+								} else {
+									print("<p>$wtl</p>");
+								}
+							?></td>
 					</tr>
 					<tr>
 						<td>Wasserbedarf</td>
-						<td><!--<?php //echo $controller->sum_water_usage($_GET["plant_id"], 1);?>--></td>
+						<td><?php
+								$wu = $controller->sum_water_usage($_GET["plant_id"], 2);
+								if($wu=="ml"){
+									print("<p><small>kein bisheriger Wasserbedarf</small></p>");
+								} else {
+									print("<p>$wu</p>");
+								}
+							?>	
+						</td>
 					</tr>
 				</table>
 			</div>
