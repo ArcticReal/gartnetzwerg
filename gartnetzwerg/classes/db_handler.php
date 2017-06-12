@@ -1201,6 +1201,24 @@ class DB_Handler{
 		return $notification_settings[0];
 	}
 	
+	public function fetch_last_data_update($sensorunit_id){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::fetch_last_data_update(Sensorunit Id: ".$sensorunit_id.")\n";
+		
+		$query = "SELECT date FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id ";
+		$query = $query."WHERE sensor_unit_id = ".$sensorunit_id." ORDER BY date LIMIT 1;";
+		$result = mysqli_query($this->mysqli, $query);
+		$last_date = mysqli_fetch_array($result);
+		
+		//logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$last_date[0]."\n";
+		$this->write_log($logtext);
+		
+		return $last_date[0];
+	}
+	
 	//insert functions
 	
 	public function insert_water_usage($plant_id, $water_usage){

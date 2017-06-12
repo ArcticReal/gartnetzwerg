@@ -164,6 +164,22 @@ class Controller{
 		
 	}
 	
+	public function get_last_sensor_update($plant_id){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::get_last_sensor_update(Plant Id: ".$plant_id.")\n";
+		$this->write_log($logtext);
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		
+		$last_date = $db_handler->fetch_last_data_update($this->plant_array[$plant_id]->get_sensor_unit_id());
+		
+		$db_handler->disconnect_sql();
+		
+		return $last_date;
+	}
+	
 	/**
 	 * Always execute this after restarting the script
 	 */
@@ -292,12 +308,9 @@ class Controller{
 		}else {
 			$insert_result = $db_handler->insert_plant($sensorunit_id, $species_id, $nickname, $location, $is_indoor, $auto_watering);
 			if ($insert_result !== FALSE){
-				if ($nickname != "Fehler"){
-					$return_string = " ".$nickname;
-				}else {
-					$return_string = 1;
-				}
 					
+				$return_string = " ".$nickname;
+				
 				$db_handler->update_sensorunit_status($sensorunit_id, "active");
 			}else {
 				$return_string = 0;				
