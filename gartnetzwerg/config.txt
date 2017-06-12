@@ -5,11 +5,11 @@
 
 ## Notification-Settings
 SEND_NOTIFICATIONS = "ON"
-SEND_MAIL_TO = "aenderungs@test.com"
+SEND_MAIL_TO = "alexander@bratrich-online.de"
 
 ## Openweathermap-Settings
-OPENWEATHERMAP_API_KEY = ""
-OPENWEATHERMAP_LOCATION = "New York"
+OPENWEATHERMAP_API_KEY = "owm_keytest"
+OPENWEATHERMAP_LOCATION = "Montréal"
 
 ## Vacation-Settings
 VACATION_FUNCTION = "OFF"

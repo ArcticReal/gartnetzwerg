@@ -154,7 +154,7 @@
 								}
 								print("</select></div>");
 
-								print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' name='mac_name' 
+								print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' name='sensorunit_mac' 
 									pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'></div>");
 							} else {
 								print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' name='sensorunit_mac' placeholder='XX:XX:XX:XX:XX:XX'></div>");
@@ -179,7 +179,7 @@
 		</div>
 
 		<div id="submit" class="button w2">
-			<a href="javascript:;" onclick="new_plant_submit()"><i class="fa fa-check-circle fa-3x" aria-hidden="true"></i></a>
+			<a href="javascript:;" onclick="new_plant_submit(<?php echo($sensorunits); ?>)"><i class="fa fa-check-circle fa-3x" aria-hidden="true"></i></a>
 		</div>
 	</div>
 

@@ -21,11 +21,6 @@
 		require_once 'gartnetzwerg/classes/controller.php'; 
 			
 		$controller = new Controller();
-		
-		$email = $controller->get_notification_receiving_email_address();
-		$wohnort = $controller->get_openweathermap_location();
-		$owm_key = $controller->get_openweathermap_api_key();
-		$notifications = $controller->get_general_notification_settings();
 
 		$v_email = $v_wohnort = $v_owm_key = $v_notifications = "";
 		
@@ -36,23 +31,28 @@
 			$v_notifications = test_input($_POST["notifications"]);
 		}
 
-		if($v_email != "" && $v_email != $email){
+		if($v_email != ""){
 			$email = $v_email;
 			$controller->change_email_address($v_email);
 		}
 
-		if($v_wohnort != "" && $v_wohnort != $wohnort){
+		if($v_wohnort != ""){
 			$wohnort = $v_wohnort;
 			$controller->change_openweathermap_location($v_wohnort);
 		}
 
-		if($v_owm_key != "" && $v_owm_key != $owm_key){
-			//$controller->change_openweathermap_api_key($v_owm_key);
+		if($v_owm_key != ""){
+			$controller->change_openweathermap_api_key($v_owm_key);
 		}
 
-		if($v_notifications != "" && $v_notifications != $notifications){
+		if($v_notifications != ""){
 			$controller->change_general_notification_settings($v_notifications);
 		}
+
+		$email = $controller->get_notification_receiving_email_address();
+		$wohnort = $controller->get_openweathermap_location();
+		$owm_key = $controller->get_openweathermap_api_key();
+		$notifications = $controller->get_general_notification_settings();
 	?>
 
 	<div id="form" class="small">
@@ -64,7 +64,7 @@
 					<div class="cell"><p>Email-Adresse</p></div>
 					<div class="cell">
 						<?php
-							print("<input type='text' name='email' placeholder='$email'>");
+							print("<input type='text' name='email' id='email' placeholder='$email'>");
 						?>
 					</div>
 				</div>
@@ -89,11 +89,11 @@
 					<div class="cell">Notifications</div>
 					<div class="cell">
 						<?php
-							if($v_notifications=="ON"){
+							if($notifications=="ON"){
 								print('<input type="hidden" name="notifications" value="OFF">');
 								print('<input type="checkbox" name="notifications" value="ON" checked>');
 							} else {
-								print('<input type="hidden" name="notifications" value="OFF" checked>');
+								print('<input type="hidden" name="notifications" value="OFF">');
 								print('<input type="checkbox" name="notifications" value="ON">');
 							}
 						?>

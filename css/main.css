@@ -487,9 +487,9 @@ input, select, textarea {
 	margin-top: 10px;
 }
 
-#form form input[type="button"],
-#form form input[type="submit"],,
-#sensor_list button, 
+input[type="button"],
+input[type="submit"],
+button, 
 #cam_buttons input{
 	background-color: #8B0000;
 	color: #FFDDDD;
@@ -497,9 +497,9 @@ input, select, textarea {
 	padding: 5px;
 }
 
-#form form input[type="button"]:hover,
-#form form input[type="submit"]:hover,
-#sensor_list button:hover,
+input[type="button"]:hover,
+input[type="submit"]:hover,
+button:hover,
 #cam_buttons input:hover{
 	color: #FFFFFF;
 	background-color: #CE0000;

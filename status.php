@@ -100,6 +100,8 @@
 				switch ($_GET['action']) {
 				case 'mb': $controller->water($_GET['plant_id']); break;
 				case 'mm': $controller->update_all_sensor_data(1); break;
+				case 'mp': break; //$controller->water($_GET['plant_id']); break;
+				case 'live': break; //$controller->update_all_sensor_data(1); break;
 				}
 			}
 
@@ -112,7 +114,6 @@
 					//}
 				?>
 
-			
 				<div id="sensor_list">
 					<div class="row">
 						<div class="cell">
@@ -286,16 +287,28 @@
 				}
 			?>
 
-			<form name="cam_buttons" id="cam_buttons">
+			<div id="cam_buttons">
 				<div class="row">
 					<div class="cell">
-						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=manual_photo";?>><input type="submit" class="button" name="a" value="Manuelle Fotoaufnahme" /></a>
+						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&action=mp#cam";?>>
+							<button class="button">Manuelles Photo</button>
+						</a>
+
+						<?php
+							if($controller->get_last_sensor_update($_GET["plant_id"]) != ""){
+								print('<small>Letztes Photo:'.$controller->get_last_sensor_update($_GET["plant_id"]).'</small>');
+							} else {
+								print('<small>Noch keine Photos.</small>');
+							}
+						?>
 					</div>
 					<div class="cell">
-						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&a=live";?>><input type="submit" class="button" name="a" value="Live View" /></a>
+						<a href=<?php echo "status.php?plant_id=".$_GET["plant_id"]."&action=live#cam";?>>
+							<button class="button">Live View</button>
+						</a>
 					</div>
 				</div>
-			</form>
+			</div>
 
 			<p>letztes Bild:</p>
 			<img src="./img/aloeveratopf.jpg" width="300" alt="letztes Bild"><br/>
