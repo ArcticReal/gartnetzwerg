@@ -202,7 +202,10 @@ class Controller{
 
 		//logging
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Lookups: \n					";
-		$logtext = $logtext."SEND_MAIL_TO:			".$this->get_notification_receiving_email_address()."\n					";
+		$logtext = $logtext."NOTFICATIONS:			".$this->get_general_notification_settings()."\n					";
+		if ($this->get_general_notification_settings() == "ON"){
+			$logtext = $logtext."SEND_MAIL_TO:			".$this->get_notification_receiving_email_address()."\n					";
+		}
 		$logtext = $logtext."OPENWEATHERMAP_API_KEY:		".$this->get_openweathermap_api_key()."\n					";
 		$logtext = $logtext."OPENWEATHERMAP_LOCATION:	".$this->get_openweathermap_location()."\n					";
 		
@@ -489,7 +492,9 @@ class Controller{
 	 */
 	public function change_general_notification_settings($new_settings){
 		
-		$this->set_notification_receiving_email_address("");
+		if ($new_settings == "OFF"){
+			$this->set_notification_receiving_email_address("");
+		}
 		$this->set_general_notification_settings($new_settings);
 		$this->write_config("SEND_NOTIFICATIONS", $new_settings);
 		
