@@ -389,42 +389,103 @@ class Controller{
 	 * checks all plants, if they are indoor or outdoor and if they need water
 	 */
 	public function check_for_watering(){
-
+		
+		$data = $test->get_openweathermap_data();
+		$data = $data["list"];
+		$rain = 0.0;
+		foreach ($data as $i => $data_entry){
+			/*echo "\n".$data["list"][$i]["dt_txt"]."\n";
+			echo "	".$data["list"][$i]["weather"][0]["description"]."\n";*/
+			if (count($data_entry) > 7){
+			
+				if (count($data_entry["rain"]) > 0){
+					$rain += $data_entry["rain"]["3h"];
+					//echo "	Rain: ".$data["list"][$i]["rain"]["3h"]."\n";
+				}
+				
+				
+			}
+		}
+		
+		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		foreach ($this->plant_array as $plant_id => $plant) {
-			if($plant->is_indoor() == false){
-				//TODO: plant is outdoor, check for weather and watering stuff
-				$data = $this->get_openweathermap_data();
-				
-				
-			} else {
-				//TODO: plant is indoor, no owm rain check (still check for sun though)
 
-				$intervall_max = $plant->get_max_watering_period();
-				$intervall_min = $plant->get_min_watering_period();
-				$last_watering = date("Y-m-d", $db_handler->fetch_last_watering($plant_id));
-				
-				$max_date = new DateTime("-".$intervall_max."days");
-				$min_date = new DateTime("-".$intervall_min."days");
-				if ($max_date->format("Y-m-d") < $last_watering){
-					//max_watering_period_reached
-					$this->water($plant_id);
+			$intervall_max = $plant->get_max_watering_period();
+			$intervall_min = $plant->get_min_watering_period();
+			$last_watering = date("Y-m-d", $db_handler->fetch_last_watering($plant_id));
+			
+			$max_date = new DateTime("-".$intervall_max."days");
+			$min_date = new DateTime("-".$intervall_min."days");
+			if ($max_date->format("Y-m-d") < $last_watering){
+				//max_watering_period_reached
+				if ($plant->get_is_indoor() == 1){
+					//plant is indoor
 					
-				}elseif ($min_date->format("Y-m-d") < $last_watering) {
-					//min_watering_period_reached
-					
-					//check for sensors
-					$akt_humidity = $db_handler->fetch_akt_soil_humidity($plant->get_sensor_unit_id());
-					$min_humidity = $plant->get_min_soil_humidity();
-					if ($akt_humidity < $min_humidity){
-						//max_patering_period reached but sensor says plant needs water
+					if ($plant->get_auto_watering() == 1){
+						//autowatering on
 						$this->water($plant_id);
 					}
+					else {
+						//auto watering off
+						// TODO auf notification checken und dementsprechende mail schreiben
+						$this->send_mail($subject, $message);
+					}
+				}else {
+					//plant is outdoor
+					if ($rain < 1){
+						if ($plant->get_auto_watering() == 1){
+							//autowatering on
+							$this->water($plant_id);
+						}
+						else {
+							//auto watering off
+							// TODO auf notification checken und dementsprechende mail schreiben
+							$this->send_mail($subject, $message);
+						}
+					}
+				}
+			}elseif ($min_date->format("Y-m-d") < $last_watering) {
+				//min_watering_period_reached
+				
+				//check for sensors
+				$akt_humidity = $db_handler->fetch_akt_soil_humidity($plant->get_sensor_unit_id());
+				$min_humidity = $plant->get_min_soil_humidity();
+				if ($akt_humidity < $min_humidity){
+					//max_patering_period reached but sensor says plant needs water
 					
+					if ($plant->get_is_indoor() == 1){
+						//plant is indoor
+						
+						if ($plant->get_auto_watering() == 1){
+							//autowatering on
+							$this->water($plant_id);
+						}
+						else {
+							//auto watering off
+							// TODO auf notification checken und dementsprechende mail schreiben
+							$this->send_mail($subject, $message);
+						}
+					}else {
+						//plant is outdoor
+						if ($rain < 1){
+							if ($plant->get_auto_watering() == 1){
+								//autowatering on
+								$this->water($plant_id);
+							}
+							else {
+								//auto watering off
+								// TODO auf notification checken und dementsprechende mail schreiben
+								$this->send_mail($subject, $message);
+							}
+						}
+					}
 				}
 			}
 		}
+		
+		$db_handler->disconnect_sql();
 	}
 	
 	/**
@@ -476,7 +537,7 @@ class Controller{
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$db_handler->update_plant_location($plant_id, $location,$is_indoor);
+		$db_handler->update_plant_location($plant_id, $location, $is_indoor);
 		$db_handler->disconnect_sql();
 		
 		$this->refresh_local_objects();
@@ -598,12 +659,12 @@ class Controller{
 		} else {
 			//gets forecast with api key
 			$json = file_get_contents('http://api.openweathermap.org/data/2.5/forecast?APPID='.$this->get_openweathermap_api_key().'&q='.$this->get_openweathermap_location());		
-			echo $json;
+			
 			$data = json_decode($json, true);
 			if ($data == ""){ //if api doesnt work then use the default one
 				$this->set_openweathermap_api_key("");
-				echo "\nrequest failed;\ntrying with default key:\n";
 				$data = $this->get_openweathermap_data();	
+
 			}
 		}
 		
@@ -1144,23 +1205,9 @@ class Controller{
 	
 	}
 }
-/*$test = new Controller();
-$test->sum_water_usage(2, 2);
+$test = new Controller();
+//$test->sum_water_usage(2, 2);
 
-/*$data = $test->get_openweathermap_data();
-for ($i = 0; $i <= 39; $i++){
-	echo "\n".$data["list"][$i]["dt_txt"]."\n";
-	echo "	".$data["list"][$i]["weather"][0]["description"]."\n";
-	if (count($data["list"][$i])>7){
-		
-		if (count($data["list"][$i]["rain"])>0){
-			
-			echo "	Rain: ".$data["list"][$i]["rain"]["3h"]."\n";
-		}
-		
-			
-	}
-}
 
-//var_dump($data);*/
+//var_dump($data);
 ?>

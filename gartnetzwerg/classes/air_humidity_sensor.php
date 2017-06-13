@@ -12,6 +12,6 @@ class Air_humidity_sensor extends Sensor{
 		}*/
 	}
 }
-$test = new Air_humidity_sensor();
-$test->update("B8:27:EB:BD:F1:A7");
+//$test = new Air_humidity_sensor();
+//$test->update("B8:27:EB:BD:F1:A7");
 ?>
