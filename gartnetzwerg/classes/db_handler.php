@@ -1393,7 +1393,7 @@ class DB_Handler{
 	
 	public function update_plant_nickname($plant_id, $nickname){
 		
-		$query = "UPDATE plants SET nickname = '".$nickname."' WHERE plant_id = ".$plant_id.";";
+		$query = "UPDATE plants SET nickname = '".utf8_decode($nickname)."' WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
 		// Logging
@@ -1407,7 +1407,7 @@ class DB_Handler{
 	
 	public function update_plant_location($plant_id, $location, $is_indoor){
 		
-		$query = "UPDATE plants SET location = '".$location."' ,is_indoor = ".$is_indoor." WHERE plant_id = ".$plant_id.";";
+		$query = "UPDATE plants SET location = '".utf8_decode($location)."' ,is_indoor = ".$is_indoor." WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
 		// Logging
