@@ -9,8 +9,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
-	<link rel="stylesheet" type="text/css" href="./css/new.css">
-	<link rel="stylesheet" type="text/css" href="./css/status.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
@@ -29,15 +27,15 @@
 		<div id="wrap">
 			<?php
 
-				$plantname = $auto_watering = $standort = $indoor = $notifications = $su_name = $su_mac = "";
+				$plantname = $auto_watering = $standort = $indoor = $su_name = $su_mac = "";
 				$suid = $scientific_name = -1;
+
 				if ($_SERVER["REQUEST_METHOD"] == "POST") {
 					$plantname = test_input($_POST["plantname"]);
 					$scientific_name = test_input($_POST["scientific_name"]);
 					$auto_watering = test_input($_POST["auto_watering"]);
 					$standort = test_input($_POST["standort"]);
 					$indoor = test_input($_POST["indoor"]);
-					$notifications = test_input($_POST["notifications"]);
 					$su_id = test_input($_POST["sensorunit"]);
 					$su_name = test_input($_POST["sensorunit_name"]);
 					$su_mac = test_input($_POST["sensorunit_mac"]);
@@ -48,34 +46,38 @@
 				var_dump($auto_watering);
 				var_dump($standort);
 				var_dump($indoor);
-				var_dump($notifications);
-				var_dump($sensorunit);
-				var_dump($sensorunit_name);
-				var_dump($sensorunit_mac);
+				var_dump($su_id);
+				var_dump($su_name);
+				var_dump($su_mac);
 
-				if($su_name=="" && $su_mac=="" && $suid!=-1){
-					print("<div id='alert'>Keine Sensorunits ausgewählt.</div>");
-				} else if(($su_name=="" || $su_mac=="") && isset($su_id)){
+				if($su_id!="" && $su_name=="" && $su_mac==""){
+					//su_id is da bzw. mac/name is nicht da
 					$nickname = $controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
-					if($nickname!=0){
-						print("<div id='alert' class='alert-ok'>Pflanze $nickname erfolgreich eingefügt.</div>");
+					if(is_numeric($nickname) && $nickname == 0){
+						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
 					} else {
-						print("<div id='alert'>Pflanze konnte nicht eingefügt werden.</div>");
+						print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze $nickname erfolgreich eingefügt.</div>");
 					}
-				} else if($su_name!="" && $su_mac!="" && !isset($su_id)){
+				} else if($su_id=="" && $su_name!="" && $su_mac!=""){
+					//su_id is nich da bzw. mac/name is
 					$id = $controller->add_sensor_unit($su_mac, $su_name);
-					if(strpos($id,'Fehler')===false){
+					if($id!=0){
 						$nickname = $controller->add_plant($id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
 						if($nickname!=0){
-							print("<div id='alert' class='alert-ok'>Pflanze $nickname erfolgreich eingefügt.</div>");
+							print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze $nickname erfolgreich eingefügt.</div>");
 						} else {
-							print("<div id='alert'>Pflanze konnte nicht eingefügt werden.</div>");
+							var_dump($nickname); //returned 0, but why?
+							var_dump($id);		 // returned 1
+							print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden 2.</div>");
+							//tritt auf, wenn ich eine neue Pflanze einfüge && eine neue Sensoreinheit; vermutlich kennt der die id nicht, oder sagt, dass die id nicht free is?
 						}
 					} else {
-						print("<div id='alert'>Sensorunit konnte nicht hinzugefügt werden.</div>");
+						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden 3.</div>");
 					}
+				} else {
+					//print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
+					//case, wenn alles leer ist
 				}
-
 			?>
 
 			<div id="alert" class="alert-none"></div>
@@ -85,7 +87,10 @@
 					<div class="cell"><p>Pflanzenname</p></div>
 
 					<div class="cell">
-						<input type="text" name="plantname" size="16" maxlength="16" autocomplete="off" width="20" placeholder="z.B. 'Mercy'" autofocus>
+						<?php
+							$placeholder_names = Array("Mercy","Ana","Wilson","Testobjekt #76","Polly","Kim","Stephen","Donald","Sir Pflanze von Hohengarten","Aloe Vera","Ghost Pepper","Scott","Ramona","Mei","Carolina Reaper","Groot","Wolfgang's Pflanze","Mr. Pflanze");
+						?>
+						<input type="text" name="plantname" size="16" maxlength="16" autocomplete="off" width="20" placeholder=<?php echo "\"z.B. '".$placeholder_names[array_rand($placeholder_names)]."'\""; ?>>
 					</div>
 				</div>
 
@@ -120,8 +125,11 @@
 				<div class="row">
 					<div class="cell"><p>Standort</p></div>
 
+					<?php
+							$placeholder_locations = Array("Wintergarten","Keller","Fenstersims, Wohnzimmer","Gartenhäuschen, links oben","Balkon, West");
+						?>
 					<div class="cell">
-						<input type="text" name="standort" placeholder="z.B. 'Balkon, links'"><br/>
+						<input type="text" name="standort" placeholder=<?php echo "\"z.B. '".$placeholder_locations[array_rand($placeholder_locations)]."'\""; ?>>
 					</div>
 				</div>
 
@@ -143,21 +151,25 @@
 					</div>
 
 					<div class="cell">
-						<input type="hidden" name="sensorunit" value="-1">
+						<!--<input type="hidden" name="sensorunit" value="-1">-->
 						<?php
 							$sensorunits = $controller->get_free_sensorunits();
 
 							if(count($sensorunits)>0){
-								print("<div><select name='sensorunit'><option value='-1' selected> </option>");
+								print("<p><small>Freie Sensoreinheit auswählen:</small></p>");
+								print("<select id=\"sensorunit\" name=\"sensorunit\"><option value=\"-1\" selected></option>");
 								foreach($sensorunits as $id => $sensorunit){
 									print("<option value=".$id.">".$sensorunit->get_name()." (".$sensorunit->get_mac_address().")</option>");
 								}
-								print("</select></div>");
+								print("</select>");
 
-								print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' name='sensorunit_mac' 
-									pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'></div>");
+								print("<p><small>Oder, neue Sensoreinheit einfügen:</small></p>");
+								print("<input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/>
+									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'>");
 							} else {
-								print("<div><input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/><input type='text' pattern='([\da-f]{2}\:){5}[\da-f]{2}\b' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' name='sensorunit_mac' placeholder='XX:XX:XX:XX:XX:XX'></div>");
+								//print("<p><small>Neue Sensoreinheit einfügen:</small></p>");
+								print("<input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/>
+									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'>");
 							}
 
 							function test_input($data){
@@ -179,7 +191,7 @@
 		</div>
 
 		<div id="submit" class="button w2">
-			<a href="javascript:;" onclick="new_plant_submit(<?php echo($sensorunits); ?>)"><i class="fa fa-check-circle fa-3x" aria-hidden="true"></i></a>
+			<?php print("<a href='javascript:;'' onclick='new_plant_submit(".count($sensorunits).");'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i></a>"); ?>
 		</div>
 	</div>
 

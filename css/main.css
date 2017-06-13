@@ -462,8 +462,8 @@ input, select, textarea {
 
 #alert{
 	background-color: #FFEEEE;
-	border: 3px red solid;
-	color: #995555;
+	border: 2px #AA5555 solid;
+	color: #AA5555;
 	padding: 8px;
 	margin-top: 8px;
 	margin-bottom: 8px;
@@ -476,6 +476,17 @@ input, select, textarea {
 	margin-bottom: 0px;
 	border: none;
 	opacity: 0;
+}
+
+#alert.alert-ok{
+	background-color: #EEFFEE;
+	border: 2px #55AA55 solid;
+	color: #55AA55;
+}
+
+#alert .fa{
+	float: left;
+	margin: 20px 10px;
 }
 
 #form form tr td:nth-child(2),

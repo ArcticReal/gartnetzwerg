@@ -54,25 +54,145 @@ function state_tabs(i){
 	}
 }
 
+function isInt(value) {
+  return !isNaN(value) && 
+         parseInt(Number(value)) == value && 
+         !isNaN(parseInt(value, 10));
+}
+
 function new_plant_submit(free_su){
-	if(document.forms["new_plant"]["plantname"].value == ""){
+	var errors = new Array();
+
+	var name = document.forms["new_plant"]["plantname"].value;
+	var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+	if(name == ""){
+		errors.push("Der Pflanzenname deiner Pflanze darf nicht leer sein.");
+	} else if(n_name == -1){
+		errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein.");
+	}
+
+	if(document.forms["new_plant"]["scientific_name"].value == -1){
+		errors.push("Die Art deiner Pflanze darf nicht leer sein.");
+	} 
+
+	var ort = document.forms["new_plant"]["standort"].value;
+	var n_ort = ort.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+	if(ort == ""){
+		errors.push("Der Standort deiner Pflanze darf nicht leer sein.");
+	} else if(n_ort == -1){
+		errors.push("Der Standort muss mindestens 2 Zeichen lang sein.");
+	}
+
+	if(free_su > 0){
+		if((document.forms["new_plant"]["sensorunit_name"].value == "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value == "") && 
+			document.forms["new_plant"]["sensorunit"].value < 0){
+			//000
+			errors.push("Keine Sensoreinheit ausgewählt.");
+		} else if((document.forms["new_plant"]["sensorunit_name"].value != "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value != "") && 
+			document.forms["new_plant"]["sensorunit"].value >= 0){
+			//111
+			errors.push("Keine eindeutige Sensoreinheit verknüpft.");
+		} else if((document.forms["new_plant"]["sensorunit_name"].value != "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value != "") && 
+			document.forms["new_plant"]["sensorunit"].value < 0){
+			//011 - okay!
+
+			/*var name = document.forms["new_plant"]["sensorunit_name"].value;
+			var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+			if(n_name == -1){
+				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
+			}*/
+
+			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
+			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig); //(/^[A-Za-z0-9 ]{3,20}$/);
+			if(n_mac == -1){
+				errors.push("Ungültige MAC-Adresse. (Format: XX:XX:XX:XX:XX:XX)");
+			}
+		} else if((document.forms["new_plant"]["sensorunit_name"].value == "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value == "") && 
+			document.forms["new_plant"]["sensorunit"].value >= 0){
+			//100 - okay!
+		} else if(((document.forms["new_plant"]["sensorunit_name"].value == "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value != "") && 
+			document.forms["new_plant"]["sensorunit"].value >= 0)||
+			((document.forms["new_plant"]["sensorunit_name"].value != "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value == "") && 
+			document.forms["new_plant"]["sensorunit"].value >= 0)){
+			//101
+			//110
+			errors.push("Keine eindeutige Sensoreinheit verknüpft.");
+		} else if(((document.forms["new_plant"]["sensorunit_name"].value == "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value != "") && 
+			document.forms["new_plant"]["sensorunit"].value < 0)||
+			((document.forms["new_plant"]["sensorunit_name"].value != "" ||
+			document.forms["new_plant"]["sensorunit_mac"].value == "") && 
+			document.forms["new_plant"]["sensorunit"].value < 0)){
+			//001
+			//010
+			errors.push("Keine Sensoreinheit verknüpft.");
+		} else {
+			errors.push("Undefinierter Fehler.");
+		}
+	} else {
+		if(document.forms["new_plant"]["sensorunit_name"].value == "" &&
+			document.forms["new_plant"]["sensorunit_mac"].value == ""){
+			//00
+			errors.push("Keine Sensoreinheit eingefügt.");
+		} else if(document.forms["new_plant"]["sensorunit_name"].value != "" &&
+			document.forms["new_plant"]["sensorunit_mac"].value != ""){
+			//11 - okay!
+
+			/*var name = document.forms["new_plant"]["sensorunit_name"].value;
+			var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+			if(n_name == -1){
+				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
+			}*/
+
+			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
+			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig); //(/^[A-Za-z0-9 ]{3,20}$/);
+			if(n_mac == -1){
+				errors.push("Ungültige MAC-Adresse. (Format: XX:XX:XX:XX:XX:XX)");
+			}
+		} else if(document.forms["new_plant"]["sensorunit_name"].value == "" &&
+			document.forms["new_plant"]["sensorunit_mac"].value != ""){
+			//01
+			errors.push("Sensorname darf nicht leer sein.");
+		} else if(document.forms["new_plant"]["sensorunit_name"].value != "" &&
+			document.forms["new_plant"]["sensorunit_mac"].value == ""){
+			//10
+			errors.push("MAC-Adresse darf nicht leer sein.");
+		} else {
+			errors.push("Undefinierter Fehler.");
+		}
+	}
+
+	if (errors.length > 0) {
 		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Der Pflanzenname deiner Pflanze darf nicht leer sein.";
-	} else if(document.forms["new_plant"]["scientific_name"].value == -1){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Die Art deiner Pflanze darf nicht leer sein.";
-	} else if(document.forms["new_plant"]["standort"].value == ""){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Der Standort deiner Pflanze darf nicht leer sein.";
-	} else if(free_su > 0 && document.forms["new_plant"]["sensorunit"].value == -1 &&
-		(document.forms["new_plant"]["sensorunit_name"].value == "" ||
-		document.forms["new_plant"]["sensorunit_mac"].value == "")){
-		//alles is leer, irgendwas passt nicht
-	} else if(free_su <= 0 && (document.forms["new_plant"]["sensorunit_name"].value == "" ||
-		document.forms["new_plant"]["sensorunit_mac"].value == "")){
-		//neue su is leer, passt nicht
+		document.getElementById("alert").innerHTML = "<i class='fa fa-times-circle fa-3x'></i> <strong>Etwas stimmt nicht ganz...</strong><br/><ul>";
+		for (var i = 0; i < errors.length; i++) {
+			document.getElementById("alert").innerHTML += "<li>" + errors[i] + "</li>";
+		}
+		document.getElementById("alert").innerHTML += "</ul>";
 	} else {
 		document.getElementById("new").submit();
+	}
+}
+
+var delete_counter = 0;
+function delete_plant_submit(){
+	if(delete_counter==0){
+		document.getElementById("delete_button").value = "Bist du dir sicher?";
+		delete_counter++;
+	} else if(delete_counter==1){
+		document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
+		delete_counter++;
+	} else if(delete_counter==2){
+		document.getElementById("delete_plant").submit();
+	} else {
+		//document.getElementById("delete_button").value = "Are you sure?";
+		//document.getElementById("delete_button").onclick = "delete_plant_submit(1)";	
 	}
 }
 
@@ -86,6 +206,10 @@ function settings_submit(){
 	} else {
 		document.getElementById("settings").submit();
 	}
+}
+
+function flowersettings_submit(){
+	document.getElementById("flowersettings").submit();
 }
 
 function vacation_submit(){
