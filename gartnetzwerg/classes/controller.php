@@ -313,6 +313,11 @@ class Controller{
 			if ($insert_result !== FALSE){
 					
 				$return_string = " ".$nickname;
+
+				$plant_id = $db_handler->fetch_last_plant_id();
+				$command = "/var/www/html/gartnetzwerg/add_picture_folder.sh ".$plant_id."_".$nickname;
+				shell_exec($command);
+				
 				
 				$db_handler->update_sensorunit_status($sensorunit_id, "active");
 			}else {
@@ -320,10 +325,6 @@ class Controller{
 			}
 		}
 				
-		$plant_id = $db_handler->fetch_last_plant_id();
-		$command = "/var/www/html/gartnetzwerg/add_picture_folder.sh ".$plant_id."_".$nickname;
-		shell_exec($command);
-		
 		$db_handler->disconnect_sql();
 		$this->refresh_local_objects();
 		
@@ -343,20 +344,19 @@ class Controller{
 			if ($name_error == NULL & $mac_error == NULL){
 				
 				//no error
-				$error_return = 1;
-				$return_string .= $db_handler->insert_sensor_unit($mac_address, $name);
+				$error_return = $db_handler->insert_sensor_unit($mac_address, $name);
 				
 				$this->refresh_local_objects();
 			}else{
 				
 				//error
-				$error_return = 0;
+				$error_return = -1;
 			}
 			$db_handler->disconnect_sql();
 		}else {
 			
 			//error too much units
-			$error_return = 0;
+			$error_return = -1;
 		}
 		
 		
