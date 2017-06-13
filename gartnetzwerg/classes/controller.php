@@ -383,6 +383,7 @@ class Controller{
 		}
 		
 		$db_handler->disconnect_sql();
+		$this->refresh_local_objects();
 	}
 	
 	/**
@@ -430,7 +431,7 @@ class Controller{
 					else {
 						//auto watering off
 						// TODO auf notification checken und dementsprechende mail schreiben
-						$this->send_mail($subject, $message);
+						$this->send_notification($plant_id, "needs_water");
 					}
 				}else {
 					//plant is outdoor
@@ -442,7 +443,7 @@ class Controller{
 						else {
 							//auto watering off
 							// TODO auf notification checken und dementsprechende mail schreiben
-							$this->send_mail($subject, $message);
+							$this->send_notification($plant_id, "needs_watering");
 						}
 					}
 				}
@@ -465,7 +466,7 @@ class Controller{
 						else {
 							//auto watering off
 							// TODO auf notification checken und dementsprechende mail schreiben
-							$this->send_mail($subject, $message);
+							$this->send_notification($plant_id, "needs_watering");
 						}
 					}else {
 						//plant is outdoor
@@ -477,7 +478,7 @@ class Controller{
 							else {
 								//auto watering off
 								// TODO auf notification checken und dementsprechende mail schreiben
-								$this->send_mail($subject, $message);
+								$this->send_notification($plant_id, "needs_watering");
 							}
 						}
 					}
@@ -717,7 +718,44 @@ class Controller{
 	}
 	
 	
-	
+	public function send_notification($plant_id, $reason){
+		
+		//TODO neue cases für neue $reason
+		if ($this->get_general_notification_settings() == "ON"){
+			
+			$db_handler = new DB_Handler();
+			$db_handler->connect_sql();
+			
+			$settings = $db_handler->fetch_notification_settings($plant_id);
+			$nickname = $db_handler->fetch_nickname($plant_id);
+			$message = "";
+			$subject = "Pflanze ".$nickname." benötigit ihre Aufmerksamkeit!";
+			switch ($reason){
+				case "needs_water":				
+					switch ($settings){
+						case "data_only": 
+							$message = "Pflanze ".$nickname." hat zu trockenen Boden.\n";
+							break;
+						case "both": 
+							$message = "Pflanze ".$nickname." hat zu trockenen Boden.\n";
+							$message .= "Jetzt gießen!";
+							break;
+						case "instructions_only": 
+							$message = "Pflanze ".$nickname." sollte jetzt gegossen werden.";
+							break;
+						case "off": 
+							$message = "";
+							break;
+						
+					}
+					break;
+			}
+			$db_handler->disconnect_sql();
+			if ($message != ""){
+				$this->send_mail($subject, $message);
+			}
+		}
+	}
 	
 	/**
 	 * 
