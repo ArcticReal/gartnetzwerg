@@ -1435,6 +1435,27 @@ class DB_Handler{
 		
 	}
 	
+	public function update_auto_watering($plant_id, $new_auto_watering){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::update_auto_watering(Plant Id: ".$plant_id.", New Watering: )".$new_auto_watering."\n";
+		
+		$query = "UPDATE plants SET auto_watering = ".$new_auto_watering." WHERE plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		
+		if ($result == NULL){
+			$result = 0;
+		}
+		
+		//logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		$this->write_log($logtext);
+		
+		
+		return $result;
+	}
+	
 	
 	// delete functions
 	

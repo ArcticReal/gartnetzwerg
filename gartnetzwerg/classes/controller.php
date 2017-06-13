@@ -614,6 +614,26 @@ class Controller{
 		
 	}
 	
+	/**
+	 * 
+	 * @param unknown $plant_id
+	 * @param unknown $new_auto_watering 1 for on or 0 for off
+	 */
+	public function change_auto_watering($plant_id, $new_auto_watering){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::change_auto_watering(Plant Id: ".$plant_id.")\n";
+		$this->write_log($logtext);
+		
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		$result = $db_handler->update_auto_watering($plant_id, $new_auto_watering);
+		$db_handler->disconnect_sql();
+		
+		return $result;
+		
+	}
+	
 	public function turn_on_vacation($new_vacation_start, $new_vacation_end){
 		
 		//logging
