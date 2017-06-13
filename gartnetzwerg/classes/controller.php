@@ -389,7 +389,10 @@ class Controller{
 	 * checks all plants, if they are indoor or outdoor and if they need water
 	 */
 	public function check_for_watering(){
-		foreach ($this->plant_array as $plant) {
+
+		$db_handler = new DB_Handler();
+		$db_handler->connect_sql();
+		foreach ($this->plant_array as $plant_id => $plant) {
 			if($plant->is_indoor() == false){
 				//TODO: plant is outdoor, check for weather and watering stuff
 				$data = $this->get_openweathermap_data();
@@ -397,6 +400,29 @@ class Controller{
 				
 			} else {
 				//TODO: plant is indoor, no owm rain check (still check for sun though)
+
+				$intervall_max = $plant->get_max_watering_period();
+				$intervall_min = $plant->get_min_watering_period();
+				$last_watering = date("Y-m-d", $db_handler->fetch_last_watering($plant_id));
+				
+				$max_date = new DateTime("-".$intervall_max."days");
+				$min_date = new DateTime("-".$intervall_min."days");
+				if ($max_date->format("Y-m-d") < $last_watering){
+					//max_watering_period_reached
+					$this->water($plant_id);
+					
+				}elseif ($min_date->format("Y-m-d") < $last_watering) {
+					//min_watering_period_reached
+					
+					//check for sensors
+					$akt_humidity = $db_handler->fetch_akt_soil_humidity($plant->get_sensor_unit_id());
+					$min_humidity = $plant->get_min_soil_humidity();
+					if ($akt_humidity < $min_humidity){
+						//max_patering_period reached but sensor says plant needs water
+						$this->water($plant_id);
+					}
+					
+				}
 			}
 		}
 	}
@@ -420,7 +446,7 @@ class Controller{
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
-		//exec(somthingsomething) mit der mac
+		//TODO: exec(somthingsomething) mit der mac
 		$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
 		$db_handler->disconnect_sql();
 		

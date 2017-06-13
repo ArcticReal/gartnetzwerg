@@ -1407,7 +1407,7 @@ class DB_Handler{
 	
 	public function update_plant_location($plant_id, $location, $is_indoor){
 		
-		$query = "UPDATE plants SET location = '".$location."' ,is_indoor = ".$is_indoor." ' WHERE plant_id = ".$plant_id.";";
+		$query = "UPDATE plants SET location = '".$location."' ,is_indoor = ".$is_indoor." WHERE plant_id = ".$plant_id.";";
 		$result = mysqli_query($this->mysqli, $query);
 		
 		// Logging
@@ -1415,6 +1415,8 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		$this->write_log($logtext);
+		
+		return $result;
 	}
 	
 	public function update_notification_settings($plant_id, $new_settings){
