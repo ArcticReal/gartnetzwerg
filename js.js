@@ -99,14 +99,14 @@ function new_plant_submit(free_su){
 			document.forms["new_plant"]["sensorunit"].value < 0){
 			//011 - okay!
 
-			/*var name = document.forms["new_plant"]["sensorunit_name"].value;
-			var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+			var name = document.forms["new_plant"]["sensorunit_name"].value;
+			var n_name = name.search(/^.{2,}$/);
 			if(n_name == -1){
 				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
-			}*/
+			}
 
 			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
-			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig); //(/^[A-Za-z0-9 ]{3,20}$/);
+			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig);
 			if(n_mac == -1){
 				errors.push("Ungültige MAC-Adresse. (Format: XX:XX:XX:XX:XX:XX)");
 			}
@@ -144,14 +144,14 @@ function new_plant_submit(free_su){
 			document.forms["new_plant"]["sensorunit_mac"].value != ""){
 			//11 - okay!
 
-			/*var name = document.forms["new_plant"]["sensorunit_name"].value;
-			var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+			var name = document.forms["new_plant"]["sensorunit_name"].value;
+			var n_name = name.search(/^.{2,}$/);
 			if(n_name == -1){
 				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
-			}*/
+			}
 
 			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
-			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig); //(/^[A-Za-z0-9 ]{3,20}$/);
+			var n_mac = mac.search(/^([\da-f]{2}\:){5}[\da-f]{2}$/ig);
 			if(n_mac == -1){
 				errors.push("Ungültige MAC-Adresse. (Format: XX:XX:XX:XX:XX:XX)");
 			}
@@ -170,7 +170,8 @@ function new_plant_submit(free_su){
 
 	if (errors.length > 0) {
 		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "<i class='fa fa-times-circle fa-3x'></i> <strong>Etwas stimmt nicht ganz...</strong><br/><ul>";
+		document.getElementById("alert").innerHTML = "<div><i class='fa fa-times-circle fa-3x'></i></div> <strong>Etwas stimmt nicht ganz...</strong> <br/>";
+		document.getElementById("alert").innerHTML += "<ul>";
 		for (var i = 0; i < errors.length; i++) {
 			document.getElementById("alert").innerHTML += "<li>" + errors[i] + "</li>";
 		}
@@ -186,7 +187,7 @@ function delete_plant_submit(){
 		document.getElementById("delete_button").value = "Bist du dir sicher?";
 		delete_counter++;
 	} else if(delete_counter==1){
-		document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
+		document.getElementById("delete_button").value = "<strong>Bist du dir <i>wirklich</i> sicher?</strong>";
 		delete_counter++;
 	} else if(delete_counter==2){
 		document.getElementById("delete_plant").submit();
@@ -209,7 +210,34 @@ function settings_submit(){
 }
 
 function flowersettings_submit(){
-	document.getElementById("flowersettings").submit();
+	var errors = new Array();
+
+	var name = document.forms["flowersettings"]["plantname"].value;
+	var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+	if(name!="" && n_name == -1){
+		errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein.");
+	}
+
+	if (errors.length > 0) {
+		document.getElementById("alert").className = "";
+		document.getElementById("alert").innerHTML = "<i class='fa fa-times-circle fa-3x'></i> <strong>Etwas stimmt nicht ganz...</strong><br/><ul>";
+		for (var i = 0; i < errors.length; i++) {
+			document.getElementById("alert").innerHTML += "<li>" + errors[i] + "</li>";
+		}
+		document.getElementById("alert").innerHTML += "</ul>";
+	} else {
+		document.getElementById("flowersettings").submit();
+	}
+}
+
+function status_submit(i){
+	switch(i){
+		case 0: document.getElementById("b1").submit(); break;
+		case 1: document.getElementById("b2").submit(); break;
+		case 2: document.getElementById("b3").submit(); break;
+		case 3: document.getElementById("b4").submit(); break;
+		default:;
+	}
 }
 
 function vacation_submit(){
@@ -503,5 +531,13 @@ function change_days(days){
 		for (var i = 0; i < diagramm.length-1; i++)
 			init_canvas(i,200,w, days);
 		document.getElementById("dayfactor").innerHTML = "Werte der letzten "+days+" Tage";
+	}
+}
+
+function smiley(i){
+	if(i == 0){
+		document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-meh-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
+	} else {
+		document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-smile-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
 	}
 }

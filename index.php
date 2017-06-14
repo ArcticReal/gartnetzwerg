@@ -25,18 +25,38 @@
 		<?php
 			require_once 'gartnetzwerg/classes/controller.php'; 
 			
-			$controller = new Controller();
-			$plants = $controller->get_plants();		
+			$controller = new Controller();	
 
-			foreach($plants as $plant){
-				$scientific_name = $plant->get_scientific_name();
-				$nickname = $plant->get_nickname();
-				$name = $plant->get_name();
-				$plant_id = $plant->get_plant_id();
+			function test_input($data){
+				$data = trim($data);
+				$data = stripslashes($data);
+				$data = htmlspecialchars($data);
+				return $data;
+			}
 
-				$color = $controller->color_state($plant_id,0.75,0.75,0.75,0.75,0.5);
+			if ($_SERVER["REQUEST_METHOD"] == "POST") {
+				$v_delete = test_input($_REQUEST['del_plant']);
 				
-				print "<a href='status.php?plant_id=$plant_id'><div class='flower $color'><span><p>$nickname<br/><small>$name ($scientific_name)</small></p></span></div></a>";
+				if($v_delete >= 0){
+					$controller->delete_plant($v_delete);
+				}	
+			}
+
+			$plants = $controller->get_plants();
+
+			if(count($plants)>0){
+				foreach($plants as $plant){
+					$scientific_name = $plant->get_scientific_name();
+					$nickname = $plant->get_nickname();
+					$name = $plant->get_name();
+					$plant_id = $plant->get_plant_id();
+
+					$color = $controller->color_state($plant_id,0.75,0.75,0.75,0.75,0.5);
+					
+					print "<a href='status.php?plant_id=$plant_id'><div class='flower $color'><span><p>$nickname<br/><small>$name ($scientific_name)</small></p></span></div></a>";
+				}
+			} else {
+				print "<a onmouseover='smiley(1)' onmouseout='smiley(0)' href='new_plant.php'><div id='empty_flower_list'><span><i class='fa fa-3x fa-meh-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span></div></a>";
 			}
 		?>
 	</div>

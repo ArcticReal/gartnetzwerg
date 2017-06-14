@@ -40,16 +40,7 @@
 					$su_name = test_input($_POST["sensorunit_name"]);
 					$su_mac = test_input($_POST["sensorunit_mac"]);
 				}
-
-				var_dump($plantname);
-				var_dump($scientific_name);
-				var_dump($auto_watering);
-				var_dump($standort);
-				var_dump($indoor);
-				var_dump($su_id);
-				var_dump($su_name);
-				var_dump($su_mac);
-
+				
 				if($su_id!="" && $su_name=="" && $su_mac==""){
 					//su_id is da bzw. mac/name is nicht da
 					$nickname = $controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
@@ -61,21 +52,17 @@
 				} else if($su_id=="" && $su_name!="" && $su_mac!=""){
 					//su_id is nich da bzw. mac/name is
 					$id = $controller->add_sensor_unit($su_mac, $su_name);
-					if($id!=0){
+					if($id!=-1){
 						$nickname = $controller->add_plant($id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
-						if($nickname!=0){
+						if(is_numeric($nickname) && $nickname == 0){
 							print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze $nickname erfolgreich eingefügt.</div>");
 						} else {
-							var_dump($nickname); //returned 0, but why?
-							var_dump($id);		 // returned 1
-							print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden 2.</div>");
-							//tritt auf, wenn ich eine neue Pflanze einfüge && eine neue Sensoreinheit; vermutlich kennt der die id nicht, oder sagt, dass die id nicht free is?
+							print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
 						}
 					} else {
-						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden 3.</div>");
+						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
 					}
 				} else {
-					//print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
 					//case, wenn alles leer ist
 				}
 			?>
@@ -113,7 +100,7 @@
 				<div class="row">
 					<div class="cell">
 						<span>Auto-Bewässerung</span>
-						<a href="#" class="tooltip" tooltip="Falls die Sensoreinheit an deiner Pflanze einen Wassertank hat, ist Auto-Bewässerung eine gute Einstellung." tooltip-persistent><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+						<a href="#" class="tooltip" tooltip="Falls die Sensoreinheit an deiner Pflanze einen Wassertank hat, ist Auto-Bewässerung eine gute Einstellung."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 					</div>
 
 					<div class="cell">
@@ -147,7 +134,7 @@
 				<div class="row">
 					<div class="cell">
 						<span>Sensoreinheit</span>
-						<a href="#" class="tooltip" tooltip="Damit wir deine Pflanze überwachen können, müssen wir wissen, welche Sensoreinheit deine Pflanze überwacht. Den Namen der Sensoreinheit solltest du auf der Einheit finden; die MAC-Adresse sollte im Handbuch stehen." tooltip-persistent><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+						<a href="#" class="tooltip" tooltip="Damit wir deine Pflanze überwachen können, müssen wir wissen, welche Sensoreinheit deine Pflanze überwacht. Den Namen der Sensoreinheit solltest du auf der Einheit finden; die MAC-Adresse sollte im Handbuch stehen."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
 					</div>
 
 					<div class="cell">

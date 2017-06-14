@@ -247,8 +247,16 @@ a{
 	border-left: 15px green solid;
 }
 
-#list > a > .flower{
+#list > a > #empty_flower_list{
+	padding: 20px 10px;
 	background-color: white;
+	border: 1px #AAA solid;
+	border-left: 15px #AAA solid;
+	color: #AAA;
+}
+
+#empty_flower_list .fa{
+	float: left;
 }
 
 #list small{
@@ -433,13 +441,17 @@ td{
 	float: right;
 }
 
+.cell p small{
+	text-align: center;
+}
+
 input, select, textarea {
   -webkit-box-sizing: border-box;
      -moz-box-sizing: border-box;
           box-sizing: border-box;
 }
 
-#form input, #sensor_list button, #cam_buttons button{
+#form input, #sensor_list input, #cam_buttons input{
 	margin: 4px;
 }
 
@@ -450,9 +462,9 @@ input, select, textarea {
 #form input[type="submit"]{
 	width: 90%;
 }
-
-#sensor_list button, 
-#cam_buttons button{
+ 
+#sensor_list input, 
+#cam_buttons input{
 	width: 100%;
 }
 
@@ -468,6 +480,9 @@ input, select, textarea {
 	margin-top: 8px;
 	margin-bottom: 8px;
 	opacity: 1;
+
+	-webkit-transition: opacity 0.5s ease 0s, margin-top 0.5s ease 0s, padding-top 0.5s ease 0s, height 0.5s ease 0s; /* Safari */
+    transition: opacity 0.5s ease 0s, margin-top 0.5s ease 0s, padding-top 0.5s ease 0s, height 0.5s ease 0s;
 }
 
 #alert.alert-none{
@@ -484,8 +499,15 @@ input, select, textarea {
 	color: #55AA55;
 }
 
+#alert > div{
+	display: flex;
+    align-items: center;
+    justify-content: center;
+    float: left;
+    width: 
+}
+
 #alert .fa{
-	float: left;
 	margin: 20px 10px;
 }
 
@@ -624,6 +646,7 @@ button:hover,
 [tooltip]:before {
     content: attr(tooltip);
     position: fixed;
+    bottom: 50px;
     opacity: 0;
     
     -webkit-transition: all 0.25s ease 5s;
@@ -635,16 +658,14 @@ button:hover,
     box-shadow: 2px 2px 1px silver;  
 
     margin: 10px;
-    right: 5px;
-    bottom: 0px;
+    right: 5px;;
     width: 75%
     width: calc(100% - 75px);  
     font-size: small;
 }
 
-[tooltip]:focus:before,
-[tooltip]:active:before{
-    opacity: 0;
+[tooltip]:hover:before{
+    opacity: 1;
 
     background-color: #333;
     margin-bottom: : 50px;

@@ -30,6 +30,28 @@
 				}
 			?>
 
+			<div class="row">
+				<div class="cell">
+					<p>Füllstände Wassertank</p>
+				</div>
+				<div class="cell">
+					<?php 
+						$plants = $controller->get_plants();
+
+						foreach ($plants as $key => $value) {
+							$su = $controller->get_sensorunit($value->get_sensor_unit_id());
+							$su->calculate_watertank_level();
+							$wtl = $su->get_watertank_level();
+							if(is_nan($wtl)){
+								print("<p><small>keine Daten vorhanden</small></p>");
+							} else {
+								print("<p>$wtl</p>");
+							}
+						}
+					?>
+				</div>
+			</div>
+
 			<div id="alert" class="alert-none"></div>
 
 			<form name="vacation" id="vacation" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
