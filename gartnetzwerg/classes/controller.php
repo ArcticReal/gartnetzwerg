@@ -664,6 +664,24 @@ class Controller{
 		
 	}
 	
+	public function take_pictures(){
+		
+		$plants = $this->plant_array;
+		$sensorunits = $this->sensorunit_array;
+		$camera = new Camera();
+		
+		foreach($plants as $plant){
+			
+			$nickname = $plant->get_nickname();
+			$plant_id = $plant->get_plant_id();
+			$sensor_unit_id = $plant->get_sensor_unit_id();
+			$mac_address = $sensorunits[$sensor_unit_id]->get_mac_address();
+			
+			$camera->take_pic($mac_address, $plant_id, $nickname);
+		}
+		
+	}
+	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
 	 * the default api key

@@ -2,5 +2,5 @@
 
 if [ "$1" != '' ]
 	then 
-		mkdir /home/pi/Bilder/$1
+		mkdir /home/pi/Pictures/$1
 fi

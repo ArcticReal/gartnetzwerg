@@ -74,7 +74,8 @@ init () {
     host_connection_test=`hostname -I | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'`
     if [ -z "$host_ip_connection_test" ]; then
         echo "         GNW Error-Code #RC1 - Host-Gerät scheint keine Internetverbindung zu besitzen."
-        exit 1
+       # exit 1
+	search_thingy
     else
         if [ "$VERBOSE" -eq 1 ]; then 
             echo "         moving on..."
