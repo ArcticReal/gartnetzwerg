@@ -524,10 +524,19 @@ class Controller{
 		
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
-		$db_handler->update_plant_nickname($plant_id, $nickname);
+		$result = $db_handler->update_plant_nickname($plant_id, $nickname);
 		$db_handler->disconnect_sql();
 		
-		$this->refresh_local_objects();
+		if ($result != 0){
+			
+			
+			//Bilder-Ordner umbenennen
+			$cmd = "mv /home/pi/Pictures/".$plant_id."_".$this->plant_array[$plant_id]->get_nickname()." /home/pi/Pictures/".$plant_id."_".$nickname;
+			
+			$this->refresh_local_objects();
+			
+		}
+		
 	}
 	
 	public function change_plant_location($plant_id,$location,$is_indoor){

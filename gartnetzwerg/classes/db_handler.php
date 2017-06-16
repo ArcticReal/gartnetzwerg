@@ -1402,6 +1402,11 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		$this->write_log($logtext);
 		
+		if ($result == NULL){
+			$result = 0;
+		}
+		
+		return $result;
 		
 	}
 	
