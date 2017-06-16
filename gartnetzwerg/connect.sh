@@ -25,9 +25,9 @@ connect () {
     pi="pi@"
     ip_with_user=$pi$ip
     if [ "$#" -eq 1 ]; then
-        ssh $ip_with_user -p 22
+        ssh -i /home/pi/.ssh/id_rsa $ip_with_user -p 22
     else
-        ssh $ip_with_user -p 22 -t "$REMOTE"
+        ssh -i /home/pi/.ssh/id_rsa $ip_with_user -p 22 -t "$REMOTE"
     fi
 }
 
