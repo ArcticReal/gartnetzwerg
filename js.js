@@ -290,7 +290,7 @@ function init_diagrams(){
 	for (var i = 1; i <= 6; i++){
 		c.push(document.getElementById("canvas"+i));
 		c[i-1].style.width = "calc(100% - 2px)";
-		c[i-1].width = w
+		c[i-1].width = w;
 	}
 
 	diagramm = [
