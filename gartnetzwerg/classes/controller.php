@@ -1075,17 +1075,8 @@ class Controller{
 		$db_handler->connect_sql();
 		$water_usage_sum = $db_handler->sum_water_usage($plant_id,$date->format("Y-m-d"));
 		$db_handler->disconnect_sql();
-		$unit = "ml";
 		
-		if($water_usage_sum >= 1000){
-			
-			$water_usage_sum = $water_usage_sum/1000;
-			$unit = "L";
-			
-		}
-		
-		
-		return $water_usage_sum.$unit;
+		return $water_usage_sum;
 	}
 	
 	public function water_usage_per_day($plant_id, $days){
@@ -1108,6 +1099,7 @@ class Controller{
 		$logtext = date(LOG_TIME_FORMAT)."	End	Controller::water_usage_per_day\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$water_usage_per_day[$date->format("Y-m-d")]."\n";
 		
+		$this->write_log($logtext);
 		
 		return $water_usage_per_day;
 		
