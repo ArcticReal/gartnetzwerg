@@ -139,7 +139,12 @@ class Sensorunit{
 				$fillage_level += $value;
 				$max_fillage_level ++;
 			}		
-			$this->set_watertank_level($fillage_level/$max_fillage_level);
+			if ($max_fillage_level != 0){
+				
+				$this->set_watertank_level($fillage_level/$max_fillage_level);
+			}else {
+				$this->set_watertank_level(NAN);
+			}
 		}
 	}
 }

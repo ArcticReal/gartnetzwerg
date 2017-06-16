@@ -66,25 +66,6 @@ search_thingy () {
     connect
 }
 
-init () {
-    # checks for hostname to check for internet connection
-    if [ "$VERBOSE" -eq 1 ]; then
-        echo "[GNW RC] check for internet connection..."
-    fi
-    host_connection_test=`hostname -I | grep -Eo '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.'`
-    if [ -z "$host_ip_connection_test" ]; then
-        echo "         GNW Error-Code #RC1 - Host-Gerät scheint keine Internetverbindung zu besitzen."
-       # exit 1
-	search_thingy
-    else
-        if [ "$VERBOSE" -eq 1 ]; then 
-            echo "         moving on..."
-        fi
-        search_thingy
-    fi
-    clean_up
-}
-
 init0 () {
     if [ $# -eq 0 ]; then
         echo "[GNW RC] Usage: sh ./connect.sh GERÄT SENSOR [debug]"
@@ -97,7 +78,8 @@ init0 () {
         echo "                 zB. 'sudo python3 /home/pi/Adafruit_Python_DHT/sensor_at.py'"
         echo "         debug (for debug-output)"
     else
-        init
+		search_thingy
+	    clean_up
     fi
 }
 init0 $1 $2

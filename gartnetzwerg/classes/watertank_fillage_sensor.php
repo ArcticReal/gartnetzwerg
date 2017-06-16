@@ -16,16 +16,13 @@ class Watertank_fillage_sensor extends Sensor{
 		
 	}
 	
-	public function update($mac_addres){
-		$this->update_value();
-		/*TODO: theoretisch hab ich ein python-file für sensor_ws (Wassersensor), 
-		        aber ich glaube das ist der zweite Bodenfeuchtigkeitssensor, weil der ne andere Bauart hat, als der obere.
-		*/
-		//exec("sudo python3 /home/pi/Adafruit_Python_DHT/sensor_ah.py", $rReturn, $err);
-		
-		//if($rReturn != ""){
-		//	$this->value = $rReturn;
-		//}
+	public function update($mac_address){
+		//TODO skript schreiben	
+	
+	/*$path = "sudo python3 /home/pi/gartnetzwerg/sensor_ah.py";
+		$cmd = __DIR__."/../connect.sh ".$mac_address." '".$path."'";
+		$this->set_value(shell_exec($cmd));
+	*/	
 	}
 }
 
