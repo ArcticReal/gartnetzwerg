@@ -1264,7 +1264,9 @@ class Controller{
 		
 		//TODO damit das hier funktioniert muss das updaten der sensorwerte funktionieren 
 		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
-			$this->update_sensor_data($sensorunit_id, $manual);
+			if ($sensorunit->get_status() == "active"){
+				$this->update_sensor_data($sensorunit_id, $manual);
+			}
 		}
 	}
 	
