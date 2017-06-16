@@ -180,6 +180,25 @@ class Controller{
 		return $last_date;
 	}
 	
+	public function get_picture_array($plant_id){
+		
+		$nickname = $this->plant_array[$plant_id]->get_nickname();
+		
+		$cmd = "ls /home/pi/Pictures/".$plant_id."_".$nickname."/";
+		$picture_array = explode("\n", shell_exec($cmd));
+		
+		$picture_array = array_reverse($picture_array);
+		
+		for($i = 0;$i < count($picture_array)-1; $i++){
+			$picture_array[$i] = $picture_array[$i+1];
+		}
+		
+		array_pop($picture_array);
+		
+		return $picture_array;
+		
+	}
+	
 	/**
 	 * Always execute this after restarting the script
 	 */
