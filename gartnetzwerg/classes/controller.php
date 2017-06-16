@@ -1099,6 +1099,7 @@ class Controller{
 		$logtext = date(LOG_TIME_FORMAT)."	End	Controller::water_usage_per_day\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$water_usage_per_day[$date->format("Y-m-d")]."\n";
 		
+		$this->write_log($logtext);
 		
 		return $water_usage_per_day;
 		
