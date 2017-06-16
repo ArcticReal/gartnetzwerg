@@ -398,6 +398,9 @@ class Controller{
 				$db_handler->delete_sensor_data($sensor_id);
 			}
 			$db_handler->update_sensorunit_status($sensorunit_id, "free");
+			$nickname = $this->plant_array[$plant_id]->get_nickname();
+			$cmd = "sudo -u root rm -r /home/pi/Pictures/".$plant_id."_".$nickname;
+			shell_exec($cmd);
 			
 		}
 		
