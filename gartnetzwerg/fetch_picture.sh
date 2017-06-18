@@ -5,6 +5,7 @@ if [ "$1" != '' ]
 		if [ "$2" != '' ]
 			then
 				scp -i /home/pi/.ssh/id_rsa pi@$1:/home/pi/Pictures/* $2
+				echo $2;
 		fi
 fi
 		

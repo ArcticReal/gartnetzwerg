@@ -334,7 +334,10 @@ class Controller{
 				$return_string = " ".$nickname;
 
 				$plant_id = $db_handler->fetch_last_plant_id();
-				$command = "/var/www/html/gartnetzwerg/add_picture_folder.sh ".$plant_id."_".$nickname;
+				$folder_name = $plant_id."_".($this->eliminate_whitespace($nickname));
+				
+				$command = "mkdir /home/pi/Pictures/".$folder_name;
+				
 				shell_exec($command);
 				
 				
@@ -399,7 +402,7 @@ class Controller{
 			}
 			$db_handler->update_sensorunit_status($sensorunit_id, "free");
 			$nickname = $this->plant_array[$plant_id]->get_nickname();
-			$cmd = "rm -r /home/pi/Pictures/".$plant_id."_".$nickname;
+			$cmd = "rm -r '/home/pi/Pictures/".$plant_id."_".$nickname."'";
 			shell_exec($cmd);
 			
 		}
@@ -553,7 +556,9 @@ class Controller{
 			
 			
 			//Bilder-Ordner umbenennen
-			$cmd = "mv /home/pi/Pictures/".$plant_id."_".$this->plant_array[$plant_id]->get_nickname()." /home/pi/Pictures/".$plant_id."_".$nickname;
+			$cmd = "mv /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname()))." /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($nickname));
+			echo $cmd;
+			shell_exec($cmd);
 			
 			$this->refresh_local_objects();
 			
@@ -711,6 +716,15 @@ class Controller{
 			$camera->take_pic($mac_address, $plant_id, $nickname);
 		}
 		
+	}
+	
+	public function take_picture($plant_id){
+		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
+		$mac = $this->sensorunit_array[$sensorunit_id]->get_mac_address();
+		$nickname = $this->plant_array[$plant_id]->get_nickname();
+		
+		$camera = new Camera();
+		$camera->take_pic($mac_address, $plant_id, $nickname);
 	}
 	
 	/**
@@ -1287,8 +1301,10 @@ class Controller{
 	}
 	
 	
-	public function test(){
-
+	public function eliminate_whitespace($string){
+	
+		return str_replace(" ", "\ ", $string);
+		
 	}
 
 	

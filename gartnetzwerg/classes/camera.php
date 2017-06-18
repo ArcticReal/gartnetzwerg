@@ -17,7 +17,7 @@ class Camera extends Sensor{
 		$cmd = "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t /home/pi/gartnetzwerg/take_picture.py";
 		shell_exec($cmd);
 				
-		$cmd = "sudo -u root ". __DIR__."/../fetch_picture.sh ".$ip." /home/pi/Pictures/".$plant_id."_".$nickname;
+		$cmd = "scp -i /home/pi/.ssh/id_rsa pi@".$ip.":/home/pi/Pictures/* '/home/pi/Pictures/".$plant_id."_".$nickname."/'";
 		shell_exec($cmd);
 		
 		$cmd =  "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t /home/pi/gartnetzwerg/remove_picture.sh";
