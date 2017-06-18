@@ -83,14 +83,18 @@ class Sensorunit{
 	
 	//functions
 	
-	public function update_sensor($sensor_id){
+	public function update_sensor($sensor_id, $ip){
 		//echo("update Sensor ".$sensor_id."\n");
-		$this->sensor_array[$sensor_id]->update($this->get_mac_address());
+		$this->sensor_array[$sensor_id]->update($ip);
 	}
 
 	public function update_all(){
+		
+		$mac_address = $this->get_mac_address();
+		$ip = shell_exec(__DIR__."/../get_ip_address.sh ".$mac_address);
+		
 		foreach ($this->sensor_array as $key => $value){
-			$this->update_sensor($key);
+			$this->update_sensor($key, $ip);
 			//echo ("Key: ".$key." Value: ".$value->get_value()."\n\n");
 		}	
 		$this->calculate_watertank_level();

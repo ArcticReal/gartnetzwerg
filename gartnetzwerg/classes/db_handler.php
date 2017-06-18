@@ -838,7 +838,8 @@ class DB_Handler{
 		
 		$light_hours = 0.0;
 		while ($light_hours_row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
-			if ($light_hours_row[0] <= 50) $light_hours += 0.5;
+			if (intval($light_hours_row["value"]) <= 50) $light_hours += 0.5;
+			
 		}
 		
 		// logging
