@@ -14,16 +14,16 @@ class Camera extends Sensor{
 		$cmd = __DIR__."/../get_ip_address.sh ".$mac_address;
 		$ip = shell_exec($cmd);
 		
-		$cmd = "ssh -i /home/pi/.ssh/id_rsa pi@".$ip.":/home/pi/gartnetzwerg/take_picture.py";
+		$cmd = "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t /home/pi/gartnetzwerg/take_picture.py";
 		shell_exec($cmd);
 				
 		$cmd = "sudo -u root ". __DIR__."/../fetch_picture.sh ".$ip." /home/pi/Pictures/".$plant_id."_".$nickname;
 		shell_exec($cmd);
 		
-		$cmd =  "ssh -i /home/pi/.ssh/id_rsa pi@".$ip.":/home/pi/gartnetzwerg/remove_picture.sh";
+		$cmd =  "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t /home/pi/gartnetzwerg/remove_picture.sh";
 		shell_exec($cmd);
 
-		$cmd = "sudo -u root chown www-data:www-data /home/pi/Pictures/".$plant_id."_".$nickname."/*";
+		$cmd = "sudo -u root chown -R www-data:www-data /home/pi/Pictures/";
 		shell_exec($cmd);
 	}
 	
