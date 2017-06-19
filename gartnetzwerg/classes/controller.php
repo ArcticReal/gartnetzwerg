@@ -336,7 +336,7 @@ class Controller{
 				$plant_id = $db_handler->fetch_last_plant_id();
 				$folder_name = $plant_id."_".($this->eliminate_whitespace($nickname));
 				
-				$command = "mkdir /home/pi/Pictures/".$folder_name;
+				$command = "mkdir /var/www/html/gartnetzwerg/Pictures/".$folder_name;
 				
 				shell_exec($command);
 				
@@ -402,7 +402,7 @@ class Controller{
 			}
 			$db_handler->update_sensorunit_status($sensorunit_id, "free");
 			$nickname = $this->plant_array[$plant_id]->get_nickname();
-			$cmd = "rm -r '/home/pi/Pictures/".$plant_id."_".$nickname."'";
+			$cmd = "rm -r '/var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$nickname."'";
 			shell_exec($cmd);
 			
 		}
@@ -535,7 +535,7 @@ class Controller{
 		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
 		
 		//gets ip
-		$cmd = __DIR__."../get_ip_address.sh ".$mac_address;
+		$cmd = __DIR__."/../get_ip_address.sh ".$mac_address;
 		$ip = shell_exec($cmd);
 		//calls water.py on raspy zero
 		$path = "/home/pi/gartnetzwerg/water.py";
@@ -564,7 +564,7 @@ class Controller{
 			
 			
 			//Bilder-Ordner umbenennen
-			$cmd = "mv /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname()))." /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($nickname));
+			$cmd = "mv /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".($this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname()))." /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($nickname));
 			echo $cmd;
 			shell_exec($cmd);
 			
@@ -721,18 +721,18 @@ class Controller{
 			$sensor_unit_id = $plant->get_sensor_unit_id();
 			$mac_address = $sensorunits[$sensor_unit_id]->get_mac_address();
 			
-			$camera->take_pic($mac_address, $plant_id, $nickname);
+			$camera->take_pic($mac_address, $plant_id, $this->eliminate_whitespace($nickname));
 		}
 		
 	}
 	
 	public function take_picture($plant_id){
 		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
-		$mac = $this->sensorunit_array[$sensorunit_id]->get_mac_address();
+		$mac_address = $this->sensorunit_array[$sensorunit_id]->get_mac_address();
 		$nickname = $this->plant_array[$plant_id]->get_nickname();
 		
 		$camera = new Camera();
-		$camera->take_pic($mac_address, $plant_id, $nickname);
+		$camera->take_pic($mac_address, $plant_id, $this->eliminate_whitespace($nickname));
 	}
 	
 	/**
@@ -1310,7 +1310,7 @@ class Controller{
 	
 	public function eliminate_whitespace($string){
 	
-		return str_replace(" ", "\ ", $string);
+		return str_replace(" ", "_", $string);
 		
 	}
 
