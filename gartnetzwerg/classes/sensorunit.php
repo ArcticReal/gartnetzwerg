@@ -91,7 +91,8 @@ class Sensorunit{
 	public function update_all(){
 		
 		$mac_address = $this->get_mac_address();
-		$ip = shell_exec(__DIR__."/../get_ip_address.sh ".$mac_address);
+		$cmd = "sudo /var/www/html/gartnetzwerg/get_ip_address.sh ".$mac_address;
+		$ip = shell_exec($cmd);
 		
 		foreach ($this->sensor_array as $key => $value){
 			$this->update_sensor($key, $ip);

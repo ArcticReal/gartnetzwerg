@@ -535,11 +535,11 @@ class Controller{
 		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
 		
 		//gets ip
-		$cmd = __DIR__."/../get_ip_address.sh ".$mac_address;
+		$cmd = "/var/www/html/gartnetzwerg/get_ip_address.sh ".$mac_address;
 		$ip = shell_exec($cmd);
 		//calls water.py on raspy zero
 		$path = "/home/pi/gartnetzwerg/water.py";
-		$cmd = "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t ".$path;
+		$cmd = "sudo /var/www/html/gartnetzwerg/water.sh ".$ip." ".$path;
 		shell_exec($cmd);
 		
 		$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
