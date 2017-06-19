@@ -1268,7 +1268,6 @@ class Controller{
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::update_all_sensor_data(Manual: ".$manual.")\n";
 		$this->write_log($logtext);
 		
-		//TODO damit das hier funktioniert muss das updaten der sensorwerte funktionieren 
 		foreach ($this->sensorunit_array as $sensorunit_id => $sensorunit){
 			if ($sensorunit->get_status() == "active"){
 				$this->update_sensor_data($sensorunit_id, $manual);

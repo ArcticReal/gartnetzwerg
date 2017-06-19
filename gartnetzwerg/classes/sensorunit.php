@@ -101,19 +101,26 @@ class Sensorunit{
 	}
 
 	/**
-	 * todo: working with parameters to choose pics
+	 * 
+	 * @param unknown $frames an array with the pictures
+	 * @param $duration this sets how long a picure will be shown in a time lapse
 	 */
-	public function make_time_lapse(){
-		//links u den bilder im internet
-		$frames = array("http://www.sarracenia.com/photos/dionaea/dionamusci070.jpg",
+	public function make_time_lapse($frames, $duration){
+		//links zu den bilder im internet
+		/*$frames = array("http://www.sarracenia.com/photos/dionaea/dionamusci070.jpg",
 				"http://www.flowers.org.uk/wp-content/uploads/2012/12/Pitcher-Plant.jpg",
 				"http://i1110.photobucket.com/albums/h443/meizzwang/IMG_6847.jpg");
 		//geht aber auch mit lokalen pfaden
 		$frames_local = array('plants/plant01.jpg',
 				'plants/plant02.jpg',
 				'plants/plant03.jpg');
+		*/
 		//wie lang jedes bild angezeigt wird
-		$durations = array(50, 50, 50);
+		$durations = [];
+		foreach ($frames as $frame){
+			$durations[] = $duration;
+			
+		}
 		
 		try{			
 			$gc = new GifCreator\GifCreator();
