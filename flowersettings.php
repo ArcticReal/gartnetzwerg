@@ -46,7 +46,7 @@
 						$plant_name = $v_plant_name;
 					}
 
-					change_auto_watering($_REQUEST["plant_id"], $v_plant_autowatering);
+					//change_auto_watering($_REQUEST["plant_id"], $v_plant_autowatering);
 					$plant_autowatering = $v_plant_autowatering;
 					
 					if($v_plant_location != ""){

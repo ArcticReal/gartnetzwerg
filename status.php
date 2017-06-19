@@ -20,7 +20,7 @@
 		$controller = new Controller();
 		
 		$plants = $controller->get_plants();		
-		$plant = $plants[$_GET["plant_id"]];
+		$plant = $plants[$_REQUEST["plant_id"]];
 
 		$scientific_name = $plant->get_scientific_name();
 		$nickname = $plant->get_nickname();
@@ -94,7 +94,7 @@
 					$v_live_view = test_input($_REQUEST['live_view']);
 
 					if($v_manual_water != ""){
-						$controller->water($_GET['plant_id']);
+						$controller->water($_REQUEST['plant_id']);
 					}
 
 					if($v_manual_data != ""){
@@ -102,11 +102,11 @@
 					}
 
 					if($v_manual_photo != ""){
-						//TODO:$controller->x();
+						$controller->take_picture($_REQUEST['plant_id']);
 					}
 
 					if($v_live_view != ""){
-						//TODO:$controller->x();
+						//$controller->x();
 					}
 				}
 
@@ -128,7 +128,7 @@
 				<div id="sensor_list">
 					<div class="row">
 						<div class="cell">
-							<form name="top_buttons" id="b1" action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="post">
+							<form name="top_buttons" id="b1" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"];?> method="post">
 								<input type="hidden" name="manual_water" value="1">
 								<input onclick="status_submit(0)" type="button" name="m_water" value="Manuelle Bewässerung"><br/>
 
@@ -142,13 +142,13 @@
 							</form>
 						</div>
 						<div class="cell">
-							<form name="top_buttons" id="b2" action=<?php echo "status.php?plant_id=".$_GET["plant_id"];?> method="post">
+							<form name="top_buttons" id="b2" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"];?> method="post">
 								<input type="hidden" name="manual_data" value="1">
 								<input onclick="status_submit(1)" type="button" name="m_data" value="Manuelle Messung"><br/>
 
 								<?php
-									if($controller->get_last_sensor_update($_GET["plant_id"]) != ""){
-										print('<small>Zuletzt gemessen:'.$controller->get_last_sensor_update($_GET["plant_id"]).'</small>');
+									if($controller->get_last_sensor_update($_REQUEST["plant_id"]) != ""){
+										print('<small>Zuletzt gemessen:'.$controller->get_last_sensor_update($_REQUEST["plant_id"]).'</small>');
 									} else {
 										print('<small>Noch nie gemessen.</small>');
 									}
@@ -223,7 +223,7 @@
 					<tr>
 						<td>Wasserbedarf</td>
 						<td><?php
-								$wu = $controller->sum_water_usage($_GET["plant_id"], 2);
+								$wu = $controller->sum_water_usage($_REQUEST["plant_id"], 2);
 								if($wu=="ml"){
 									print("<p><small>kein bisheriger Wasserbedarf</small></p>");
 								} else {
@@ -245,7 +245,7 @@
 			<?php 
 				$days = 365;
 
-				$water_usage_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
+				$water_usage_array = $controller->water_usage_per_day($_REQUEST["plant_id"], $days);
 				$lighthours_array = $controller->lighthours_per_day($plant->get_sensor_unit_id(), $days);
 				$air_humidity_array = $controller->air_humidity_per_day($plant->get_sensor_unit_id(), $days);
 				$soil_humidity_array = $controller->soil_humidity_per_day($plant->get_sensor_unit_id(), $days);
@@ -299,10 +299,10 @@
 
 		<div id="tab_cam">
 			<?php 
-				if (isset($_GET['manual_photo'])) {
+				if (isset($_REQUEST['manual_photo'])) {
 					print('Manual Photo');
 					//$controller->();
-				} else if (isset($_GET['live'])) {
+				} else if (isset($_REQUEST['live'])) {
 					print('Live');
 					//$controller->();
 				}
@@ -311,7 +311,7 @@
 			<div id="cam_buttons">
 				<div class="row">
 					<div class="cell">
-						<form name="top_buttons" id="b3" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
+						<form name="top_buttons" id="b3" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="manual_photo" value="1">
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
 
@@ -325,7 +325,7 @@
 						</form>
 					</div>
 					<div class="cell">
-						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
+						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="live_view" value="1">
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
 						</form>
@@ -417,7 +417,7 @@
 		</div>
 		
 		<div id="submit" class="button w2">
-			<a href=<?php echo "flowersettings.php?plant_id=".$_GET["plant_id"];?>>
+			<a href=<?php echo "flowersettings.php?plant_id=".$_REQUEST["plant_id"];?>>
 				<div id="flowersettings" class="item">
 					<i class="fa fa-cog fa-3x" aria-hidden="true"></i>
 				</div>
