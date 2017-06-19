@@ -24,7 +24,7 @@
 				$vacation_on = $controller->lookup_config("VACATION_FUNCTION");
 
 				if($vacation_on == "OFF"){
-					print("<p>Wenn Sie den Urlaubsmodus aktivieren, werden alle Pflanzen (die eine automatische Bewässerung besitzen) automatisch bewässert.</p>");
+					print("<p style='padding: 8px; margin-bottom: 16px'>Wenn Sie den Urlaubsmodus einschalten, werden alle Pflanzen (die eine automatische Bewässerung besitzen) automatisch in bestimmten Tagesabständen bewässert. Der Urlaubsmodus wird automatisch im angegebenen Zeitraum aktiv, und schaltet sich auch automatisch wieder aus. Sie können den Urlaubsmodus auch frühzeitig ausschalten.</p>");
 				} else {
 					print("<p>[Insert Allgemeine Tipps hier]</p>");
 				}
@@ -43,9 +43,9 @@
 							$su->calculate_watertank_level();
 							$wtl = $su->get_watertank_level();
 							if(is_nan($wtl)){
-								print("<p><small>keine Daten vorhanden</small></p>");
+								print("<p style='padding-left: 5px'><small>keine Daten vorhanden</small></p>");
 							} else {
-								print("<p>$wtl</p>");
+								print("<p style='padding-left: 5px'>$wtl</p>");
 							}
 						}
 					?>
@@ -73,17 +73,6 @@
 						print ("<div class='row'><div class='cell'><p>Enddatum</p></div><div class='cell'><input type='date' name='end_date' placeholder='$e_date'></div></div>");
 					}
 				?>
-				<div class="row">
-					<div class="cell1">
-						<?php
-							if($vacation_on == "OFF"){
-								print ("<input type='button' name='vacation' onclick='vacation_submit(1)' value='Urlaubsmodus aktivieren'>");
-							} else {
-								print ("<input type='button' name='vacation' onclick='vacation_submit(0)' value='Urlaubsmodus frühzeitig deaktivieren'>");
-							}
-						?>
-					</div>
-				</div>
 
 				<?php
 					function test_input($data){
@@ -110,8 +99,17 @@
 	</div>
 	
 	<div id="footer">
-		<div id="back_to_main" class="button">
+		<div id="back_to_main" class="button w2">
 			<a href="index.php"><i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i></a>
+		</div>
+		<div class="button w2 vacation">
+			<?php
+				if($vacation_on == "OFF"){
+					print ("<input form='vacation' type='button' name='vacation' onclick='vacation_submit(1)' value='Urlaubsmodus aktivieren'>");
+				} else {
+					print ("<input form='vacation' type='button' name='vacation' onclick='vacation_submit(0)' value='Urlaubsmodus frühzeitig deaktivieren'>");
+				}
+			?>
 		</div>
 	</div>
 

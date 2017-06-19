@@ -86,7 +86,7 @@
 				</div>
 
 				<div class="row">
-					<div class="cell">Notifications</div>
+					<div class="cell">Notificationinhalt</div>
 					<div class="cell">
 						<?php
 							if($notifications=="ON"){

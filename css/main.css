@@ -38,6 +38,8 @@ a{
 
 #header.small{
 	height: 50px;
+	display: flex;
+	align-items: center;
 }
 
 #header #helper{
@@ -51,7 +53,7 @@ a{
 	font-size: larger;
 	text-align: center;
 	font-weight: bold;
-	margin: 20px 0px;
+	width: 100%;
 }
 
 #header .item{
@@ -70,26 +72,26 @@ a{
     color: #333;
 }
 
-#header #back_to_menu *{
+#footer #back_to_menu *{
 	-webkit-transition: margin 0.5s ease 0s; /* Safari */
     transition: margin 0.5s ease 0s;
 }
 
-#header #back_to_menu:hover *{
+#footer #back_to_menu:hover *{
 	margin-left: -5px;
 	margin-right: 13px;
 }
 
-#header #flowersettings{
+#footer #flowersettings{
 	overflow: hidden;
 }
 
-#header #flowersettings *{
+#footer #flowersettings *{
 	-webkit-transition: transform 0.5s ease 0s;
 	transform: transform 0.5s ease 0s;
 }
 
-#header #flowersettings:hover *{
+#footer #flowersettings:hover *{
 	-moz-transform: rotate(90deg);
 	-webkit-transform: rotate(90deg);
 	-o-transform: rotate(90deg);
@@ -115,7 +117,6 @@ a{
 	height: 55px;
 	width: 100%;
 	margin: 0 auto;
-	margin-top: 75px;
 	overflow: hidden;
 }
 
@@ -202,11 +203,10 @@ a{
 }
 
 #list.status{
-	margin-top: 125px;
+	margin-top: 50px;
 	height: 100%;
-	height: calc(100vh - 175px);
+	height: calc(100vh - 150px);
 	position: absolute;
-
 	width: 90vw;
 	width: calc(100vw - 50px);
 }
@@ -287,6 +287,12 @@ a{
 	width: 50%;
 }
 
+#footer .button.w2.vacation *{
+	width: calc(100% - 10px);
+	margin: 5px;
+	height: 40px;
+}
+
 #footer .button.w3{
 	width: 33.33333333333333333333%;
 	width: calc(1 / 3 * 100%);
@@ -311,6 +317,10 @@ a{
 
 #footer .button:hover *{
 	color: #EEE !important;
+}
+
+#footer .button.vacation:hover{
+	background-color: #FFF;
 }
 
 #list.infos > p{
@@ -398,6 +408,9 @@ td{
 #sensor_list .row,
 #cam_buttons .row{
 	overflow: auto;
+	padding: 8px;
+	display: flex;
+	align-items: center;
 }
 
 #form .row:nth-child(even){
@@ -407,8 +420,8 @@ td{
 #form .row .cell,
 #sensor_list .row .cell,
 #cam_buttons .row .cell{
-	padding: 8px;
 	float: left;
+	margin-bottom: 5px;
 }
 
 #form .row .cell:nth-child(even),
@@ -439,6 +452,8 @@ td{
 .cell .tooltip{
 	color: #AAA;
 	float: right;
+	padding-top: 2px;
+	padding-right: 20px;
 }
 
 .cell p small{
@@ -455,12 +470,17 @@ input, select, textarea {
 	margin: 4px;
 }
 
+#vacation input{
+	width: 90%;
+}
+
 #form input[type="text"],
 #form input[type="email"],
 #form input[type="button"],
 #form select,
 #form input[type="submit"]{
 	width: 90%;
+	margin-left: 3px;
 }
  
 #sensor_list input, 
@@ -592,6 +612,55 @@ button:hover,
 	font-size: large;
 }
 
+/* ################################################## GALLERY */
+
+#gallery * {
+    box-sizing: border-box;
+}
+
+div.gallery {
+    border: 1px solid #ccc;
+}
+
+div.gallery:hover {
+    border: 1px solid #777;
+}
+
+div.gallery img {
+    width: 100%;
+    height: auto;
+}
+
+div.desc {
+    padding: 15px;
+    text-align: center;
+}
+
+#gallery .responsive {
+    padding: 6px;
+    float: left;
+    width: 24.99999%;
+}
+
+#last_pic .responsive{
+	padding: 0px;
+	width: 99.99999%;
+	height: 200px;
+	margin: 0 auto;
+	overflow-y: hidden;
+}
+
+#last_pic .responsive img{
+	width: 100%;
+	height: auto;
+}
+
+.clearfix:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
 /* ############################################ status colors */
 
 .red{
@@ -697,6 +766,21 @@ button:hover,
 	    width: auto !important;
 	    float: right !important;
 	}
+}
+
+@media only screen and (max-width: 700px){
+	.responsive {
+   		padding: 6px;
+        width: 24.99999%;
+        margin: 6px 0;
+    }
+}
+
+@media only screen and (max-width: 500px){
+    .responsive {
+        padding: 6px;
+        width: 49.99999%;
+    }
 }
 
 @media screen and (max-width: 480px) {

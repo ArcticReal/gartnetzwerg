@@ -187,7 +187,7 @@ function delete_plant_submit(){
 		document.getElementById("delete_button").value = "Bist du dir sicher?";
 		delete_counter++;
 	} else if(delete_counter==1){
-		document.getElementById("delete_button").value = "<strong>Bist du dir <i>wirklich</i> sicher?</strong>";
+		document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
 		delete_counter++;
 	} else if(delete_counter==2){
 		document.getElementById("delete_plant").submit();

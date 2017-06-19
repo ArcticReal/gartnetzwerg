@@ -51,7 +51,7 @@
 					$name = $plant->get_name();
 					$plant_id = $plant->get_plant_id();
 
-					$color = $controller->color_state($plant_id,0.75,0.75,0.75,0.75,0.5);
+					$color = $controller->color_state($plant_id,0.5,0.5,0.5,0.5,0.5);
 					
 					print "<a href='status.php?plant_id=$plant_id'><div class='flower $color'><span><p>$nickname<br/><small>$name ($scientific_name)</small></p></span></div></a>";
 				}

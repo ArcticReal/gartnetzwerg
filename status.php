@@ -50,48 +50,39 @@
 		$akt_waterlogging = $plant->get_akt_waterlogging();
 	?>
 
-	<div id="header">
-		<a href="index.php"><div id="back_to_menu" class="item">
-			<i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i>
+	<div id="nav">
+		<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
+			<p>
+				<i class="fa fa-table" aria-hidden="true"></i>
+				<span>Übersicht</span>
+			</p>
 		</div></a>
-		<div id="nick_name" class="item item2">
-			<p><?php echo $nickname." (".$name.")"; ?></p>
-		</div>
-		<a href=<?php echo "flowersettings.php?plant_id=".$_GET["plant_id"];?>><div id="flowersettings" class="item">
-			<i class="fa fa-cog fa-3x" aria-hidden="true"></i>
+		<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
+			<p>
+				<i class="fa fa-bar-chart" aria-hidden="true"></i>
+				<span>Diagramme</span>
+			</p>
 		</div></a>
-
-		<div id="nav">
-			<a href="#state" onclick="state_tabs(0)"><div id="status" class="item">
-				<p>
-					<i class="fa fa-table" aria-hidden="true"></i>
-					<span>Übersicht</span>
-				</p>
-			</div></a>
-			<a href="#diagramms" onclick="state_tabs(1)"><div id="diagramme" class="item">
-				<p>
-					<i class="fa fa-bar-chart" aria-hidden="true"></i>
-					<span>Diagramme</span>
-				</p>
-			</div></a>
-			<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
-				<p>
-					<i class="fa fa-camera" aria-hidden="true"></i>
-					<span>Kamera</span>
-				</p>
-			</div></a>
-			<a href="#info" onclick="state_tabs(3)"><div id="info" class="item">
-				<p>
-					<i class="fa fa-info" aria-hidden="true"></i>
-					<span>Info</span>
-				</p>
-			</div></a>
-		</div>
-
+		<a href="#cam" onclick="state_tabs(2)"><div id="cam" class="item">
+			<p>
+				<i class="fa fa-camera" aria-hidden="true"></i>
+				<span>Kamera</span>
+			</p>
+		</div></a>
+		<a href="#info" onclick="state_tabs(3)"><div id="info" class="item">
+			<p>
+				<i class="fa fa-info" aria-hidden="true"></i>
+				<span>Info</span>
+			</p>
+		</div></a>
 	</div>
 
 	<div id="list" class="status">
 		<div id="tab_status">
+		<div id="nick_name" style="text-align: center;">
+				<strong><p><?php echo $nickname." (".$name.")"; ?></p></strong>
+			</div>
+
 			<!--<div id="img"></div>-->
 
 			<?php
@@ -167,6 +158,12 @@
 					</div>
 				</div>
 
+				<div id="last_pic">
+					<div class='responsive'>
+						<img src='./img/aloeveratopf.jpg' alt='' width='300' height='200'>
+					</div>
+				</div>
+
 				<table>
 					<tr>
 						<th>Sensor</th>
@@ -203,10 +200,6 @@
 						<td><?php echo $max_light_hours." h"; ?></td>
 						<td><?php echo $akt_light_hours." h"; ?></td>
 					</tr>
-					<tr>
-						<td>Staunässe</td>
-						<td id="sn" colspan="3"><?php echo $akt_waterlogging; ?></td>
-					</tr>
 				</table>
 
 				<table>
@@ -239,6 +232,10 @@
 							?>	
 						</td>
 					</tr>
+					<tr>
+						<td>Staunässe</td>
+						<td id="sn"><?php echo $akt_waterlogging; ?></td>
+					</tr>
 				</table>
 			</div>
 		</div>
@@ -249,12 +246,14 @@
 				$days = 365;
 
 				$water_usage_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
-				$lighthours_array = $controller->lighthours_per_day($_GET["plant_id"], $days);
-				$air_humidity_array = $controller->air_humidity_per_day($_GET["plant_id"], $days);
-				$soil_humidity_array = $controller->soil_humidity_per_day($_GET["plant_id"], $days);
-				$air_temperature_array = $controller->air_temperature_per_day($_GET["plant_id"], $days);
-				$soil_temperature_array = $controller->soil_temperature_per_day($_GET["plant_id"], $days);
-				$waterlogging_array = $controller->water_usage_per_day($_GET["plant_id"], $days);
+				$lighthours_array = $controller->lighthours_per_day($plant->get_sensor_unit_id(), $days);
+				$air_humidity_array = $controller->air_humidity_per_day($plant->get_sensor_unit_id(), $days);
+				$soil_humidity_array = $controller->soil_humidity_per_day($plant->get_sensor_unit_id(), $days);
+				$air_temperature_array = $controller->air_temperature_per_day($plant->get_sensor_unit_id(), $days);
+				$soil_temperature_array = $controller->soil_temperature_per_day($plant->get_sensor_unit_id(), $days);
+				$waterlogging_array = $controller->water_usage_per_day($plant->get_sensor_unit_id(), $days);
+
+				var_dump($air_temperature_array);
 			?>
 
 			<input type="button" id="canvasm" onclick="change_days(-1)" value="-">
@@ -312,7 +311,7 @@
 			<div id="cam_buttons">
 				<div class="row">
 					<div class="cell">
-						<form name="top_buttons" id="b1" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
+						<form name="top_buttons" id="b3" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="manual_photo" value="1">
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
 
@@ -326,7 +325,7 @@
 						</form>
 					</div>
 					<div class="cell">
-						<form name="top_buttons" id="b2" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
+						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_GET["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="live_view" value="1">
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
 						</form>
@@ -334,48 +333,37 @@
 				</div>
 			</div>
 
-			<p>letztes Bild:</p>
-			<img src="./img/aloeveratopf.jpg" width="300" alt="letztes Bild"><br/>
+			<script type="text/javascript" charset="utf-8" src="gallery.js"></script>
 
-			<?php
-				function f_zero($par){
-					if($par < 10)
-						return 0;
-				}
+			<div id="gallery">
+				<?php
+					$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]); 
+					if(count($pic_array)<=0){
+						print("<p><small>Noch keine Bilder vorhanden. :(</small></p>");
+					} else {
 
-				$day = 02;
-				$hour = 04;
-				$min = 48;
-				$sec = 18;
-
-				$path = "/var/www/html/img/testpics/2017-06-02_".$hour."_".$min."_".$sec.".jpg";
-				for ($i = 0; $i < -999999; $i++) { 
-					$path = "/var/www/html/img/testpics/2017-06-".f_zero($day).$day."_".f_zero($hour).$hour."_".f_zero($min).$min."_".f_zero($sec).$sec.".jpg";
-				
-					if(file_exists($path)==1){
-						print("<img src='./img/testpics/2017-06-".f_zero($day).$day."_".f_zero($hour).$hour."_".f_zero($min).$min."_".f_zero($sec).$sec.".jpg' alt='".$path."' width='30%'>");
 					}
 
-					$sec += 1;
-					if($sec>59){
-						$min += 1;
-						$sec = 0;
+					foreach ($pic_array as $i => $value) {
+						echo '<script>add_pic_array("'.$value.'");</script>';
 					}
+				?>
 
-					if($min>60){
-						$min %= 60;
-						$hour += 1;
-					}
+				<div class='responsive'>
+					<div class='gallery'>
+						<a target='_self' href='./img/aloeveratopf.jpg'>
+							<img src=<?php echo "'file://home/pi/Pictures/7_Groot/$pic_array[0]'" ?> alt='' width='300' height='200'>
+						</a>
+					<div class='desc'>beschreibung hier</div>
+					</div>
+				</div>
 
-					if($hour >= 22){
-						$day += 1;
-					}
-				}
-			?>
+				<script>init_gallery(<?php echo "'".$_REQUEST["plant_id"]."_".$plant->get_nickname()."'"; ?>);</script>
+			</div>
 		</div>
 
 		<div id="tab_info">
-			<h1>Tipps zur Pflanzenpflege</h1>
+			<h1>Tipps zur Pflege für <?php echo "$scientific_name"; ?></h1>
 
 			<strong>Richtig Gießen</strong>
 			<?php 
@@ -416,6 +404,24 @@
 			<?php 
 				print("<p>".$plant->get_special_needs()."</p>");
 			?>
+		</div>
+	</div>
+
+	<div id="footer">
+		<div id="status" class="button w2">
+			<a href="index.php">
+				<div id="back_to_menu" class="item">
+					<i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i>
+				</div>
+			</a>
+		</div>
+		
+		<div id="submit" class="button w2">
+			<a href=<?php echo "flowersettings.php?plant_id=".$_GET["plant_id"];?>>
+				<div id="flowersettings" class="item">
+					<i class="fa fa-cog fa-3x" aria-hidden="true"></i>
+				</div>
+			</a>
 		</div>
 	</div>
 

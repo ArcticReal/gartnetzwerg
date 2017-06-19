@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-	<title>Blumeneinstellungen — GartNetzwerg</title>
+	<title>Pflanzeneinstellungen — GartNetzwerg</title>
 
 	<meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -80,7 +80,7 @@
 						$arten = $controller->get_all_species();
 						foreach($arten as $id => $scientific_name){
 							if($id == $plant_type){
-								print("<p><small><i>".$scientific_name."</i></small></p>");
+								print("<p style='text-align: center; width: 90%; margin-left: 3px;'><small><i>".$scientific_name."</i></small></p>");
 							}
 						}
 					?>
@@ -109,7 +109,7 @@
 				</div>
 				<div class="row">
 					<div class="cell"></div>
-					<div class="cell">
+					<div style="padding-left: 3px" class="cell">
 						<?php
 							if($plant_indoor==1){
 								print('Drinnen <input type="radio" name="indoor" value=1 checked>');
@@ -122,7 +122,7 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="cell"><p>Notifications einstellen</p></div>
+					<div class="cell"><p>Notificationinhalt einstellen</p></div>
 					<div class="cell">
 						<?php
 							if($controller->get_general_notification_settings()!="BOTH"){

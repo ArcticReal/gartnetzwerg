@@ -69,9 +69,9 @@
 			</small></p>
 		</div>
 	</div>
-	
+
 	<div id="footer">
-		<div id="back_to_main" class="button">
+		<div id="back_to_menu" class="button w2">
 			<a href="index.php"><i class="fa fa-arrow-circle-left fa-3x" aria-hidden="true"></i></a>
 		</div>
 	</div>

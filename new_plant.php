@@ -77,7 +77,7 @@
 						<?php
 							$placeholder_names = Array("Mercy","Ana","Wilson","Testobjekt #76","Polly","Kim","Stephen","Donald","Sir Pflanze von Hohengarten","Aloe Vera","Ghost Pepper","Scott","Ramona","Mei","Carolina Reaper","Groot","Wolfgang's Pflanze","Mr. Pflanze");
 						?>
-						<input type="text" name="plantname" size="16" maxlength="16" autocomplete="off" width="20" placeholder=<?php echo "\"z.B. '".$placeholder_names[array_rand($placeholder_names)]."'\""; ?>>
+						<input type="text" name="plantname" size="16" maxlength="45" autocomplete="off" width="20" placeholder=<?php echo "\"z.B. '".$placeholder_names[array_rand($placeholder_names)]."'\""; ?>>
 					</div>
 				</div>
 
@@ -116,7 +116,7 @@
 							$placeholder_locations = Array("Wintergarten","Keller","Fenstersims, Wohnzimmer","Gartenhäuschen, links oben","Balkon, West");
 						?>
 					<div class="cell">
-						<input type="text" name="standort" placeholder=<?php echo "\"z.B. '".$placeholder_locations[array_rand($placeholder_locations)]."'\""; ?>>
+						<input type="text" name="standort" maxlength="45" placeholder=<?php echo "\"z.B. '".$placeholder_locations[array_rand($placeholder_locations)]."'\""; ?>>
 					</div>
 				</div>
 
@@ -125,7 +125,7 @@
 						<p></p>
 					</div>
 
-					<div class="cell">
+					<div class="cell" style="padding-left: 3px">
 						Drinnen <input type="radio" name="indoor" value=1 checked>
 						Draußen <input type="radio" name="indoor" value=0>
 					</div>
@@ -143,20 +143,20 @@
 							$sensorunits = $controller->get_free_sensorunits();
 
 							if(count($sensorunits)>0){
-								print("<p><small>Freie Sensoreinheit auswählen:</small></p>");
+								print("<p style='padding-left: 4px; padding-top: 10px;'><small>Freie Sensoreinheit auswählen:</small></p>");
 								print("<select id=\"sensorunit\" name=\"sensorunit\"><option value=\"-1\" selected></option>");
 								foreach($sensorunits as $id => $sensorunit){
 									print("<option value=".$id.">".$sensorunit->get_name()." (".$sensorunit->get_mac_address().")</option>");
 								}
 								print("</select>");
 
-								print("<p><small>Oder, neue Sensoreinheit einfügen:</small></p>");
-								print("<input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/>
-									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'>");
+								print("<p style='padding-left: 4px; padding-top: 10px;'><small>Oder, neue Sensoreinheit einfügen:</small></p>");
+								print("<input type='text' name='sensorunit_name' maxlength='45' placeholder='Name der Sensoreinheit'><br/>
+									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='MAC-Adresse (XX:XX:XX:XX:XX:XX)'>");
 							} else {
 								//print("<p><small>Neue Sensoreinheit einfügen:</small></p>");
-								print("<input type='text' name='sensorunit_name' placeholder='z.B. node_6'><br/>
-									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='XX:XX:XX:XX:XX:XX'>");
+								print("<input type='text' name='sensorunit_name' maxlength='17' placeholder='Name der Sensoreinheit'><br/>
+									<input type='text' name='sensorunit_mac' title='Die MAC-Adresse muss in einem XX:XX:XX:XX:XX:XX-Format eingegeben werden.' placeholder='MAC-Adresse (XX:XX:XX:XX:XX:XX)'>");
 							}
 
 							function test_input($data){
