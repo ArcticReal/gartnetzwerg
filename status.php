@@ -83,8 +83,6 @@
 				<strong><p><?php echo $nickname." (".$name.")"; ?></p></strong>
 			</div>
 
-			<!--<div id="img"></div>-->
-
 			<?php
 				$v_manual_water = $v_manual_data = $v_manual_photo = $v_live_view = "";
 				if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -252,8 +250,6 @@
 				$air_temperature_array = $controller->air_temperature_per_day($plant->get_sensor_unit_id(), $days);
 				$soil_temperature_array = $controller->soil_temperature_per_day($plant->get_sensor_unit_id(), $days);
 				$waterlogging_array = $controller->water_usage_per_day($plant->get_sensor_unit_id(), $days);
-
-				var_dump($air_temperature_array);
 			?>
 
 			<input type="button" id="canvasm" onclick="change_days(-1)" value="-">
@@ -298,15 +294,11 @@
 		</div>
 
 		<div id="tab_cam">
-			<?php 
-				if (isset($_REQUEST['manual_photo'])) {
-					print('Manual Photo');
-					//$controller->();
-				} else if (isset($_REQUEST['live'])) {
-					print('Live');
-					//$controller->();
-				}
-			?>
+			<div id="gallery_modal" class="modal">
+				<span class="close">×</span>
+				<img class="modal-content" id="modal_img">
+				<div id="caption"></div>
+			</div>
 
 			<div id="cam_buttons">
 				<div class="row">
@@ -316,10 +308,12 @@
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
 
 							<?php
-								if($plant->get_last_watering() != ""){
-									print('<small>Letztes Photo:'.$plant->get_last_watering().'</small>');
+								$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]); 
+								if(count($pic_array)<=0){
+									print("<p><small>Noch keine Bilder vorhanden. :(</small></p>");
 								} else {
-									print('<small>Noch keine Photos.</small>');
+									print("<p><small>&nbsp;</small></p>");
+									//print('<small>Letztes Photo:'.$plant->get_last_watering().'</small>');
 								}
 							?>
 						</form>
@@ -328,6 +322,7 @@
 						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="live_view" value="1">
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
+							<p><small>&nbsp;</small></p>
 						</form>
 					</div>
 				</div>
@@ -337,26 +332,10 @@
 
 			<div id="gallery">
 				<?php
-					$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]); 
-					if(count($pic_array)<=0){
-						print("<p><small>Noch keine Bilder vorhanden. :(</small></p>");
-					} else {
-
-					}
-
 					foreach ($pic_array as $i => $value) {
 						echo '<script>add_pic_array("'.$value.'");</script>';
 					}
 				?>
-
-				<div class='responsive'>
-					<div class='gallery'>
-						<a target='_self' href='./img/aloeveratopf.jpg'>
-							<img src=<?php echo "'file://home/pi/Pictures/7_Groot/$pic_array[0]'" ?> alt='' width='300' height='200'>
-						</a>
-					<div class='desc'>beschreibung hier</div>
-					</div>
-				</div>
 
 				<script>init_gallery(<?php echo "'".$_REQUEST["plant_id"]."_".$plant->get_nickname()."'"; ?>);</script>
 			</div>
@@ -365,44 +344,44 @@
 		<div id="tab_info">
 			<h1>Tipps zur Pflege für <?php echo "$scientific_name"; ?></h1>
 
-			<strong>Richtig Gießen</strong>
+			<p><b>Richtig Gießen</b></p>
 			<?php 
-				print("<p>".$plant->get_how_to_water()."</p>");
+				print("<div><span>".$plant->get_how_to_water()."</span></div>");
 			?>
 
-			<strong>Richtige Position</strong>
+			<p><b>Richtige Position</b></p>
 			<?php 
-				print("<p>".$plant->get_needed_location()."</p>");
+				print("<div><span>".$plant->get_needed_location()."</span></div>");
 			?>
 
-			<strong>Dünger-Tipps</strong>
+			<p><b>Dünger-Tipps</b></p>
 			<?php 
-				print("<p>".$plant->get_fertilizing_hints()."</p>");
+				print("<div><span>".$plant->get_fertilizing_hints()."</span></div>");
 			?>
 		
-			<strong>Winter-Vorbereitungen</strong>
+			<p><b>Winter-Vorbereitungen</b></p>
 			<?php 
-				print("<p>".$plant->get_winter_prep()."</p>");
+				print("<div><span>".$plant->get_winter_prep()."</span></div>");
 			?>
 
-			<strong>Sommer-Vorbereitungen</strong>
+			<p><b>Sommer-Vorbereitungen</b></p>
 			<?php 
-				print("<p>".$plant->get_summer_prep()."</p>");
+				print("<div><span>".$plant->get_summer_prep()."</span></div>");
 			?>
 
-			<strong>Ungeziefer und Pflege</strong>
+			<p><b>Ungeziefer und Pflege</b></p>
 			<?php 
-				print("<p>".$plant->get_caretaking_hints()."</p>");
+				print("<div><span>".$plant->get_caretaking_hints()."</span></div>");
 			?>
 
-			<strong>Umtopfen und Vermehren</strong>
+			<p><b>Umtopfen und Vermehren</b></p>
 			<?php 
-				print("<p>".$plant->get_transplanting()."</p>");
+				print("<div><span>".$plant->get_transplanting()."</span></div>");
 			?>
 
-			<strong>Spezielle Bedürfnisse</strong>
+			<p><b>Spezielle Bedürfnisse</b></p>
 			<?php 
-				print("<p>".$plant->get_special_needs()."</p>");
+				print("<div><span>".$plant->get_special_needs()."</span></div>");
 			?>
 		</div>
 	</div>

@@ -64,11 +64,11 @@ function new_plant_submit(free_su){
 	var errors = new Array();
 
 	var name = document.forms["new_plant"]["plantname"].value;
-	var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+	var n_name = name.search(/^[^\\'"]{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
 	if(name == ""){
 		errors.push("Der Pflanzenname deiner Pflanze darf nicht leer sein.");
 	} else if(n_name == -1){
-		errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein.");
+		errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein und darf keine ',\" und \\ enthalten.");
 	}
 
 	if(document.forms["new_plant"]["scientific_name"].value == -1){
@@ -76,11 +76,11 @@ function new_plant_submit(free_su){
 	} 
 
 	var ort = document.forms["new_plant"]["standort"].value;
-	var n_ort = ort.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+	var n_ort = ort.search(/^[^\\'"]{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
 	if(ort == ""){
 		errors.push("Der Standort deiner Pflanze darf nicht leer sein.");
 	} else if(n_ort == -1){
-		errors.push("Der Standort muss mindestens 2 Zeichen lang sein.");
+		errors.push("Der Standort muss mindestens 2 Zeichen lang sein und darf keine ',\" und \\ enthalten.");
 	}
 
 	if(free_su > 0){
@@ -100,9 +100,9 @@ function new_plant_submit(free_su){
 			//011 - okay!
 
 			var name = document.forms["new_plant"]["sensorunit_name"].value;
-			var n_name = name.search(/^.{2,}$/);
+			var n_name = name.search(/^[^\\'"]{2,}$/);
 			if(n_name == -1){
-				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
+				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein und darf keine ',\" und \\ enthalten.");
 			}
 
 			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
@@ -145,9 +145,9 @@ function new_plant_submit(free_su){
 			//11 - okay!
 
 			var name = document.forms["new_plant"]["sensorunit_name"].value;
-			var n_name = name.search(/^.{2,}$/);
+			var n_name = name.search(/^[^\\'"]{2,}$/);
 			if(n_name == -1){
-				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein.");
+				errors.push("Der Sensorname muss mindestens 2 Zeichen lang sein und darf keine ',\" und \\ enthalten.");
 			}
 
 			var mac = document.forms["new_plant"]["sensorunit_mac"].value;
@@ -189,21 +189,28 @@ function delete_plant_submit(){
 	} else if(delete_counter==1){
 		document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
 		delete_counter++;
-	} else if(delete_counter==2){
+	} else if(delete_counter==2)
 		document.getElementById("delete_plant").submit();
-	} else {
-		//document.getElementById("delete_button").value = "Are you sure?";
-		//document.getElementById("delete_button").onclick = "delete_plant_submit(1)";	
-	}
 }
 
 function settings_submit(){
+	var errors = new Array();
+
 	var email = document.forms["settings"]["email"].value;
-	var n = email.search(/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+	var n = email.search(/^(([^<>()\[\]\\.,;:\s@"']+(\.[^<>()\[\]\\.,;:\s@"']+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 	
+	var owm_location = document.forms["settings"]["wohnort"].value;
+	var n2 = owm_location.search(/^[^\\'"]{2,}$/);
+
+	var owm_key = document.forms["settings"]["owm_key"].value;
+	var n3 = owm_key.search(/^[^\\'"]{2,}$/);
+
 	if(email!="" && n == -1){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Ungültige Email.";
+		errors.push("Ungültige Email.");
+	} else if(owm_location!="" && n2 == -1){
+		errors.push("Der Standort darf kein ',\" oder \ enthalten.");
+	} else if(owm_key!="" && n3 == -1){
+		errors.push("Der OpenWeatherMap-Key darf kein ',\" oder \ enthalten.");
 	} else {
 		document.getElementById("settings").submit();
 	}

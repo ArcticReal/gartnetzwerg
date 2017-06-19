@@ -61,7 +61,7 @@
 			<p>Die farblichen Balken im Hauptmenü zu der jeweiligen Pflanze zeigen den aktuellen Zustand deiner Pflanze, basierend auf den letzten Werten der Sensoreinheit. Grün gilt dabei als theoretisch gesunde Pflanze, bei schwacher Abweichung verfärbt sich der Status langsam in Richtung Rot. Sollte es der Pflanze unmenschlich miserabel gehen, ist die Farbe schwarz.
 			</p><br/>
 
-			<p>Danke, dass du dich für unsere Software benutzt! Viel Spaß im Garten und einen grünen Daumen!
+			<p>Danke, dass du unsere Software benutzt! Viel Spaß im Garten und einen grünen Daumen!
 				— Das Gartnetzwerg-Team
 			</p><br/>
 

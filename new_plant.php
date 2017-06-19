@@ -178,7 +178,7 @@
 		</div>
 
 		<div id="submit" class="button w2">
-			<?php print("<a href='javascript:;'' onclick='new_plant_submit(".count($sensorunits).");'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i></a>"); ?>
+			<?php print("<a href='javascript:;' onclick='new_plant_submit(".count($sensorunits).");'><i class='fa fa-check-circle fa-3x'></i></a>"); ?>
 		</div>
 	</div>
 

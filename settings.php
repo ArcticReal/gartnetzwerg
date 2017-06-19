@@ -64,7 +64,11 @@
 					<div class="cell"><p>Email-Adresse</p></div>
 					<div class="cell">
 						<?php
-							print("<input type='text' name='email' id='email' placeholder='$email'>");
+							if($notifications=="ON"){
+								print("<input type='text' name='email' id='email' placeholder='$email'>");
+							} else {
+								print("<input type='text' name='email' id='email' placeholder='[Notifications unten deaktiviert]'>");
+							}
 						?>
 					</div>
 				</div>
