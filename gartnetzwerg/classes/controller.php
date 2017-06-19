@@ -523,7 +523,7 @@ class Controller{
 		
 		
 		
-		$sensorunit_id = $this->plant_array[$plant_id];
+		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
 		
 		//logging
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::water(Plant Id: ".$plant_id.")\n";
@@ -533,7 +533,15 @@ class Controller{
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
-		//TODO: exec(somthingsomething) mit der mac
+		
+		//gets ip
+		$cmd = __DIR__."../get_ip_address.sh ".$mac_address;
+		$ip = shell_exec($cmd);
+		//calls water.py on raspy zero
+		$path = "/home/pi/gartnetzwerg/water.py";
+		$cmd = "ssh -i /home/pi/.ssh/id_rsa pi@".$ip." -t ".$path;
+		shell_exec($cmd);
+		
 		$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
 		$db_handler->disconnect_sql();
 		
