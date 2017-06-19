@@ -86,7 +86,7 @@
 				</div>
 
 				<div class="row">
-					<div class="cell">Notificationinhalt</div>
+					<div class="cell">Notifications</div>
 					<div class="cell">
 						<?php
 							if($notifications=="ON"){
@@ -100,7 +100,7 @@
 					</div>
 				</div>
 
-				<div class="row">
+				<!--<div class="row">
 					<div class="cell"></div>
 					<div class="cell">
 						<input type="button" name="delete_images" value="Bilder löschen">
@@ -112,7 +112,7 @@
 					<div class="cell">
 						<input type="button" name="delete_sensordata" value="Sensordaten löschen">
 					</div>
-				</div>
+				</div>-->
 
 				<div class="row">
 					<div class="cell"></div>

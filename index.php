@@ -50,10 +50,11 @@
 					$nickname = $plant->get_nickname();
 					$name = $plant->get_name();
 					$plant_id = $plant->get_plant_id();
+					$location = $plant->get_location();
 
 					$color = $controller->color_state($plant_id,0.5,0.5,0.5,0.5,0.5);
 					
-					print "<a href='status.php?plant_id=$plant_id'><div class='flower $color'><span><p>$nickname<br/><small>$name ($scientific_name)</small></p></span></div></a>";
+					print "<a href='status.php?plant_id=$plant_id'><div class='flower $color'><span><p>$nickname<br/><small>$name ($scientific_name)<br/>Standort: $location</small></p></span></div></a>";
 				}
 			} else {
 				print "<a onmouseover='smiley(1)' onmouseout='smiley(0)' href='new_plant.php'><div id='empty_flower_list'><span><i class='fa fa-3x fa-meh-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span></div></a>";

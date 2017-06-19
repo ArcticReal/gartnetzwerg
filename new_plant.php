@@ -45,9 +45,9 @@
 					//su_id is da bzw. mac/name is nicht da
 					$nickname = $controller->add_plant($su_id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
 					if(is_numeric($nickname) && $nickname == 0){
-						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
+						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden (Fehler-Code #1).</div>");
 					} else {
-						print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze $nickname erfolgreich eingefügt.</div>");
+						print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze '$nickname' erfolgreich eingefügt.</div>");
 					}
 				} else if($su_id=="" && $su_name!="" && $su_mac!=""){
 					//su_id is nich da bzw. mac/name is
@@ -55,12 +55,12 @@
 					if($id!=-1){
 						$nickname = $controller->add_plant($id, $scientific_name, $plantname, $standort, $indoor, $auto_watering);
 						if(is_numeric($nickname) && $nickname == 0){
-							print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze $nickname erfolgreich eingefügt.</div>");
+							print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden (Fehler-Code #2).</div>");
 						} else {
-							print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Pflanze konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
+							print("<div id='alert' class='alert-ok'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i> Pflanze '$nickname' erfolgreich eingefügt.</div>");
 						}
 					} else {
-						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden.</div>");
+						print("<div id='alert'><i class='fa fa-times-circle fa-3x' aria-hidden 'true'></i> Sensoreinheit konnte aus undefinierten Gründen nicht eingefügt werden (Fehler-Code #3).</div>");
 					}
 				} else {
 					//case, wenn alles leer ist
