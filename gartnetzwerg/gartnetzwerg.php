@@ -2,10 +2,16 @@
 
 require_once 'classes/controller.php';
 
-$controller = new Controller();
+$waterlogging_sensor = new Waterlogging_sensor();
 
-$picture_array = $controller->get_picture_array(6);
+$ip = '192.168.178.40';
 
-var_dump($picture_array);
+$waterlogging_sensor->update($ip);
+
+$erg = $waterlogging_sensor->get_value();
+
+echo "\n";
+echo $erg;
+echo "\n";
 
 ?>
