@@ -120,6 +120,10 @@ a{
 	overflow: hidden;
 }
 
+#nav .fa{
+	display: inline;
+}
+
 #nav .item{
 	height: 50px;
 	margin: 0px;
@@ -541,6 +545,11 @@ input, select, textarea {
 	padding: 42px 10px;
 }
 
+#alert.correction .fa{
+	padding: 5px;
+	display: inline;
+}
+
 #form form tr td:nth-child(2),
 #sensor_list form tr td:nth-child(2){
 	width: 100px;
@@ -655,15 +664,15 @@ div.desc {
 
 #last_pic .responsive{
 	padding: 0px;
-	width: 99.99999%;
+	width: 200px;
 	height: 200px;
 	margin: 0 auto;
 	overflow-y: hidden;
 }
 
 #last_pic .responsive img{
-	width: 100%;
-	height: auto;
+	width: auto;
+	height: 200px;
 }
 
 .clearfix:after {
@@ -800,10 +809,14 @@ div.desc {
     box-shadow: 2px 2px 1px silver;  
 
     margin: 10px;
-    right: 5px;;
-    width: 75%
-    width: calc(100% - 75px);  
     font-size: small;
+
+    right: 0;
+    left: 0;
+    margin-right: auto;
+    margin-left: auto;
+    width: 75%;
+    max-width: 90%;
 }
 
 [tooltip]:hover:before{

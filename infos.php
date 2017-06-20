@@ -8,6 +8,24 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
+    <link rel="apple-touch-icon" sizes="57x57" href="./img/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="./img/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="./img/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="./img/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="./img/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="./img/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="./img/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="./img/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="./img/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="./img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="./img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="./img/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./img/favicon/favicon-16x16.png">
+	<link rel="manifest" href="./img/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="./img/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
@@ -26,23 +44,26 @@
 			<p>Das GartNetzwerg ist eine Pflanzenüberwachungssoftware, welche über die mitgelieferten Sensoreinheiten deine Pflanzen analysiert und dir die Zustandsveränderungen deiner Pflanze graphisch und tabellarisch visualisiert.
 			</p><br/>
 
+			<strong>Startseite</strong>
+			<p>Hier findest du eine Übersicht über alle deine Pflanzen. Wie es deiner Pflanze gerade geht, ob sie z.B. genügend Wasser hat, kannst du an dem linken farbigen Balken erkennen. Die Ampelfarben signalisieren dir also immer wenn etwas zu tun ist. Falls du hier noch nichts siehst, musst du zuerst noch eine Pflanze hinzufügen.</p><br/>
+
 			<strong>Hinzufügen einer neuen Pflanze</strong>
-			<p>Über den <i class="fa fa-plus-circle" aria-hidden="true"></i>-Button im Hauptmenü kannst du eine neue Pflanze hinzufügen. Wähle eine die Art deiner Pflanze aus, gib ihr einen Namen und einen Standort, verknüpfe deine Pflanze mit der Sensoreinheit, und leg los!
+			<p>Über den <i class="fa fa-plus-circle" aria-hidden="true"></i>-Button im Hauptmenü kannst du eine neue Pflanze hinzufügen. Wähle die Art deiner Pflanze aus, gib ihr einen Namen und einen Standort, verknüpfe deine Pflanze mit der Sensoreinheit, und leg los!
 			</p><br/>
 
 			<strong>Hinzufügen einer neuen Sensoreinheit</strong>
-			<p>Um deine Pflanze überwachen zu können, muss GartNetzwerg wissen, welche Sensoreinheit deine Pflanze überwacht; und dafür musst du einen Sensoreinheit anlegen. Dies kannst du im <i>Neue Pflanzen</i>-Menü (<i class="fa fa-plus-circle" aria-hidden="true"></i>) machen. Unsere Einheiten haben alle eine Nummer, die du eingeben musst. </p><br/>
+			<p>Um deine Pflanze überwachen zu können, muss GartNetzwerg wissen, welche Sensoreinheit deine Pflanze überwacht; und dafür musst du eine Sensoreinheit verbinden. Dies kannst du im <i>Neue Pflanzen</i>-Menü (<i class="fa fa-plus-circle" aria-hidden="true"></i>) machen. Unsere Sensoreinheiten haben alle eine Nummer, die du eingeben musst. </p><br/>
 
 			<strong>Statusübersicht</strong>
 			<p>Wählst du eine der Pflanzen in der Liste im Hauptmenü, gelangst du auf die jeweile Statusseite der Pflanze. Dort findest du unter anderem eine Tabelle der aktuellen und idealen Werte der Sensoreinheit deiner Pflanze, und einige Buttons zur manuellen Bewässerung und Messung.
 			</p><br/>
 
 			<strong>Statusübersicht — Diagramme</strong>
-			<p>Über den <i class="fa fa-bar-chart" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zu den Diagrammen. Dort kann du den Verlauf der jeweiligen Sensoren genauer unter die Lupe nehmen.
+			<p>Über den <i class="fa fa-bar-chart" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zu den Diagrammen. Dort kannst du den Verlauf der verschiedenen Sensoren genauer unter die Lupe nehmen.
 			</p><br/>
 
 			<strong>Statusübersicht — Kamera</strong>
-			<p>Über den <i class="fa fa-camera" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zur Kamera. Dort kannst du das letzte geschossene Bild deiner Pflanze sehen, in der Galerie die  älteren Bilder deiner Pflanze sehen, ein Bild manuell schießen und die Kamera einstellen. Außerdem kannst du deine Galerie als Zeitraffer darstellen lassen.
+			<p>Über den <i class="fa fa-camera" aria-hidden="true"></i>-Button in der Statusübersicht gelangst du zur Kamera. Hier kannst du das zuletzt aufgenommene Bild deiner Pflanze sehen oder in der Galerie die  ältere Bilder deiner Pflanze nochmals aufrufen. Du kann jederzeit ein Bild manuell machen und die Kamera einstellen. Außerdem kannst du deine Galerie als Zeitraffer darstellen lassen.
 			</p><br/>
 
 			<strong>Statusübersicht — Pflegetipps</strong>
@@ -54,14 +75,14 @@
 			</p><br/>
 
 			<strong>Urlaubsfunktion</strong>
-			<p>Der <i class="fa fa-plane"></i>-Button leitet zur Urlaubsfunktion weiter. Sobald du eine Zeitspanne einfügst und die Funktion aktivierst, werden alle Pflanzen (die eine automatische Bewässerung besitzen), automatisch gegossen.
+			<p>Der <i class="fa fa-plane"></i>-Button leitet dich zur Urlaubsfunktion weiter. Sobald du eine Zeitspanne einfügst und die Funktion aktivierst, werden alle Pflanzen (die eine automatische Bewässerung besitzen), automatisch gegossen.
 			</p><br/>
 
 			<strong>Sonstiges</strong>
 			<p>Die farblichen Balken im Hauptmenü zu der jeweiligen Pflanze zeigen den aktuellen Zustand deiner Pflanze, basierend auf den letzten Werten der Sensoreinheit. Grün gilt dabei als theoretisch gesunde Pflanze, bei schwacher Abweichung verfärbt sich der Status langsam in Richtung Rot. Sollte es der Pflanze unmenschlich miserabel gehen, ist die Farbe schwarz.
 			</p><br/>
 
-			<p>Danke, dass du unsere Software benutzt! Viel Spaß im Garten und einen grünen Daumen!
+			<p>Danke, dass du unsere Software benutzt! <i class="fa fa-heart" style="color: red;" aria-hidden="true"></i> Viel Spaß im Garten und einen grünen Daumen!
 				— Das Gartnetzwerg-Team
 			</p><br/>
 

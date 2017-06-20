@@ -10,6 +10,24 @@
     <meta http-equiv="refresh" content="1800" >
     <!--3600-->
     
+    <link rel="apple-touch-icon" sizes="57x57" href="./img/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="./img/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="./img/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="./img/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="./img/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="./img/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="./img/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="./img/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="./img/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="./img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="./img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="./img/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./img/favicon/favicon-16x16.png">
+	<link rel="manifest" href="./img/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="./img/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+    
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
@@ -118,9 +136,10 @@
 
 			<div id="sensordaten">
 				<?php
-					//if($controller-> correction_text($plant)!=-1){
-						//print('<div id="alert">'.$controller->correction_text($plant).'</div>');
-					//}
+					$correction_text = $controller->correction_text($_REQUEST["plant_id"]);
+					if($correction_text!=""){
+						print('<div id="alert" class="correction"><p>'.$correction_text.'</p></div>');
+					}
 				?>
 
 				<div id="sensor_list">
@@ -158,7 +177,14 @@
 
 				<div id="last_pic">
 					<div class='responsive'>
-						<img src='./img/aloeveratopf.jpg' alt='' width='300' height='200'>
+						<?php 
+							$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]);
+							$folder = $_REQUEST["plant_id"]."_".$plant->get_nickname(); 
+							if(count($pic_array > 0)){
+								//print("<img  src='./gartnetzwerg/Pictures/$folder/$pic_array[0]' alt='' width='300'>");
+							}
+						?>
+						<img src="./img/aloe.png" height="200px">
 					</div>
 				</div>
 
@@ -188,9 +214,9 @@
 					</tr>
 					<tr>
 						<td>Bodenfeuchtigkeit</td>
-						<td><?php echo $min_soil_humidity."%"; ?></td>
-						<td><?php echo $max_soil_humidity."%"; ?></td>
-						<td><?php echo $akt_soil_humidity."%"; ?></td>
+						<td><?php echo $min_soil_humidity." von 10"; ?></td>
+						<td><?php echo $max_soil_humidity." von 10"; ?></td>
+						<td><?php echo $akt_soil_humidity." von 10"; ?></td>
 					</tr>
 					<tr>
 						<td>Lichtstunden</td>
@@ -232,7 +258,7 @@
 					</tr>
 					<tr>
 						<td>Staunässe</td>
-						<td id="sn"><?php echo $akt_waterlogging; ?></td>
+						<td id="sn"><?php echo $akt_waterlogging." von 10"; ?></td>
 					</tr>
 				</table>
 			</div>
@@ -307,8 +333,7 @@
 							<input type="hidden" name="manual_photo" value="1">
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
 
-							<?php
-								$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]); 
+							<?php 
 								if(count($pic_array)<=0){
 									print("<p><small>Noch keine Bilder vorhanden. :(</small></p>");
 								} else {
@@ -324,6 +349,15 @@
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
 							<p><small>&nbsp;</small></p>
 						</form>
+					</div>
+					<div class="cell">
+						<?php 
+							if(count($pic_array)>0){
+								$controller->make_time_lapse($_REQUEST["plant_id"], $pic_array, 10);
+							}
+						?>
+						<input onclick="zeitraffer_modal(<?php echo "'".$_REQUEST["plant_id"]."_".$plant->get_nickname()."'"; ?>)" type="button" name="m_timelapse" value="Zeitraffer"><br/>
+							<p><small>&nbsp;</small></p>
 					</div>
 				</div>
 			</div>

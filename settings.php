@@ -8,6 +8,24 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 
+    <link rel="apple-touch-icon" sizes="57x57" href="./img/favicon/apple-icon-57x57.png">
+	<link rel="apple-touch-icon" sizes="60x60" href="./img/favicon/apple-icon-60x60.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="./img/favicon/apple-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="76x76" href="./img/favicon/apple-icon-76x76.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="./img/favicon/apple-icon-114x114.png">
+	<link rel="apple-touch-icon" sizes="120x120" href="./img/favicon/apple-icon-120x120.png">
+	<link rel="apple-touch-icon" sizes="144x144" href="./img/favicon/apple-icon-144x144.png">
+	<link rel="apple-touch-icon" sizes="152x152" href="./img/favicon/apple-icon-152x152.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="./img/favicon/apple-icon-180x180.png">
+	<link rel="icon" type="image/png" sizes="192x192"  href="./img/favicon/android-icon-192x192.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="./img/favicon/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="96x96" href="./img/favicon/favicon-96x96.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="./img/favicon/favicon-16x16.png">
+	<link rel="manifest" href="./img/favicon/manifest.json">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="./img/favicon/ms-icon-144x144.png">
+	<meta name="theme-color" content="#ffffff">
+
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
@@ -22,13 +40,14 @@
 			
 		$controller = new Controller();
 
-		$v_email = $v_wohnort = $v_owm_key = $v_notifications = "";
+		$v_email = $v_wohnort = $v_owm_key = $v_notifications = $v_su = "";
 		
 		if ($_SERVER["REQUEST_METHOD"] == "POST") {
-			$v_email = test_input($_POST["email"]);
-			$v_wohnort = test_input($_POST["wohnort"]);
-			$v_owm_key = test_input($_POST["owm_key"]);
-			$v_notifications = test_input($_POST["notifications"]);
+			$v_email = test_input($_REQUEST["email"]);
+			$v_wohnort = test_input($_REQUEST["wohnort"]);
+			$v_owm_key = test_input($_REQUEST["owm_key"]);
+			$v_notifications = test_input($_REQUEST["notifications"]);
+			$v_su = test_input($_REQUEST["sensorunit"]);
 		}
 
 		if($v_email != ""){
@@ -49,6 +68,10 @@
 			$controller->change_general_notification_settings($v_notifications);
 		}
 
+		if($v_su != ""){
+			//$controller->delete_sensorunit($v_su);
+		}
+
 		$email = $controller->get_notification_receiving_email_address();
 		$wohnort = $controller->get_openweathermap_location();
 		$owm_key = $controller->get_openweathermap_api_key();
@@ -61,7 +84,10 @@
 
 			<form name="settings" id="settings" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" method="post">
 				<div class="row">
-					<div class="cell"><p>Email-Adresse</p></div>
+					<div class="cell">
+						<span>Email-Adresse</span>
+						<a href="#" class="tooltip" tooltip="Deine Email für Notifications."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					</div>
 					<div class="cell">
 						<?php
 							if($notifications=="ON"){
@@ -73,7 +99,10 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="cell"><p>Wohnort</p></div>
+					<div class="cell">
+						<span>Wohnort</span>
+						<a href="#" class="tooltip" tooltip="Dein Wohnort für OpenWeatherMap."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					</div>
 					<div class="cell">
 						<?php
 							print("<input type='text' name='wohnort' autocomplete='off' placeholder='$wohnort'>");
@@ -81,7 +110,10 @@
 					</div>
 				</div>
 				<div class="row">
-					<div class="cell"><p>OpenWeatherMap Key</p></div>
+					<div class="cell">
+						<span>OpenWeatherMap Key</span>
+						<a href="#" class="tooltip" tooltip="Mit OpenWeatherMap überprüfen wir den Wetterbericht, für deine Outdoor-Pflanzen; im Falle dass es Regnen sollte wird dann die automatische Bewässerung kurzzeitig deaktiviert. Falls du zufällig einen Premium OpenWeatherMap Key besitzt, kannst du ihn hier eintragen um genauere Wetterdaten für unsere Überprüfung zu verwenden."><i class="fa fa-question-circle" aria-hidden="true"></i></a>
+					</div>
 					<div class="cell">
 						<?php
 							print("<input type='text' name='owm_key' autocomplete='off' placeholder='$owm_key'>");
@@ -90,7 +122,7 @@
 				</div>
 
 				<div class="row">
-					<div class="cell">Notifications</div>
+					<div class="cell"><span>Notifications</span></div>
 					<div class="cell">
 						<?php
 							if($notifications=="ON"){
@@ -103,25 +135,26 @@
 						?>
 					</div>
 				</div>
+			</form>
 
-				<!--<div class="row">
-					<div class="cell"></div>
-					<div class="cell">
-						<input type="button" name="delete_images" value="Bilder löschen">
-					</div>
-				</div>
-
+			<form name="delete_su" id="delete_su" action="settings.php" method="post">
 				<div class="row">
 					<div class="cell"></div>
 					<div class="cell">
-						<input type="button" name="delete_sensordata" value="Sensordaten löschen">
-					</div>
-				</div>-->
+						<input type="hidden" name="del_su" value=1>
+						<?php
+							$sensorunits = $controller->get_free_sensorunits();
+				
+							if(count($sensorunits)>0){
+								print("<select id=\"sensorunit\" name=\"sensorunit\"><option value=\"-1\" selected></option>");
+								foreach($sensorunits as $id => $sensorunit){
+									print("<option value=".$id.">".$sensorunit->get_name()." (".$sensorunit->get_mac_address().")</option>");
+								}
+								print("</select>");
 
-				<div class="row">
-					<div class="cell"></div>
-					<div class="cell">
-						<input type="button" name="delete_sensorunit" value="Sensorunit löschen">
+								print('<input onclick="delete_sensor_unit_submit()" id="delete_su_button" type="button" name="delete" value="Sensoreinheit löschen">');
+							}
+						?>
 					</div>
 				</div>
 			</form>

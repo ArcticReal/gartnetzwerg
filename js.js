@@ -193,6 +193,15 @@ function delete_plant_submit(){
 		document.getElementById("delete_plant").submit();
 }
 
+function delete_sensor_unit_submit(){
+	if(document.forms["delete_su"]["sensorunit"].value == -1){
+		document.getElementById("alert").className = "";
+		document.getElementById("alert").innerHTML = "Keine Sensoreinheit zum Löschen ausgewählt.";
+	} else {
+		document.getElementById("delete_su").submit();
+	}
+}
+
 function settings_submit(){
 	var errors = new Array();
 
@@ -247,30 +256,23 @@ function status_submit(i){
 	}
 }
 
-function vacation_submit(){
-	if(document.forms["vacation"]["start_date"].value == ""){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Das Start-Datum darf nicht leer sein.";
-	} else if(document.forms["vacation"]["end_date"].value == ""){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Das End-Datum darf nicht leer sein.";
-	} else {
+function vacation_submit(i){
+	if(i==1){
+		if(document.forms["vacation"]["start_date"].value == ""){
+			document.getElementById("alert").className = "";
+			document.getElementById("alert").innerHTML = "Das Start-Datum darf nicht leer sein.";
+		} else if(document.forms["vacation"]["end_date"].value == ""){
+			document.getElementById("alert").className = "";
+			document.getElementById("alert").innerHTML = "Das End-Datum darf nicht leer sein.";
+		} else {
+			document.getElementById("vacation").submit();
+		}
+	} else if(i==0){
 		document.getElementById("vacation").submit();
-	}
-}
-
-function toggle(){
-	if(su == false){
-		document.getElementById("availSU").className = "invisible";
-		document.getElementById("newSU").className = "";
-		su = true;
 	} else {
-		document.getElementById("availSU").className = "";
-		document.getElementById("newSU").className = "invisible";
-		su = false;
+
 	}
 }
-
 
 //# DIAGRAMM-FUNKTIONEN ########################################################################################
 

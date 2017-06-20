@@ -938,16 +938,14 @@ class Controller{
 	/**
 	 * sub-function for color_state. 
 	 * 
-	 * @param takes $min and $max value from the database and compares it to the current $sensor value.$this
+	 * @param takes $min and $max value from the database and compares it to the current $akt value
 	 * @return offset/difference between current value and ideal value
-	 * 
-	 * TODO: Siehe Diskussion (is alles drin, außer Zeitliche Veränderung, Lichtsensor-Korrektheit und eventuell Icons)
+	 *
 	 */
-	public function sensor_offset($sensor, $min, $max, $gewichtung){
-		//echo "Sensorvalue: ".$sensor->get_value()." min: ".$min." max: ".$max."\n";
-		if($sensor->get_value() - $min < 0){
+	public function sensor_offset($akt, $min, $max, $gewichtung){
+		if($akt - $min < 0){
 			return (-1 * $gewichtung);
-		} else if($max - $sensor->get_value() < 0){
+		} else if($max - $akt < 0){
 			return (1 * $gewichtung);
 		}
 		return 0;
@@ -957,128 +955,74 @@ class Controller{
 	 * @param takes plant_id and sensor_id
 	 * @return text depending on sensor and offset-value
 	 */
-	public function correction_text($plant, $sensor){
-		$offset = 0;
-		$prio = 1;
+	public function correction_text($plant_id){
+		$return_string = "";
+		
+		$min_air_temperature = $this->get_plant($plant_id)->get_min_air_temperature();
+		$min_air_humidity = $this->get_plant($plant_id)->get_min_air_humidity();
+		$min_soil_temperature = $this->get_plant($plant_id)->get_min_soil_temperature();
+		$min_light_hours = $this->get_plant($plant_id)->get_min_light_hours();
+		$min_soil_humidity = $this->get_plant($plant_id)->get_min_soil_humidity();
+		
+		$max_air_temperature = $this->get_plant($plant_id)->get_max_air_temperature();
+		$max_air_humidity = $this->get_plant($plant_id)->get_max_air_humidity();
+		$max_soil_temperature = $this->get_plant($plant_id)->get_max_soil_temperature();
+		$max_light_hours = $this->get_plant($plant_id)->get_max_light_hours();
+		$max_soil_humidity = $this->get_plant($plant_id)->get_max_soil_humidity();
+		
+		$akt_air_temperature = $this->get_plant($plant_id)->get_akt_air_temperature();
+		$akt_air_humidity = $this->get_plant($plant_id)->get_akt_air_humidity();
+		$akt_soil_temperature = $this->get_plant($plant_id)->get_akt_soil_temperature();
+		$akt_light_hours = $this->get_plant($plant_id)->get_akt_light_hours();
+		$akt_soil_humidity = $this->get_plant($plant_id)->get_akt_soil_humidity();
 
-		//TODO: auch hier gehe davon aus dass der Index von sensor_unit array und plant_array die gleiche nummer sind.
-		echo $plant.", ". $sensor .", ". get_class($this->get_sensorunit($plant)->get_sensor($sensor)) ."\n";
-		
-		switch (get_class($this->get_sensorunit($plant)->get_sensor($sensor))) {
-			case "Air_temperature_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_temperature(), $this->plant_array[$plant]->get_max_air_temperature(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback; later return
-					echo "test: es isch zu kalt, tu was\n\n";
-				} else if($offset == 1){
-					//TODO: get positive offset feedback; later return
-					echo "test: hilfe, ich brenne!\n\n";
-				}
-				break;
-				
-			case "Air_moisture_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_humidity(), $this->plant_array[$plant]->get_max_air_humidity(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Light_sensor":
-				//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_light_hours(), $this->plant_array[$plant]->get_max_light_hours(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Soil_humidity_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_humidity(), $this->plant_array[$plant]->get_max_soil_humidity(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Soil_temperature_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_temperature(), $this->plant_array[$plant]->get_max_soil_temperature(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			default:;break;
+		$offset_at = $this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, 1);
+		$offset_ah = $this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, 1);
+		$offset_st = $this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, 1);
+		$offset_l  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
+		$offset_sh = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
+
+		if($offset_at < 0){
+			//negative
+			$return_string .= "<i class='fa fa-thermometer-empty' aria-hidden='true'></i> Deiner Pflanze ist es anscheinend zu kalt. Etwas mehr Wärme würde ihr gut tun.<br/>";
+		} else if($offset_at > 0){
+			//positive
+			$return_string .= "<i class='fa fa-thermometer-full' aria-hidden='true'></i> Deiner Pflanze ist es anscheinend zu warm. Drehe die Heizung runter.<br/>";
 		}
-	}
-	
-	/**
-	 * @param takes plant_id and sensor_id
-	 * @return icon depending on sensor and offset-value
-	 */
-	public function sensor_icon($plant, $sensor){
-		$offset = 0;
-		$prio = 1;
-		
-		//TODO: auch hier gehe davon aus dass der Index von sensor_unit array und plant_array die gleiche nummer sind.
-		echo $plant.", ". $sensor .", ". get_class($this->get_sensorunit($plant)->get_sensor($sensor)) ."\n";
-		
-		switch (get_class($this->get_sensorunit($plant)->get_sensor($sensor))) {
-			case "Air_temperature_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_temperature(), $this->plant_array[$plant]->get_max_air_temperature(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback; later return
-					echo "test: freezing_plant_icon.png\n\n";
-				} else if($offset == 1){
-					//TODO: get positive offset feedback; later return
-					echo "test: buring_plant_icon.png\n\n";
-				}
-				break;
-				
-			case "Air_moisture_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_air_humidity(), $this->plant_array[$plant]->get_max_air_humidity(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Light_sensor":
-				//TODO: Light_sensor is ein Value, aber Light_hours is eine Zeitspanne, die irgendwie noch gezählt werden muss.
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_light_hours(), $this->plant_array[$plant]->get_max_light_hours(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Soil_humidity_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_humidity(), $this->plant_array[$plant]->get_max_soil_humidity(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			case "Soil_temperature_sensor":
-				$offset = $this->sensor_offset($this->get_sensorunit($plant)->get_sensor($sensor), $this->plant_array[$plant]->get_min_soil_temperature(), $this->plant_array[$plant]->get_max_soil_temperature(),$prio);
-				if($offset == -1){
-					//TODO: get negative offset feedback
-				} else if($offset == 1){
-					//TODO: get positive offset feedback
-				}
-				break;
-				
-			default:;break;
+
+		if($offset_ah < 0){
+			//negative
+			$return_string .= "<i class='fa fa-cloud' aria-hidden='true'></i> Die Luftfeuchtigkeit ist anscheinend zu niedrig. Ein Wasserspray hilf temporär.<br/>";
+		} else if($offset_ah > 0){
+			//positive
+			$return_string .= "<i class='fa fa-cloud' aria-hidden='true'></i> Die Luftfeuchtigkeit ist anscheinend zu hoch. Kurz Durchlüften sollte helfen.<br/>";
 		}
+
+		if($offset_st < 0){
+			//negative
+			$return_string .= "<i class='fa fa-thermometer-1' aria-hidden='true'></i> Die Erde ist anscheinend etwas kalt. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas mehr zuwärmen.<br/>";
+		} else if($offset_st > 0){
+			//positive
+			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zukühlen.";
+		}
+
+		if($offset_l < 0){
+			//negative
+			$return_string .= "<i class='fa fa-low-vision' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Licht vertragen. Stelle sie etwas näher zum Fenster.<br/>";
+		} else if($offset_l > 0){
+			//positive
+			$return_string .= "<i class='fa fa-lightbulb-o' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Schatten vertragen. Stelle sie etwas weiter vom Fenster weg.<br/>";
+		}
+
+		if($offset_sh < 0){
+			//negative
+			$return_string .= "<i class='fa fa-tint' aria-hidden='true'></i> Deine Pflanze fühlt sich durstig. Überprüfe das vorher mit deinem Finger.<br/>";
+		} else if($offset_sh > 0){
+			//positive
+			$return_string .= "<i class='fa fa-umbrella' aria-hidden='true'></i> Deine Pflanze fühlt sich etwas zu nass. Stelle das Gießen für die nächsten paar Tage etwas ein. Allgemein gilt: Lieber ein paar Tage zu wenig als zu viel.<br/>";
+		}
+
+		return $return_string;
 	}
 	
 	/**
@@ -1087,42 +1031,36 @@ class Controller{
 	 */
 	public function color_state($plant_id, $g_at, $g_ah, $g_l, $g_sh, $g_st){
 		$color_value = 0;
-		$su_id = $this->get_plant($plant_id)->get_sensor_unit_id();
 
 		$min_air_temperature = $this->get_plant($plant_id)->get_min_air_temperature();
 		$min_air_humidity = $this->get_plant($plant_id)->get_min_air_humidity();
 		$min_soil_temperature = $this->get_plant($plant_id)->get_min_soil_temperature();
 		$min_light_hours = $this->get_plant($plant_id)->get_min_light_hours();
 		$min_soil_humidity = $this->get_plant($plant_id)->get_min_soil_humidity();
+		
 		$max_air_temperature = $this->get_plant($plant_id)->get_max_air_temperature();
 		$max_air_humidity = $this->get_plant($plant_id)->get_max_air_humidity();
 		$max_soil_temperature = $this->get_plant($plant_id)->get_max_soil_temperature();
 		$max_light_hours = $this->get_plant($plant_id)->get_max_light_hours();
 		$max_soil_humidity = $this->get_plant($plant_id)->get_max_soil_humidity();
 		
-		foreach($this->get_sensorunit($su_id)->get_array() as $key => $value){
-			switch (get_class($value)) {
-				case "Air_temperature_sensor": 
-					$color_value += abs($this->sensor_offset($value, $min_air_temperature, $max_air_temperature, $g_at)); break;
-				case "Air_moisture_sensor": 
-					$color_value += abs($this->sensor_offset($value, $min_air_humidity, $max_air_humidity,$g_ah)); break;
-				case "Light_sensor":
-					$color_value += abs($this->sensor_offset($value, $min_light_hours, $max_light_hours,$g_l)); break;
-				case "Soil_humidity_sensor":
-					$color_value += abs($this->sensor_offset($value, $min_soil_humidity, $max_soil_humidity,$g_sh)); break;
-				case "Soil_temperature_sensor":
-					$color_value += abs($this->sensor_offset($value, $min_soil_temperature, $max_soil_temperature, $g_st)); break;
-				default:break;
-			}
-		}
-	
+		$akt_air_temperature = $this->get_plant($plant_id)->get_akt_air_temperature();
+		$akt_air_humidity = $this->get_plant($plant_id)->get_akt_air_humidity();
+		$akt_soil_temperature = $this->get_plant($plant_id)->get_akt_soil_temperature();
+		$akt_light_hours = $this->get_plant($plant_id)->get_akt_light_hours();
+		$akt_soil_humidity = $this->get_plant($plant_id)->get_akt_soil_humidity();
+
+		$color_value += abs($this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, $g_at));
+		$color_value += abs($this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, $g_ah));
+		$color_value += abs($this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, $g_st));
+		$color_value += abs($this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, $g_sh));
+		$color_value += abs($this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, $g_l));
+
 		if($color_value >= 3) return "black"; else if($color_value >= 2) return "red";
 		else if($color_value >= 1) return "orange"; else if($color_value >= 0.5) return "yellow"; else return "green";
 	}
 	
-	
 	//messwerte
-
 	
 	/**
 	 * return the sum of used water during $days from plant with $plant_id
