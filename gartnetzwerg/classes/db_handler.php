@@ -1208,7 +1208,7 @@ class DB_Handler{
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_handler::fetch_last_data_update(Sensorunit Id: ".$sensorunit_id.")\n";
 		
 		$query = "SELECT date FROM sensor JOIN sensor_data ON sensor.sensor_id = sensor_data.sensor_id ";
-		$query = $query."WHERE sensor_unit_id = ".$sensorunit_id." ORDER BY date LIMIT 1;";
+		$query = $query."WHERE sensor_unit_id = ".$sensorunit_id." ORDER BY date DESC LIMIT 1;";
 		$result = mysqli_query($this->mysqli, $query);
 		$last_date = mysqli_fetch_array($result);
 		

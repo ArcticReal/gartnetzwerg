@@ -745,6 +745,9 @@ class Controller{
 	 * @param $duration this sets how long a picure will be shown in a time lapse
 	 */
 	public function make_time_lapse($plant_id, $frames, $duration){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::make_time_lapse(Plant Id: ".$plant_id.", Frames: ".$frames.", Duration: ".$duration.")\n";		
 		//links zu den bilder im internet
 		/*$frames = array("http://www.sarracenia.com/photos/dionaea/dionamusci070.jpg",
 		 "http://www.flowers.org.uk/wp-content/uploads/2012/12/Pitcher-Plant.jpg",
@@ -774,8 +777,9 @@ class Controller{
 			file_put_contents('/var/www/html/gartnetzwerg/Gifs/'.$plant_id.'_'.$nickname.'.gif', $gif_binary); //speichert gif lokal ab
 		}
 		catch (\Exception $ex){
-			echo $ex->getMessage()."\n";
+			$logtext = $logtext.date(LOG_TIME_FORMAT)."	ERROR: ".$ex->getMessage()."\n";
 		}
+		$this->write_log($logtext);
 	}
 	
 	
