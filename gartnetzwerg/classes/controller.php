@@ -182,9 +182,9 @@ class Controller{
 	
 	public function get_picture_array($plant_id){
 		
-		$nickname = $this->plant_array[$plant_id]->get_nickname();
+		$nickname = $this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname());
 		
-		$cmd = "ls /home/pi/Pictures/".$plant_id."_".$nickname."/";
+		$cmd = "ls /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$nickname."/";
 		$picture_array = explode("\n", shell_exec($cmd));
 		
 		$picture_array = array_reverse($picture_array);
@@ -561,11 +561,15 @@ class Controller{
 		$db_handler->disconnect_sql();
 		
 		if ($result != 0){
+			$nickname = $this->eliminate_whitespace($nickname);
+			$old_nickname = $this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname());
 			
-			
+	
 			//Bilder-Ordner umbenennen
-			$cmd = "mv /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".($this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname()))." /home/pi/Pictures/".$plant_id."_".($this->eliminate_whitespace($nickname));
-			echo $cmd;
+			echo $cmd = "mv /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$old_nickname." /home/pi/Pictures/".$plant_id."_".$nickname;
+			shell_exec($cmd);
+			
+			echo $cmd = "mv /var/www/html/gartnetzwerg/Gifs/".$plant_id."_".$old_nickname.".gif /home/pi/Pictures/".$plant_id."_".$nickname.".gif";
 			shell_exec($cmd);
 			
 			$this->refresh_local_objects();
@@ -734,6 +738,47 @@ class Controller{
 		$camera = new Camera();
 		$camera->take_pic($mac_address, $plant_id, $this->eliminate_whitespace($nickname));
 	}
+	
+	/**
+	 *
+	 * @param unknown $frames an array with the pictures
+	 * @param $duration this sets how long a picure will be shown in a time lapse
+	 */
+	public function make_time_lapse($plant_id, $frames, $duration){
+		//links zu den bilder im internet
+		/*$frames = array("http://www.sarracenia.com/photos/dionaea/dionamusci070.jpg",
+		 "http://www.flowers.org.uk/wp-content/uploads/2012/12/Pitcher-Plant.jpg",
+		 "http://i1110.photobucket.com/albums/h443/meizzwang/IMG_6847.jpg");
+		 //geht aber auch mit lokalen pfaden
+		 $frames_local = array('plants/plant01.jpg',
+		 'plants/plant02.jpg',
+		 'plants/plant03.jpg');
+		 */
+		//wie lang jedes bild angezeigt wird
+		
+		$nickname = $this->eliminate_whitespace($this->plant_array[$plant_id]->get_nickname());
+		$path = "/var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$nickname."/";
+		
+		$durations = [];
+		foreach ($frames as $key => $frame){
+			$frames[$key] = $path.$frame;
+			$durations[] = $duration;
+			
+		}
+		
+		var_dump($frames);
+		
+		try{
+			$gc = new GifCreator\GifCreator();
+			$gc->create($frames, $durations, 0);
+			$gif_binary = $gc->getGif();
+			file_put_contents('/var/www/html/gartnetzwerg/Gifs/'.$plant_id.'_'.$nickname.'.gif', $gif_binary); //speichert gif lokal ab
+		}
+		catch (\Exception $ex){
+			echo $ex->getMessage()."\n";
+		}
+	}
+	
 	
 	/**
 	 * request a forecast from openweathermap, if api key is an empty string, it automatically uses 
