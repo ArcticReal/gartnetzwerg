@@ -766,7 +766,6 @@ class Controller{
 			
 		}
 		
-		var_dump($frames);
 		
 		try{
 			$gc = new GifCreator\GifCreator();
