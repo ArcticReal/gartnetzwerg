@@ -15,7 +15,7 @@ class Camera extends Sensor{
 		$cmd = "sudo /var/www/html/gartnetzwerg/get_ip_address.sh ".$mac_address;
 		$ip = shell_exec($cmd);
 		
-		echo $cmd = "sudo ".__DIR__."/../take_picture.sh ".$ip." ".$plant_id."_".$nickname;
+		$cmd = "sudo ".__DIR__."/../take_picture.sh ".$ip." ".$plant_id."_".$nickname;
 		shell_exec($cmd);
 				
 	}

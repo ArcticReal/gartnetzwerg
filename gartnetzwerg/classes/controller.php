@@ -596,10 +596,10 @@ class Controller{
 			
 	
 			//Bilder-Ordner umbenennen
-			echo $cmd = "mv /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$old_nickname." /home/pi/Pictures/".$plant_id."_".$nickname;
+			$cmd = "mv /var/www/html/gartnetzwerg/Pictures/".$plant_id."_".$old_nickname." /home/pi/Pictures/".$plant_id."_".$nickname;
 			shell_exec($cmd);
 			
-			echo $cmd = "mv /var/www/html/gartnetzwerg/Gifs/".$plant_id."_".$old_nickname.".gif /home/pi/Pictures/".$plant_id."_".$nickname.".gif";
+			$cmd = "mv /var/www/html/gartnetzwerg/Gifs/".$plant_id."_".$old_nickname.".gif /home/pi/Pictures/".$plant_id."_".$nickname.".gif";
 			shell_exec($cmd);
 			
 			$this->refresh_local_objects();
@@ -934,6 +934,8 @@ class Controller{
 	 */
 	public function send_mail($subject, $message){
 		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::send_mail(Subject: ".$subject.", Message: ".$message.")\n";
 		
 		$from = "gartnetzwerg@outlook.de";
 		
@@ -957,9 +959,10 @@ class Controller{
 		$mail = $smtp->send($this->get_notification_receiving_email_address(), $headers, $message);
 		
 		if (PEAR::isError($mail)) {
-			echo("<p>" . $mail->getMessage() . "</p>\n");
+			$logtext = $logtext.date(LOG_TIME_FORMAT)."	Error: ".$mail->getMessage()."\n";
+			
 		} else {
-			echo("<p>Message successfully sent!</p>\n");
+			$logtext = $logtext.date(LOG_TIME_FORMAT)."	Mail successfully sent\n";
 		}
 				
 	}
