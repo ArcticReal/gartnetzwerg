@@ -700,7 +700,7 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
 		
-		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_air_humidity = mysqli_fetch_array($result);
 		
@@ -723,7 +723,7 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
 		
-		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_soil_humidity = mysqli_fetch_array($result);
 		
@@ -747,7 +747,7 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
 		
-		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_waterlogging = mysqli_fetch_array($result);
 		
@@ -771,7 +771,7 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
 		
-		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date LIMIT 1";
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
 		$result = mysqli_query($this->mysqli, $query);
 		$akt_air_temperature = mysqli_fetch_array($result);
 		
