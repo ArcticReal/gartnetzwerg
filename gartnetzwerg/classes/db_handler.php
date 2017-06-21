@@ -306,6 +306,9 @@ class DB_Handler{
 			
 			$notification_settings = $this->fetch_notification_settings($plant_id);
 			$plant->set_notification_settings($notification_settings);
+			
+			$auto_watering = $this->fetch_auto_watering($plant_id);
+			$plant->set_auto_watering($auto_watering);
 					
 			$this->plants[$plant_id] = $plant;
 		}
@@ -1218,6 +1221,15 @@ class DB_Handler{
 		$this->write_log($logtext);
 		
 		return $last_date[0];
+	}
+	
+	public function fetch_auto_watering($plant_id){
+		
+		$query = "SELECT auto_watering FROM plants where plant_id = ".$plant_id.";";
+		$result = mysqli_query($this->mysqli, $query);
+		$auto_watering = mysqli_fetch_array($result);
+		
+		return $auto_watering[0];
 	}
 	
 	//insert functions
