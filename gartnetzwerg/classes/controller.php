@@ -523,19 +523,20 @@ class Controller{
 		
 		
 		
-		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
 		
 		//logging
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::water(Plant Id: ".$plant_id.")\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Getting sensorunit_id: ".$sensorunit_id."\n";
 		$this->write_log($logtext);
 		
+		$sensorunit_id = $this->plant_array[$plant_id]->get_sensor_unit_id();
+
 		$db_handler = new DB_Handler();
 		$db_handler->connect_sql();
 		$mac_address = $db_handler->fetch_mac_address($sensorunit_id);
 		
 		//gets ip
-		$cmd = "/var/www/html/gartnetzwerg/get_ip_address.sh ".$mac_address;
+		$cmd = "sudo /var/www/html/gartnetzwerg/get_ip_address.sh ".$mac_address;
 		$ip = shell_exec($cmd);
 		//calls water.py on raspy zero
 		$path = "/home/pi/gartnetzwerg/water.py";
@@ -979,8 +980,8 @@ class Controller{
 		$offset_at = $this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, 1);
 		$offset_ah = $this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, 1);
 		$offset_st = $this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, 1);
-		$offset_l  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
-		$offset_sh = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
+		$offset_sh  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
+		$offset_l = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
 
 		if($offset_at < 0){
 			//negative
