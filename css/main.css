@@ -435,9 +435,13 @@ td{
     float: right;
 }
 
-#sensor_list .row .cell:nth-child(even),
-#cam_buttons .row .cell:nth-child(even){
-    width: 50%;
+#sensor_list .row .cell:nth-child(even){
+	width: 50%;
+    float: right;
+}
+
+#cam_buttons .row .cell{
+    width: 33%;
     float: right;
 }
 
@@ -499,7 +503,7 @@ input, select, textarea {
  
 #sensor_list input, 
 #cam_buttons input{
-	width: 100%;
+	width: 97%;
 }
 
 #sensor_list .row .cell{
@@ -534,15 +538,11 @@ input, select, textarea {
 }
 
 #alert > div{
-	display: flex;
-    align-items: center;
-    justify-content: center;
     float: left;
-    width: 
 }
 
 #alert .fa{
-	padding: 42px 10px;
+	margin: auto 10px;
 }
 
 #alert.correction .fa{
@@ -672,7 +672,7 @@ div.desc {
 
 #last_pic .responsive{
 	padding: 0px;
-	width: 200px;
+	width: 200px !important;
 	height: 200px;
 	margin: 0 auto;
 	overflow-y: hidden;

@@ -32,6 +32,16 @@
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
+	<script type="text/javascript">
+		function smiley(i){
+			if(i == 0){
+				document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-meh-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
+			} else {
+				document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-smile-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
+			}
+		}
+	</script>
+
 	<div id="header">
 		<div id="helper">
 			<div id="logo"></div>
