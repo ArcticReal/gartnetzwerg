@@ -964,6 +964,7 @@ class Controller{
 		} else {
 			$logtext = $logtext.date(LOG_TIME_FORMAT)."	Mail successfully sent\n";
 		}
+		$this->write_log($logtext);
 				
 	}
 	
@@ -1020,7 +1021,7 @@ class Controller{
 			$return_string .= "<i class='fa fa-thermometer-empty' aria-hidden='true'></i> Deiner Pflanze ist es anscheinend zu kalt. Etwas mehr Wärme würde ihr gut tun.<br/>";
 		} else if($offset_at > 0){
 			//positive
-			$return_string .= "<i class='fa fa-thermometer-full' aria-hidden='true'></i> Deiner Pflanze ist es anscheinend zu warm. Drehe die Heizung runter.<br/>";
+			$return_string .= "<i class='fa fa-thermometer-full' aria-hidden='true'></i> Deiner Pflanze ist es anscheinend zu warm.<br/>";
 		}
 
 		if($offset_ah < 0){
@@ -1028,7 +1029,7 @@ class Controller{
 			$return_string .= "<i class='fa fa-cloud' aria-hidden='true'></i> Die Luftfeuchtigkeit ist anscheinend zu niedrig. Ein Wasserspray hilf temporär.<br/>";
 		} else if($offset_ah > 0){
 			//positive
-			$return_string .= "<i class='fa fa-cloud' aria-hidden='true'></i> Die Luftfeuchtigkeit ist anscheinend zu hoch. Kurz Durchlüften sollte helfen.<br/>";
+			$return_string .= "<i class='fa fa-cloud' aria-hidden='true'></i> Die Luftfeuchtigkeit ist anscheinend zu hoch.<br/>";
 		}
 
 		if($offset_st < 0){
@@ -1039,13 +1040,13 @@ class Controller{
 			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zukühlen.";
 		}
 
-		if($offset_l < 0){
+		/*if($offset_l < 0){
 			//negative
 			$return_string .= "<i class='fa fa-low-vision' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Licht vertragen. Stelle sie etwas näher zum Fenster.<br/>";
 		} else if($offset_l > 0){
 			//positive
 			$return_string .= "<i class='fa fa-lightbulb-o' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Schatten vertragen. Stelle sie etwas weiter vom Fenster weg.<br/>";
-		}
+		}*/
 
 		if($offset_sh < 0){
 			//negative
