@@ -1526,6 +1526,10 @@ class DB_Handler{
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
 		
+		if ($result == NULL){
+			$result = 0;
+		}
+		
 		return $result;
 		
 	}
@@ -1539,6 +1543,10 @@ class DB_Handler{
 		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::delete_sensor_unit(sensor_unit_id: ".$sensor_unit_id.")\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
 		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$result."\n";
+		
+		if ($result == NULL){
+			$result = 0;
+		}
 		
 		return $result;
 		

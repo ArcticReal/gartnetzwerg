@@ -411,6 +411,35 @@ class Controller{
 		$this->refresh_local_objects();
 	}
 	
+	public function delete_sensorunit($sensorunit_id){
+		
+		//logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	Controller::delete_sensorunit(Sensorunit Id: ".$sensorunit_id.")\n";
+		$this->write_log($logtext);
+		
+		$return = 0;
+		if ($this->sensorunit_array[$sensorunit_id]->get_status() == "free"){
+			$db_handler = new DB_Handler();
+			$db_handler->connect_sql();
+			
+			if ($db_handler->delete_sensors($sensorunit_id)){
+				$return = $db_handler->delete_sensor_unit($sensorunit_id);
+				
+			}else {
+				$return = 0;
+			}
+			
+			
+			$db_handler->disconnect_sql();
+		}
+		else {
+			$return = 0;
+			
+		}
+		
+		return $return;
+	}
+	
 	/**
 	 * checks all plants, if they are indoor or outdoor and if they need water
 	 */
