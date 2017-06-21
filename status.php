@@ -183,8 +183,17 @@
 							if(count($pic_array > 0)){
 								//print("<img  src='./gartnetzwerg/Pictures/$folder/$pic_array[0]' alt='' width='300'>");
 							}
+
+							if($plant->get_species_id()==1){
+								print('<img src="./img/aloe.png" height="200px">');
+							} else if($plant->get_species_id()==2){
+								print('<img src="./img/orchidee.png" height="200px">');
+							} else if($plant->get_species_id()==3){
+								/*print('<img src="./img/aloe.png" height="200px">');*/
+							} else if($plant->get_species_id()==4){
+								print('<img src="./img/geranie.png" height="200px">');
+							}
 						?>
-						<img src="./img/aloe.png" height="200px">
 					</div>
 				</div>
 
@@ -332,37 +341,32 @@
 						<form name="top_buttons" id="b3" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="manual_photo" value="1">
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
-
-							<?php 
-								if(count($pic_array)<=0){
-									print("<p><small>Noch keine Bilder vorhanden. :(</small></p>");
-								} else {
-									print("<p><small>&nbsp;</small></p>");
-									//print('<small>Letztes Photo:'.$plant->get_last_watering().'</small>');
-								}
-							?>
 						</form>
 					</div>
 					<div class="cell">
 						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="live_view" value="1">
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
-							<p><small>&nbsp;</small></p>
 						</form>
 					</div>
 					<div class="cell">
 						<?php 
 							if(count($pic_array)>0){
-								$controller->make_time_lapse($_REQUEST["plant_id"], $pic_array, 10);
+								$controller->make_time_lapse($_REQUEST["plant_id"], array_reverse($pic_array), 10);
 								print("<input onclick=\"zeitraffer_modal('".$_REQUEST['plant_id']."_".$plant->get_nickname()."')\" type='button' name='m_timelapse' value='Zeitraffer'><br/>");
 							} else {
 								print("<input type='button' class='disabled' name='m_timelapse' value='Zeitraffer' disabled><br/>");
 							}
 						?>
-						<p><small>&nbsp;</small></p>
 					</div>
 				</div>
 			</div>
+
+			<?php 
+				if(count($pic_array)<=0){
+					print("<p style='text-align:center'><small>Noch keine Bilder vorhanden. :(</small></p>");
+				}
+			?>
 
 			<script type="text/javascript" charset="utf-8" src="gallery.js"></script>
 
@@ -395,14 +399,18 @@
 				print("<div><p>".$plant->get_fertilizing_hints()."</p></div>");
 			?>
 		
-			<p><b>Winter-Vorbereitungen</b></p>
 			<?php 
-				print("<div><p>".$plant->get_winter_prep()."</p></div>");
+				if($plant->get_winter_prep()!=""){
+					print("<p><b>Winter-Vorbereitungen</b></p>");
+					print("<div><p>".$plant->get_winter_prep()."</p></div>");
+				}
 			?>
 
-			<p><b>Sommer-Vorbereitungen</b></p>
 			<?php 
-				print("<div><p>".$plant->get_summer_prep()."</p></div>");
+				if($plant->get_summer_prep()!=""){
+					print("<p><b>Sommer-Vorbereitungen</b></p>");
+					print("<div><p>".$plant->get_summer_prep()."</p></div>");
+				}
 			?>
 
 			<p><b>Ungeziefer und Pflege</b></p>

@@ -30,6 +30,29 @@
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
 <body>
+	<script type="text/javascript">
+		function flowersettings_submit(){
+			var errors = new Array();
+
+			var name = document.forms["flowersettings"]["plantname"].value;
+			var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
+			if(name!="" && n_name == -1){
+				errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein.");
+			}
+
+			if (errors.length > 0) {
+				document.getElementById("alert").className = "";
+				document.getElementById("alert").innerHTML = "<i class='fa fa-times-circle fa-3x'></i> <strong>Etwas stimmt nicht ganz...</strong><br/><ul>";
+				for (var i = 0; i < errors.length; i++) {
+					document.getElementById("alert").innerHTML += "<li>" + errors[i] + "</li>";
+				}
+				document.getElementById("alert").innerHTML += "</ul>";
+			} else {
+				document.getElementById("flowersettings").submit();
+			}
+		}
+	</script>
+
 	<?php 
 		require_once 'gartnetzwerg/classes/controller.php'; 
 		$controller = new Controller();

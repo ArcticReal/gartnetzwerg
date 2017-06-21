@@ -225,27 +225,6 @@ function settings_submit(){
 	}
 }
 
-function flowersettings_submit(){
-	var errors = new Array();
-
-	var name = document.forms["flowersettings"]["plantname"].value;
-	var n_name = name.search(/^.{2,}$/); //(/^[A-Za-z0-9 ]{3,20}$/);
-	if(name!="" && n_name == -1){
-		errors.push("Der Pflanzenname muss mindestens 2 Zeichen lang sein.");
-	}
-
-	if (errors.length > 0) {
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "<i class='fa fa-times-circle fa-3x'></i> <strong>Etwas stimmt nicht ganz...</strong><br/><ul>";
-		for (var i = 0; i < errors.length; i++) {
-			document.getElementById("alert").innerHTML += "<li>" + errors[i] + "</li>";
-		}
-		document.getElementById("alert").innerHTML += "</ul>";
-	} else {
-		document.getElementById("flowersettings").submit();
-	}
-}
-
 function status_submit(i){
 	switch(i){
 		case 0: document.getElementById("b1").submit(); break;
@@ -253,24 +232,6 @@ function status_submit(i){
 		case 2: document.getElementById("b3").submit(); break;
 		case 3: document.getElementById("b4").submit(); break;
 		default:;
-	}
-}
-
-function vacation_submit(i){
-	if(i==1){
-		if(document.forms["vacation"]["start_date"].value == ""){
-			document.getElementById("alert").className = "";
-			document.getElementById("alert").innerHTML = "Das Start-Datum darf nicht leer sein.";
-		} else if(document.forms["vacation"]["end_date"].value == ""){
-			document.getElementById("alert").className = "";
-			document.getElementById("alert").innerHTML = "Das End-Datum darf nicht leer sein.";
-		} else {
-			document.getElementById("vacation").submit();
-		}
-	} else if(i==0){
-		document.getElementById("vacation").submit();
-	} else {
-
 	}
 }
 
@@ -339,19 +300,19 @@ function init_canvas(cc, height, width, days){
 		//document.getElementById("diadebug").innerHTML += diagramm[cc].data[i];
 		if(diagramm[cc].data[i]!=0){
 			if(days == 365){
-				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-21)/days)+20+((diagramm[cc].data.length-1-i)*1),
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
 				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
-				(width-20)/days,
+				(width-20)/days-1,
 				diagramm[cc].data[i]*diagramm[cc].degreesize);
 			} else if(days > 75){
-				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-23)/days)+20+((diagramm[cc].data.length-1-i)*3),
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
 				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
-				(width-20)/days,
+				(width-20)/days-2,
 				diagramm[cc].data[i]*diagramm[cc].degreesize);
 			} else {
-				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-25)/days)+20+((diagramm[cc].data.length-1-i)*5),
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
 				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
-				(width-20)/days,
+				(width-20)/days-5,
 				diagramm[cc].data[i]*diagramm[cc].degreesize);
 			}
 		}
@@ -552,13 +513,5 @@ function change_days(days){
 		for (var i = 0; i < diagramm.length-1; i++)
 			init_canvas(i,300,w, days);
 		document.getElementById("dayfactor").innerHTML = "Werte der letzten "+days+" Tage";
-	}
-}
-
-function smiley(i){
-	if(i == 0){
-		document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-meh-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
-	} else {
-		document.getElementById("empty_flower_list").innerHTML = "<span><i class='fa fa-3x fa-smile-o'></i><p id='trigger'>Hier ist es ganz schön leer.<br/><small><i>Erste Pflanze einfügen</i></small></p></span>";
 	}
 }
