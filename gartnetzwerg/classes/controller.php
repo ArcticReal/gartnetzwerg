@@ -445,7 +445,7 @@ class Controller{
 	 */
 	public function check_for_watering(){
 		
-		$data = $test->get_openweathermap_data();
+		$data = $this->get_openweathermap_data();
 		$data = $data["list"];
 		$rain = 0.0;
 		foreach ($data as $i => $data_entry){
@@ -469,13 +469,15 @@ class Controller{
 
 			$intervall_max = $plant->get_max_watering_period();
 			$intervall_min = $plant->get_min_watering_period();
-			$last_watering = date("Y-m-d", $db_handler->fetch_last_watering($plant_id));
+			$last_watering = new DateTime($plant->get_last_watering());
+			$last_watering = $last_watering->format('Y-m-d');
+			
 			
 			$max_date = new DateTime("-".$intervall_max."days");
 			$min_date = new DateTime("-".$intervall_min."days");
 			if ($max_date->format("Y-m-d") < $last_watering){
 				//max_watering_period_reached
-				if ($plant->get_is_indoor() == 1){
+				if ($plant->is_indoor() == 1){
 					//plant is indoor
 					
 					if ($plant->get_auto_watering() == 1){
@@ -497,8 +499,13 @@ class Controller{
 						else {
 							//auto watering off
 							// TODO auf notification checken und dementsprechende mail schreiben
-							$this->send_notification($plant_id, "needs_watering");
+							$this->send_notification($plant_id, "needs_water");
 						}
+					}else {
+						//es kommt zum regnen
+						$this->send_notification($plant_id, "needs_watering_but_rain");
+						$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
+						
 					}
 				}
 			}elseif ($min_date->format("Y-m-d") < $last_watering) {
@@ -510,7 +517,7 @@ class Controller{
 				if ($akt_humidity < $min_humidity){
 					//max_patering_period reached but sensor says plant needs water
 					
-					if ($plant->get_is_indoor() == 1){
+					if ($plant->is_indoor() == 1){
 						//plant is indoor
 						
 						if ($plant->get_auto_watering() == 1){
@@ -520,7 +527,7 @@ class Controller{
 						else {
 							//auto watering off
 							// TODO auf notification checken und dementsprechende mail schreiben
-							$this->send_notification($plant_id, "needs_watering");
+							$this->send_notification($plant_id, "needs_water");
 						}
 					}else {
 						//plant is outdoor
@@ -532,8 +539,13 @@ class Controller{
 							else {
 								//auto watering off
 								// TODO auf notification checken und dementsprechende mail schreiben
-								$this->send_notification($plant_id, "needs_watering");
+								$this->send_notification($plant_id, "needs_water");
 							}
+						}
+						else {
+							//es kommt zum regnen
+							$this->send_notification($plant_id, "needs_watering_but_rain");
+							$db_handler->insert_water_usage($plant_id, WATER_PER_TIME);
 						}
 					}
 				}
@@ -886,6 +898,78 @@ class Controller{
 		file_put_contents(__DIR__.'/../config.txt', $config);	
 	}
 	
+	public function daily_notification($plant_id){
+		
+		$plant = $this->plant_array[$plant_id];
+		$notifications = $plant->get_notification_settings();
+		$nickname = $plant->get_nickname();
+		
+		$min_air_temperature = $this->get_plant($plant_id)->get_min_air_temperature();
+		$min_air_humidity = $this->get_plant($plant_id)->get_min_air_humidity();
+		$min_soil_temperature = $this->get_plant($plant_id)->get_min_soil_temperature();
+		$min_light_hours = $this->get_plant($plant_id)->get_min_light_hours();
+		$min_soil_humidity = $this->get_plant($plant_id)->get_min_soil_humidity();
+		
+		$max_air_temperature = $this->get_plant($plant_id)->get_max_air_temperature();
+		$max_air_humidity = $this->get_plant($plant_id)->get_max_air_humidity();
+		$max_soil_temperature = $this->get_plant($plant_id)->get_max_soil_temperature();
+		$max_light_hours = $this->get_plant($plant_id)->get_max_light_hours();
+		$max_soil_humidity = $this->get_plant($plant_id)->get_max_soil_humidity();
+		
+		$akt_air_temperature = $this->get_plant($plant_id)->get_akt_air_temperature();
+		$akt_air_humidity = $this->get_plant($plant_id)->get_akt_air_humidity();
+		$akt_soil_temperature = $this->get_plant($plant_id)->get_akt_soil_temperature();
+		$akt_light_hours = $this->get_plant($plant_id)->get_akt_light_hours();
+		$akt_soil_humidity = $this->get_plant($plant_id)->get_akt_soil_humidity();
+		
+		$offset_at = $this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, 1);
+		$offset_ah = $this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, 1);
+		$offset_st = $this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, 1);
+		$offset_sh  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
+		$offset_l = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
+		
+		
+		$message = "";
+		$subject = "Pflanze ".$nickname." benötigt ihre aufmerksamkeit!";
+		switch ($notifications){
+			case "both":
+				//both
+				$message = $this->correction_text($plant_id)."\n";
+				
+			case "data-only":
+				//data
+				
+				if ($offset_ah != 0){
+					$message .= "Luftfeuchtigkeit: \n\tMin: ".$min_air_humidity."\n\tMax: ".$max_air_humidity."\n\tAktuell: ".$akt_air_humidity."\n";
+				}
+				if ($offset_at != 0){
+					$message .= "Lufttemperatur: \n\tMin: ".$min_air_temperature."\n\tMax: ".$max_air_temperature."\n\tAktuell: ".$akt_air_temperature."\n";
+				}
+				if ($offset_l != 0){
+					$message .= "Lichtstunden: \n\tMin: ".$min_light_hours."\n\tMax: ".$max_light_hours."\n\tAktuell: ".$akt_light_hours."\n";
+				}
+				if ($offset_sh != 0){
+					$message .= "Bodenfeuchtigkeit: \n\tMin: ".$min_soil_humidity."\n\tMax: ".$max_soil_humidity."\n\tAktuell: ".$akt_soil_humidity."\n";
+				}
+				if ($offset_st != 0){
+					$message .= "Bodentemperatur: \n\tMin: ".$min_soil_temperature."\n\tMax: ".$max_soil_temperature."\n\tAktuell: ".$akt_soil_temperature."\n";
+				}
+				
+				
+				break;
+			case "instructions-only":
+				//instructions
+				$message = $this->correction_text($plant_id);
+				break;
+			case "off":
+				$message = "";
+				break;
+		}
+		
+		if ($message != ""){
+			$this->send_mail($subject, $message);
+		}
+	}
 	
 	public function send_notification($plant_id, $reason){
 		
@@ -916,6 +1000,24 @@ class Controller{
 							$message = "";
 							break;
 						
+					}
+					break;
+				case "needs_watering_but_rain":
+					switch ($settings){
+					case "data_only":
+							$message = "Pflanze ".$nickname." hat zu trockenen Boden, aber es kommt zum regnen.\n";
+							break;
+						case "both":
+							$message = "Pflanze ".$nickname." hat zu trockenen Boden, aber es kommt zum regnen.\n";
+							$message .= "Müsste gegossen werden. Sollte es nicht zum regnen kommen, dann bitte gießenņ";
+							break;
+						case "instructions_only":
+							$message = "Pflanze ".$nickname." sollte gegossen werden, falls es die nächsten Tage nicht mehr zu regnen kommt.";
+							break;
+						case "off":
+							$message = "";
+							break;
+								
 					}
 					break;
 			}
@@ -1040,13 +1142,13 @@ class Controller{
 			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zu kühlen.";
 		}
 
-		/*if($offset_l < 0){
+		if($offset_l < 0){
 			//negative
 			$return_string .= "<i class='fa fa-low-vision' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Licht vertragen. Stelle sie etwas näher zum Fenster.<br/>";
 		} else if($offset_l > 0){
 			//positive
 			$return_string .= "<i class='fa fa-lightbulb-o' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Schatten vertragen. Stelle sie etwas weiter vom Fenster weg.<br/>";
-		}*/
+		}
 
 		if($offset_sh < 0){
 			//negative
