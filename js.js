@@ -338,10 +338,22 @@ function init_canvas(cc, height, width, days){
 	for (var i = 0; i < diagramm[cc].data.length; i++) {
 		//document.getElementById("diadebug").innerHTML += diagramm[cc].data[i];
 		if(diagramm[cc].data[i]!=0){
-			diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
+			if(days == 365){
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-21)/days)+20+((diagramm[cc].data.length-1-i)*1),
 				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
 				(width-20)/days,
 				diagramm[cc].data[i]*diagramm[cc].degreesize);
+			} else if(days > 75){
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-23)/days)+20+((diagramm[cc].data.length-1-i)*3),
+				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
+				(width-20)/days,
+				diagramm[cc].data[i]*diagramm[cc].degreesize);
+			} else {
+				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-25)/days)+20+((diagramm[cc].data.length-1-i)*5),
+				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
+				(width-20)/days,
+				diagramm[cc].data[i]*diagramm[cc].degreesize);
+			}
 		}
 	}
 	//document.getElementById("diadebug").innerHTML += "<br/>";
@@ -461,8 +473,8 @@ function init_diagramm(canvas,days){
 	//document.getElementById("diadebug").innerHTML = w;
 
 	update_drawing_borders(canvas);
-	update_degree_size(canvas,200);
-	init_canvas(canvas,200,w, days);
+	update_degree_size(canvas,300);
+	init_canvas(canvas,300,w, days);
 }
 
 function add_data(array,dates,data){
@@ -524,21 +536,21 @@ function change_days(days){
 	if(days == 0){
 		current_factor = 0;
 		for (var i = 0; i < diagramm.length-1; i++)
-			init_canvas(i,200,w,day_factors[current_factor].v);
+			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days == 1 && current_factor+1 <= day_factors.length-1){
 		current_factor += 1;
 		for (var i = 0; i < diagramm.length-1; i++)
-			init_canvas(i,200,w,day_factors[current_factor].v);
+			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days == -1 && current_factor-1 >= 0){
 		current_factor -= 1;
 		for (var i = 0; i < diagramm.length-1; i++)
-			init_canvas(i,200,w,day_factors[current_factor].v);
+			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days > 1){
 		for (var i = 0; i < diagramm.length-1; i++)
-			init_canvas(i,200,w, days);
+			init_canvas(i,300,w, days);
 		document.getElementById("dayfactor").innerHTML = "Werte der letzten "+days+" Tage";
 	}
 }

@@ -348,7 +348,7 @@ a{
 }
 
 #tab_info div{
-	margin: 25px;
+	margin: 0px 25px;
 }
 
 #buttonSU{
@@ -392,7 +392,7 @@ a{
 	margin-top: 10px;
 }
 
-#list table th, td, #form table th, td#sn{
+#list table th, td, #form table th{
 	padding: 5px;
 	text-align: center;
 }
@@ -566,6 +566,14 @@ button,
 	background-color: #8B0000;
 	color: #FFDDDD;
 	border: 1px #660000 solid;
+	padding: 5px;
+}
+
+#cam_buttons input.disabled,
+#cam_buttons input.disabled:hover{
+	background-color: lightgrey;
+	color: darkgrey;
+	border: 1px #666 solid;
 	padding: 5px;
 }
 
@@ -846,6 +854,12 @@ div.desc {
 	    width: auto !important;
 	    float: none !important;
 	    clear: both !important;
+	}
+
+	#form .row,
+	#sensor_list .row,
+	#cam_buttons .row{
+	    display: list-item !important;
 	}
 
 	#form .row div.checkbox:nth-child(even){

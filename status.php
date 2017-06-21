@@ -36,6 +36,30 @@
 		require_once 'gartnetzwerg/classes/controller.php'; 
 			
 		$controller = new Controller();
+
+		$v_manual_water = $v_manual_data = $v_manual_photo = $v_live_view = "";
+		if ($_SERVER["REQUEST_METHOD"] == "POST") {
+			$v_manual_water = test_input($_REQUEST['manual_water']);
+			$v_manual_data = test_input($_REQUEST['manual_data']);
+			$v_manual_photo = test_input($_REQUEST['manual_photo']);
+			$v_live_view = test_input($_REQUEST['live_view']);
+
+			if($v_manual_water != ""){
+				$controller->water($_REQUEST['plant_id']);
+			}
+
+			if($v_manual_data != ""){
+				$controller->update_all_sensor_data(1);
+			}
+
+			if($v_manual_photo != ""){
+				$controller->take_picture($_REQUEST['plant_id']);
+			}
+
+			if($v_live_view != ""){
+				//$controller->x();
+			}
+		}
 		
 		$plants = $controller->get_plants();		
 		$plant = $plants[$_REQUEST["plant_id"]];
@@ -102,30 +126,6 @@
 			</div>
 
 			<?php
-				$v_manual_water = $v_manual_data = $v_manual_photo = $v_live_view = "";
-				if ($_SERVER["REQUEST_METHOD"] == "POST") {
-					$v_manual_water = test_input($_REQUEST['manual_water']);
-					$v_manual_data = test_input($_REQUEST['manual_data']);
-					$v_manual_photo = test_input($_REQUEST['manual_photo']);
-					$v_live_view = test_input($_REQUEST['live_view']);
-
-					if($v_manual_water != ""){
-						$controller->water($_REQUEST['plant_id']);
-					}
-
-					if($v_manual_data != ""){
-						$controller->update_all_sensor_data(1);
-					}
-
-					if($v_manual_photo != ""){
-						$controller->take_picture($_REQUEST['plant_id']);
-					}
-
-					if($v_live_view != ""){
-						//$controller->x();
-					}
-				}
-
 				function test_input($data){
 					$data = trim($data);
 					$data = stripslashes($data);
@@ -151,7 +151,7 @@
 
 								<?php
 									if($plant->get_last_watering() != ""){
-										print('<small>Zuletzt gegossen:'.$plant->get_last_watering().'</small>');
+										print('<small>Zuletzt gegossen: '.$plant->get_last_watering().'</small>');
 									} else {
 										print('<small>Noch nie per Einheit gegossen.</small>');
 									}
@@ -165,7 +165,7 @@
 
 								<?php
 									if($controller->get_last_sensor_update($_REQUEST["plant_id"]) != ""){
-										print('<small>Zuletzt gemessen:'.$controller->get_last_sensor_update($_REQUEST["plant_id"]).'</small>');
+										print('<small>Zuletzt gemessen: '.$controller->get_last_sensor_update($_REQUEST["plant_id"]).'</small>');
 									} else {
 										print('<small>Noch nie gemessen.</small>');
 									}
@@ -284,37 +284,37 @@
 
 			<p>Lufttemperatur-Verlauf <small>(in Celsius)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas1" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas1" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
 			<p>Bodentemperatur-Verlauf <small>(in Celsius)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas2" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas2" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Luftfeuchtigkeitsverlauf <small>(in 10er Schritten)</small></p>
+			<p>Luftfeuchtigkeitsverlauf <small>(in Prozent)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas3" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas3" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
 			<p>Bodenfeuchtigkeitsverlauf <small>(in 10er Schritten)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas4" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas4" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Lichtstundenverlauf <small>(in vollen Stunden)</small></p>
+			<p>Lichtstundenverlauf <small>(in Stunden)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas5" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas5" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 
-			<p>Wasserverbrauch <small>(in Liter)</small></p>
+			<p>Wasserverbrauch <small>(in Milliliter)</small></p>
 			<div id="diagramm1" class="diagramm">
-				<canvas id="canvas6" width="600px" height="200px" style="border:1px solid #000000;">
+				<canvas id="canvas6" width="600px" height="300px" style="border:1px solid #000000;">
 				</canvas>
 			</div>
 		</div>
@@ -354,10 +354,12 @@
 						<?php 
 							if(count($pic_array)>0){
 								$controller->make_time_lapse($_REQUEST["plant_id"], $pic_array, 10);
+								print("<input onclick=\"zeitraffer_modal('".$_REQUEST['plant_id']."_".$plant->get_nickname()."')\" type='button' name='m_timelapse' value='Zeitraffer'><br/>");
+							} else {
+								print("<input type='button' class='disabled' name='m_timelapse' value='Zeitraffer' disabled><br/>");
 							}
 						?>
-						<input onclick="zeitraffer_modal(<?php echo "'".$_REQUEST["plant_id"]."_".$plant->get_nickname()."'"; ?>)" type="button" name="m_timelapse" value="Zeitraffer"><br/>
-							<p><small>&nbsp;</small></p>
+						<p><small>&nbsp;</small></p>
 					</div>
 				</div>
 			</div>
@@ -380,42 +382,42 @@
 
 			<p><b>Richtig Gießen</b></p>
 			<?php 
-				print("<div><span>".$plant->get_how_to_water()."</span></div>");
+				print("<div><p>".$plant->get_how_to_water()."</p></div>");
 			?>
 
 			<p><b>Richtige Position</b></p>
 			<?php 
-				print("<div><span>".$plant->get_needed_location()."</span></div>");
+				print("<div><p>".$plant->get_needed_location()."</p></div>");
 			?>
 
 			<p><b>Dünger-Tipps</b></p>
 			<?php 
-				print("<div><span>".$plant->get_fertilizing_hints()."</span></div>");
+				print("<div><p>".$plant->get_fertilizing_hints()."</p></div>");
 			?>
 		
 			<p><b>Winter-Vorbereitungen</b></p>
 			<?php 
-				print("<div><span>".$plant->get_winter_prep()."</span></div>");
+				print("<div><p>".$plant->get_winter_prep()."</p></div>");
 			?>
 
 			<p><b>Sommer-Vorbereitungen</b></p>
 			<?php 
-				print("<div><span>".$plant->get_summer_prep()."</span></div>");
+				print("<div><p>".$plant->get_summer_prep()."</p></div>");
 			?>
 
 			<p><b>Ungeziefer und Pflege</b></p>
 			<?php 
-				print("<div><span>".$plant->get_caretaking_hints()."</span></div>");
+				print("<div><p>".$plant->get_caretaking_hints()."</p></div>");
 			?>
 
 			<p><b>Umtopfen und Vermehren</b></p>
 			<?php 
-				print("<div><span>".$plant->get_transplanting()."</span></div>");
+				print("<div><p>".$plant->get_transplanting()."</p></div>");
 			?>
 
 			<p><b>Spezielle Bedürfnisse</b></p>
 			<?php 
-				print("<div><span>".$plant->get_special_needs()."</span></div>");
+				print("<div><p>".$plant->get_special_needs()."</p></div>");
 			?>
 		</div>
 	</div>

@@ -69,7 +69,7 @@
 		}
 
 		if($v_su != ""){
-			//$controller->delete_sensorunit($v_su);
+			$controller->delete_sensorunit($v_su);
 		}
 
 		$email = $controller->get_notification_receiving_email_address();
