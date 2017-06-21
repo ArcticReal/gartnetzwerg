@@ -1034,10 +1034,10 @@ class Controller{
 
 		if($offset_st < 0){
 			//negative
-			$return_string .= "<i class='fa fa-thermometer-1' aria-hidden='true'></i> Die Erde ist anscheinend etwas kalt. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas mehr zuwärmen.<br/>";
+			$return_string .= "<i class='fa fa-thermometer-1' aria-hidden='true'></i> Die Erde ist anscheinend etwas kalt. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas mehr zu wärmen.<br/>";
 		} else if($offset_st > 0){
 			//positive
-			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zukühlen.";
+			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zu kühlen.";
 		}
 
 		/*if($offset_l < 0){

@@ -259,7 +259,9 @@ class DB_Handler{
 			$sensor_unit_id = $this->fetch_sensor_unit_id($plant_id);
 			$plant->set_sensor_unit_id($sensor_unit_id);
 			
-			$akt_light_hours = $this->fetch_light_hours($sensor_unit_id, date("Y-m-d"));
+			$date_time = new DateTime("-1 days");
+			
+			$akt_light_hours = $this->fetch_light_hours($sensor_unit_id, $date_time->format("Y-m-d"));
 			$plant->set_akt_light_hours($akt_light_hours); 
 			
 			$akt_air_humidity = $this->fetch_akt_air_humidity($sensor_unit_id);
