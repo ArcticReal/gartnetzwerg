@@ -1112,11 +1112,18 @@ class Controller{
 		$akt_light_hours = $this->get_plant($plant_id)->get_akt_light_hours();
 		$akt_soil_humidity = $this->get_plant($plant_id)->get_akt_soil_humidity();
 
-		$offset_at = $this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, 1);
-		$offset_ah = $this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, 1);
-		$offset_st = $this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, 1);
-		$offset_sh  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
-		$offset_l = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
+		$offset_at = $offset_ah = $offset_st = $offste_sh = $offset_l = 0;
+
+		if(!is_null($akt_air_temperature) || !is_null($akt_air_humidity) || !is_null($akt_soil_temperature) || !is_null($akt_soil_humidity)){
+			$offset_at = $this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, 1);
+			$offset_ah = $this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, 1);
+			$offset_st = $this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, 1);
+			$offset_sh  = $this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, 1);
+		}
+
+		if(!is_null($akt_light_hours)){
+			$offset_l = $this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, 1);
+		}
 
 		if($offset_at < 0){
 			//negative
@@ -1142,13 +1149,13 @@ class Controller{
 			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zu kühlen.";
 		}
 
-		if($offset_l < 0){
+		/*if($offset_l < 0){
 			//negative
 			$return_string .= "<i class='fa fa-low-vision' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Licht vertragen. Stelle sie etwas näher zum Fenster.<br/>";
 		} else if($offset_l > 0){
 			//positive
 			$return_string .= "<i class='fa fa-lightbulb-o' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Schatten vertragen. Stelle sie etwas weiter vom Fenster weg.<br/>";
-		}
+		}*/
 
 		if($offset_sh < 0){
 			//negative
@@ -1186,11 +1193,18 @@ class Controller{
 		$akt_light_hours = $this->get_plant($plant_id)->get_akt_light_hours();
 		$akt_soil_humidity = $this->get_plant($plant_id)->get_akt_soil_humidity();
 
+		if(is_null($akt_air_temperature) || is_null($akt_air_humidity) || is_null($akt_soil_temperature) || is_null($akt_soil_humidity)){
+			return "grey";
+		}
+
 		$color_value += abs($this->sensor_offset($akt_air_temperature, $min_air_temperature, $max_air_temperature, $g_at));
 		$color_value += abs($this->sensor_offset($akt_air_humidity, $min_air_humidity, $max_air_humidity, $g_ah));
 		$color_value += abs($this->sensor_offset($akt_soil_temperature, $min_soil_temperature, $max_soil_temperature, $g_st));
 		$color_value += abs($this->sensor_offset($akt_soil_humidity, $min_soil_humidity, $max_soil_humidity, $g_sh));
-		$color_value += abs($this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, $g_l));
+		
+		if(!is_null($akt_light_hours)){
+			$color_value += abs($this->sensor_offset($akt_light_hours, $min_light_hours, $max_light_hours, $g_l));
+		}
 
 		if($color_value >= 3) return "black"; else if($color_value >= 2) return "red";
 		else if($color_value >= 1) return "orange"; else if($color_value >= 0.5) return "yellow"; else return "green";

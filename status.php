@@ -180,19 +180,8 @@
 						<?php 
 							$pic_array = $controller->get_picture_array($_REQUEST["plant_id"]);
 							$folder = $_REQUEST["plant_id"]."_".$plant->get_nickname(); 
-							if(count($pic_array > 0)){
-								//print("<img  src='./gartnetzwerg/Pictures/$folder/$pic_array[0]' alt='' width='300'>");
-							}
 
-							if($plant->get_species_id()==1){
-								print('<img src="./img/aloe.png" height="200px">');
-							} else if($plant->get_species_id()==2){
-								print('<img src="./img/orchidee.png" height="200px">');
-							} else if($plant->get_species_id()==3){
-								/*print('<img src="./img/aloe.png" height="200px">');*/
-							} else if($plant->get_species_id()==4){
-								print('<img src="./img/geranie.png" height="200px">');
-							}
+							print('<img src="./img/plant'.($plant->get_species_id()).'.png" height="200px">');
 						?>
 					</div>
 				</div>
@@ -207,31 +196,65 @@
 						<td>Temperatur</td>
 						<td><?php echo $min_air_temperature." °C"; ?></td>
 						<td><?php echo $max_air_temperature." °C"; ?></td>
-						<td><?php echo $akt_air_temperature." °C"; ?></td>
+						<td><?php if(is_null($akt_air_temperature)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_air_temperature." °C";
+							} ?></td>
 					</tr>
 					<tr>
 						<td>Bodentemperatur</td>
 						<td><?php echo $min_soil_temperature." °C"; ?></td>
 						<td><?php echo $max_soil_temperature." °C"; ?></td>
-						<td><?php echo $akt_soil_temperature." °C"; ?></td>
+						<td><?php if(is_null($akt_soil_temperature)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_soil_temperature." °C";
+							} ?></td>
 					</tr>
 					<tr>
 						<td>Luftfeuchtigkeit</td>
 						<td><?php echo $min_air_humidity."%"; ?></td>
 						<td><?php echo $max_air_humidity."%"; ?></td>
-						<td><?php echo $akt_air_humidity."%"; ?></td>
+						<td><?php if(is_null($akt_air_humidity)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_air_humidity."%";
+							} ?></td>
 					</tr>
 					<tr>
 						<td>Bodenfeuchtigkeit</td>
 						<td><?php echo $min_soil_humidity." von 10"; ?></td>
 						<td><?php echo $max_soil_humidity." von 10"; ?></td>
-						<td><?php echo $akt_soil_humidity." von 10"; ?></td>
+						<td><?php if(is_null($akt_soil_humidity)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_soil_humidity." von 10";
+							} ?></td>
 					</tr>
 					<tr>
 						<td>Lichtstunden</td>
 						<td><?php echo $min_light_hours." h"; ?></td>
 						<td><?php echo $max_light_hours." h"; ?></td>
-						<td><?php echo $akt_light_hours." h"; ?></td>
+						<td><?php if(is_null($akt_light_hours)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_light_hours." h";
+							} ?></td>
+					</tr>
+					<tr>
+						<td>Staunässe</td>
+						<td colspan="2"><?php 
+							if($waterlogging==0){
+								print("<small>Verträgt keine Staunässe</small>");
+							} else {
+								print("<small>Verträgt Staunässe</small>");
+							} ?></td>
+						<td><?php if(is_null($akt_waterlogging)){
+								print("<p><small>Noch keine Daten vorhanden</small></p>");
+							} else {
+								echo $akt_waterlogging." von 10";
+							} ?></td>
 					</tr>
 				</table>
 
@@ -246,8 +269,8 @@
 								$su = $controller->get_sensorunit($plant->get_sensor_unit_id());
 								$su->calculate_watertank_level();
 								$wtl = $su->get_watertank_level();
-								if(is_nan($wtl)){
-									print("<p><small>keine Daten vorhanden</small></p>");
+								if(is_nan($wtl) || is_null($wtl) || $wtl==""){
+									print("<p><small>Noch keine Daten vorhanden</small></p>");
 								} else {
 									print("<p>$wtl</p>");
 								}
@@ -257,17 +280,13 @@
 						<td>Wasserbedarf</td>
 						<td><?php
 								$wu = $controller->sum_water_usage($_REQUEST["plant_id"], 2);
-								if($wu=="ml"){
-									print("<p><small>kein bisheriger Wasserbedarf</small></p>");
+								if($wu=="ml" || is_null($wu) || is_nan($wu)){
+									print("<p><small>Kein bisheriger Wasserbedarf</small></p>");
 								} else {
 									print("<p>$wu</p>");
 								}
 							?>	
 						</td>
-					</tr>
-					<tr>
-						<td>Staunässe</td>
-						<td id="sn"><?php echo $akt_waterlogging." von 10"; ?></td>
 					</tr>
 				</table>
 			</div>
@@ -284,12 +303,11 @@
 				$soil_humidity_array = $controller->soil_humidity_per_day($plant->get_sensor_unit_id(), $days);
 				$air_temperature_array = $controller->air_temperature_per_day($plant->get_sensor_unit_id(), $days);
 				$soil_temperature_array = $controller->soil_temperature_per_day($plant->get_sensor_unit_id(), $days);
-				$waterlogging_array = $controller->water_usage_per_day($plant->get_sensor_unit_id(), $days);
 			?>
 
-			<input type="button" id="canvasm" onclick="change_days(-1)" value="-">
+			<input type="button" id="canvasm" onclick="change_days(-1)" value="weniger">
 			<span><small id="dayfactor">x</small></span>
-			<input type="button" id="canvasp" onclick="change_days(1)" value="+"><br/>
+			<input type="button" id="canvasp" onclick="change_days(1)" value="mehr"><br/>
 
 			<p>Lufttemperatur-Verlauf <small>(in Celsius)</small></p>
 			<div id="diagramm1" class="diagramm">
@@ -427,6 +445,8 @@
 			<?php 
 				print("<div><p>".$plant->get_special_needs()."</p></div>");
 			?>
+
+			<p><small>Alle Angaben ohne Gewähr. Für den Tod einer Pflanze wird keine Verantwortung übernommen.</p>
 		</div>
 	</div>
 

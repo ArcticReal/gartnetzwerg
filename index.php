@@ -104,7 +104,5 @@
 			<a href="settings.php"><i class="fa fa-cog fa-3x" aria-hidden="true"></i></a>
 		</div>
 	</div>
-
-	<script src="js.js"></script>
 </body>
 </html>
