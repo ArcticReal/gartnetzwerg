@@ -17,7 +17,7 @@ class Watertank_fillage_sensor extends Sensor{
 	}
 	
 	public function update($ip){
-		$path = "/home/pi/gartnetzwerg/sensor_wf.py ".($this->position+3)."";
+		$path = "/home/pi/gartnetzwerg/sensor_wf.py ".($this->position)."";
 		$cmd = "sudo /var/www/html/gartnetzwerg/update_sensor.sh ".$ip." ".$path;
 		$result = shell_exec($cmd);
 		$this->set_value($result);
