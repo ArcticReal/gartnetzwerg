@@ -295,6 +295,7 @@ a{
 	width: calc(100% - 10px);
 	margin: 5px;
 	height: 40px;
+	color: #33FF33;
 }
 
 #footer .button.w3{
@@ -442,7 +443,7 @@ td{
 }
 
 #cam_buttons .row .cell{
-    width: 33%;
+    width: 49%;
     float: right;
 }
 
@@ -525,6 +526,10 @@ input, select, textarea {
     transition: opacity 0.5s ease 0s, margin-top 0.5s ease 0s, padding-top 0.5s ease 0s, height 0.5s ease 0s;
 }
 
+#alert p{
+	overflow: hidden;
+}
+
 #alert.alert-none{
 	padding: 0px;
 	margin-top: 0px;
@@ -578,6 +583,9 @@ button,
 	-moz-border-radius: 6px;
     -webkit-border-radius: 6px;
     border-radius: 6px;
+
+    -webkit-transition: all 0.5s ease 0s, background-color 1s ease 0s; /* Safari */
+    transition: all 0.5s ease 0s, background-color 1s ease 0s;
 }
 
 input[type="button"].delete{
@@ -588,6 +596,9 @@ input[type="button"].delete{
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#AA0000), to(#800000));
 	background: -webkit-linear-gradient(0% 0%, 0% 100%, from(#AA0000), to(#800000));
 	background: -moz-linear-gradient(center top, #AA0000, #800000);
+
+	-webkit-transition: all 0.5s ease 0s, background-color 1s ease 0s; /* Safari */
+    transition: all 0.5s ease 0s, background-color 1s ease 0s;
 }
 
 #cam_buttons input.disabled,
@@ -608,8 +619,8 @@ button:hover,
 	color: #FFFFFF;
 	background-color: #CE0000;
 
-	-webkit-transition: color 0s ease 0.5s, background-color 1s ease 0s; /* Safari */
-    transition: color 0s ease 0.5s, background-color 1s ease 0s;
+	-webkit-transition: all 0.5s ease 0s, background-color 1s ease 0s; /* Safari */
+    transition: all 0.5s ease 0s, background-color 1s ease 0s;
 }
 
 #tab_status.current_tab,
