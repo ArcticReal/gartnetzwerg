@@ -361,18 +361,23 @@
 							<input onclick="status_submit(2)" type="button" name="m_photo" value="Manuelles Photo"><br/>
 						</form>
 					</div>
-					<div class="cell">
-						<form name="top_buttons" id="b4" action=<?php echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
+					<!--<div class="cell">
+						<form name="top_buttons" id="b4" action=<?php //echo "status.php?plant_id=".$_REQUEST["plant_id"]."#cam";?> method="post">
 							<input type="hidden" name="live_view" value="1">
 							<input onclick="status_submit(3)" type="button" name="m_live" value="Live View"><br/>
 						</form>
-					</div>
+					</div>-->
 					<div class="cell">
 						<?php 
-							if(count($pic_array)>0){
-								$controller->make_time_lapse($_REQUEST["plant_id"], array_reverse($pic_array), 10);
-								print("<input onclick=\"zeitraffer_modal('".$_REQUEST['plant_id']."_".$plant->get_nickname()."')\" type='button' name='m_timelapse' value='Zeitraffer'><br/>");
-							} else {
+							try {
+								if(count($pic_array)>0){
+									$controller->make_time_lapse($_REQUEST["plant_id"], array_reverse($pic_array), 10);
+									print("<input onclick=\"zeitraffer_modal('".$_REQUEST['plant_id']."_".$plant->get_nickname()."')\" type='button' name='m_timelapse' value='Zeitraffer'><br/>");
+								}  else {
+								print("<input type='button' class='disabled' name='m_timelapse' value='Zeitraffer' disabled><br/>");
+								}
+							}
+							catch(Exception $e) {
 								print("<input type='button' class='disabled' name='m_timelapse' value='Zeitraffer' disabled><br/>");
 							}
 						?>

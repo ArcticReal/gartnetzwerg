@@ -84,6 +84,10 @@
 			$v_su = test_input($_REQUEST["sensorunit"]);
 		}
 
+		if($v_su != ""){
+			$controller->delete_sensorunit($v_su);
+		}
+
 		if($v_email != ""){
 			$email = $v_email;
 			$controller->change_email_address($v_email);
@@ -100,10 +104,6 @@
 
 		if($v_notifications != ""){
 			$controller->change_general_notification_settings($v_notifications);
-		}
-
-		if($v_su != ""){
-			$controller->delete_sensorunit($v_su);
 		}
 
 		$email = $controller->get_notification_receiving_email_address();

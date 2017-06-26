@@ -11,7 +11,7 @@ function init_gallery(folder){
 		document.getElementById("gallery").innerHTML += "<div class='responsive'><div class='gallery'>" +
 			"<a href='javascript:;' onclick='modal("+ i +")'>" +
 			"<img id='img_" + i + "' src='./gartnetzwerg/Pictures/" + folder + "/" + pic_array[i] + "' alt='' width='300' height='200'>" +
-			"</a><div class='desc'>" + string.substring(0, (string.length-4)); + "</div></div></div>";
+			"</a><div class='desc'>" + /*string.substring(0, (string.length-4)); +*/ "</div></div></div>";
 	}
 }
 
