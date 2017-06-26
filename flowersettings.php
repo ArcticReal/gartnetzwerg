@@ -51,6 +51,18 @@
 				document.getElementById("flowersettings").submit();
 			}
 		}
+
+		var delete_counter = 0;
+		function delete_plant_submit(){
+			if(delete_counter==0){
+				document.getElementById("delete_button").value = "Bist du dir sicher?";
+				delete_counter++;
+			} else if(delete_counter==1){
+				document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
+				delete_counter++;
+			} else if(delete_counter==2)
+				document.getElementById("delete_plant").submit();
+		}
 	</script>
 
 	<?php 
@@ -208,7 +220,7 @@
 					<div class="cell"></div>
 					<div class="cell">
 						<input type="hidden" name="del_plant" value=<?php echo $_REQUEST["plant_id"]; ?>>
-						<input onclick="delete_plant_submit()" id="delete_button" type="button" name="delete" value="Pflanze löschen">
+						<input onclick="delete_plant_submit()" id="delete_button" class="delete" type="button" name="delete" value="Pflanze löschen">
 					</div>
 				</div>
 			</form>
@@ -233,7 +245,5 @@
 			<?php print("<a href='javascript:;'' onclick='flowersettings_submit();'><i class='fa fa-check-circle fa-3x' aria-hidden 'true'></i></a>"); ?>
 		</div>
 	</div>
-
-	<script src="js.js"></script>
 </body>
 </html>

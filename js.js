@@ -1,7 +1,6 @@
 function init_settings_page(){
 	document.getElementById("alert").className = "alert-none";
 	document.getElementById("alert").innerHTML = "";
-	toggle();
 }
 
 var su = false;
@@ -181,50 +180,6 @@ function new_plant_submit(free_su){
 	}
 }
 
-var delete_counter = 0;
-function delete_plant_submit(){
-	if(delete_counter==0){
-		document.getElementById("delete_button").value = "Bist du dir sicher?";
-		delete_counter++;
-	} else if(delete_counter==1){
-		document.getElementById("delete_button").value = "Bist du dir wirklich sicher?";
-		delete_counter++;
-	} else if(delete_counter==2)
-		document.getElementById("delete_plant").submit();
-}
-
-function delete_sensor_unit_submit(){
-	if(document.forms["delete_su"]["sensorunit"].value == -1){
-		document.getElementById("alert").className = "";
-		document.getElementById("alert").innerHTML = "Keine Sensoreinheit zum Löschen ausgewählt.";
-	} else {
-		document.getElementById("delete_su").submit();
-	}
-}
-
-function settings_submit(){
-	var errors = new Array();
-
-	var email = document.forms["settings"]["email"].value;
-	var n = email.search(/^(([^<>()\[\]\\.,;:\s@"']+(\.[^<>()\[\]\\.,;:\s@"']+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
-	
-	var owm_location = document.forms["settings"]["wohnort"].value;
-	var n2 = owm_location.search(/^[^\\'"]{2,}$/);
-
-	var owm_key = document.forms["settings"]["owm_key"].value;
-	var n3 = owm_key.search(/^[^\\'"]{2,}$/);
-
-	if(email!="" && n == -1){
-		errors.push("Ungültige Email.");
-	} else if(owm_location!="" && n2 == -1){
-		errors.push("Der Standort darf kein ',\" oder \ enthalten.");
-	} else if(owm_key!="" && n3 == -1){
-		errors.push("Der OpenWeatherMap-Key darf kein ',\" oder \ enthalten.");
-	} else {
-		document.getElementById("settings").submit();
-	}
-}
-
 function status_submit(i){
 	switch(i){
 		case 0: document.getElementById("b1").submit(); break;
@@ -238,14 +193,14 @@ function status_submit(i){
 //# DIAGRAMM-FUNKTIONEN ########################################################################################
 
 var day_factors = [
-	{v: 7, t: "Werte der letzten 7 Tage"},
-	{v:14, t:"Werte der letzten 2 Wochen"},
-	{v:21, t:"Werte der letzten 3 Wochen"},
-	{v:31, t:"Werte des letzten Monat"},
-	{v:62, t:"Werte der letzten 2 Monate"},
-	{v:92, t:"Werte des letzten Quartal"},
-	{v:184, t:"Werte der letzten 6 Monate"},
-	{v:365, t:"Werte des letzten Jahres"}];
+	{v: 7, t: "Täglicher Durchschnitt der letzten 7 Tage"},
+	{v:14, t:"Täglicher Durchschnitt der letzten 2 Wochen"},
+	{v:21, t:"Täglicher Durchschnitt der letzten 3 Wochen"},
+	{v:31, t:"Täglicher Durchschnitt des letzten Monat"},
+	{v:62, t:"Täglicher Durchschnitt der letzten 2 Monate"},
+	{v:92, t:"Täglicher Durchschnitt des letzten Quartal"},
+	{v:184, t:"Täglicher Durchschnitt der letzten 6 Monate"},
+	{v:365, t:"Täglicher Durchschnitt des letzten Jahres"}];
 var current_factor = 0;
 
 var c = new Array();
@@ -299,15 +254,10 @@ function init_canvas(cc, height, width, days){
 	for (var i = 0; i < diagramm[cc].data.length; i++) {
 		//document.getElementById("diadebug").innerHTML += diagramm[cc].data[i];
 		if(diagramm[cc].data[i]!=0){
-			if(days == 365){
+			if(days >= 50){
 				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
 				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
 				(width-20)/days-1,
-				diagramm[cc].data[i]*diagramm[cc].degreesize);
-			} else if(days > 75){
-				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
-				5+(diagramm[cc].max_v*diagramm[cc].degreesize)-(diagramm[cc].data[i]*diagramm[cc].degreesize),
-				(width-20)/days-2,
 				diagramm[cc].data[i]*diagramm[cc].degreesize);
 			} else {
 				diagramm[cc].c.fillRect((diagramm[cc].data.length-1-i)*((width-20)/days)+20,
@@ -317,29 +267,40 @@ function init_canvas(cc, height, width, days){
 			}
 		}
 	}
-	//document.getElementById("diadebug").innerHTML += "<br/>";
+
+	diagramm[cc].c.font = '10pt Helvetica';
+	diagramm[cc].c.fillStyle = 'black';
 
 	for (var i = 0; i < diagramm[cc].data.length; i++) {
 		if(days == 7){
 			//datum text
-			diagramm[cc].c.font = '10pt Helvetica';
-			diagramm[cc].c.fillStyle = 'black';
 			var date_text = diagramm[cc].dates[i];
+			date_text = date_text.substring(8,10)+"."+date_text.substring(5,7)+"."+date_text.substring(0,4);
 			var w_d = diagramm[cc].c.measureText(date_text).width;
 			if(w_d >= ((width-20)/days)){
-				var str = diagramm[cc].dates[i];
-				date_text = str.substring(5,11);
+				date_text = date_text.substring(0,5);
 			}
-			diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20+(w_d/Math.pow(2,(3-current_factor))), height - 5);
+			diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20+w_d, height - 5);
+		} else if(days == 365){
+			var date_text = diagramm[cc].dates[i];
+			if(Number(date_text.substring(8,10))==15){
+				//datum text
+				var months = ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+
+				date_text = months[Number(date_text.substring(5,7))-1];
+				var w_d = diagramm[cc].c.measureText(date_text).width;
+
+				diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20, height - 5);
+			}
 		} else {
 			if(i % (days/7) == 0){
 				//datum text
-				diagramm[cc].c.font = '10pt Helvetica';
-				diagramm[cc].c.fillStyle = 'black';
-				var str = diagramm[cc].dates[i];
-				var date_text = str.substring(5,11);
+				var date_text = diagramm[cc].dates[i];
+				date_text = date_text.substring(8,10)+"."+date_text.substring(5,7);
 				var w_d = diagramm[cc].c.measureText(date_text).width;
-				diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20+(w_d/8), height - 5);
+				if(w_d >= ((width-20)/days)){
+					diagramm[cc].c.fillText(date_text, (diagramm[cc].data.length-1-i)*((width-20)/days)+20+(w_d/current_factor), height - 5);
+				}
 			}
 		}
 	}
@@ -496,22 +457,22 @@ function update_drawing_borders(array){
 function change_days(days){
 	if(days == 0){
 		current_factor = 0;
-		for (var i = 0; i < diagramm.length-1; i++)
+		for (var i = 0; i < diagramm.length; i++)
 			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days == 1 && current_factor+1 <= day_factors.length-1){
 		current_factor += 1;
-		for (var i = 0; i < diagramm.length-1; i++)
+		for (var i = 0; i < diagramm.length; i++)
 			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days == -1 && current_factor-1 >= 0){
 		current_factor -= 1;
-		for (var i = 0; i < diagramm.length-1; i++)
+		for (var i = 0; i < diagramm.length; i++)
 			init_canvas(i,300,w,day_factors[current_factor].v);
 		document.getElementById("dayfactor").innerHTML = day_factors[current_factor].t;
 	} else if(days > 1){
-		for (var i = 0; i < diagramm.length-1; i++)
+		for (var i = 0; i < diagramm.length; i++)
 			init_canvas(i,300,w, days);
-		document.getElementById("dayfactor").innerHTML = "Werte der letzten "+days+" Tage";
+		document.getElementById("dayfactor").innerHTML = "Täglicher Durchschnitt der letzten "+days+" Tage";
 	}
 }

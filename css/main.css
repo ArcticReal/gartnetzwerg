@@ -120,7 +120,7 @@ a{
 	overflow: hidden;
 }
 
-#nav .fa{
+#nav .fa, #list.infos .fa{
 	display: inline;
 }
 
@@ -151,7 +151,7 @@ a{
 }
 
 #nav .item.current_tab{
-	border-top: 3px indigo solid;
+	border-top: 3px green solid;
 	box-shadow: 0px 10px 20px;
 
 	background-color: #EEE;
@@ -310,6 +310,7 @@ a{
 	padding: 0px;
 	color: #AAA;
 	width: 100%;
+	margin-top: 3px;
 
 	-webkit-transition: color 0.5s ease 0s; /* Safari */
     transition: color 0.5s ease 0s;
@@ -518,6 +519,7 @@ input, select, textarea {
 	margin-top: 8px;
 	margin-bottom: 8px;
 	opacity: 1;
+	overflow: hidden;
 
 	-webkit-transition: opacity 0.5s ease 0s, margin-top 0.5s ease 0s, padding-top 0.5s ease 0s, height 0.5s ease 0s; /* Safari */
     transition: opacity 0.5s ease 0s, margin-top 0.5s ease 0s, padding-top 0.5s ease 0s, height 0.5s ease 0s;
@@ -563,10 +565,29 @@ input[type="button"],
 input[type="submit"],
 button, 
 #cam_buttons input{
-	background-color: #8B0000;
-	color: #FFDDDD;
-	border: 1px #660000 solid;
+	background-color: #FFFFFF;
+	color: #33FF33;
+	border: 1px #005500 solid;
 	padding: 5px;
+	font-weight: bold;
+
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#00AA00), to(#008000));
+	background: -webkit-linear-gradient(0% 0%, 0% 100%, from(#00AA00), to(#008000));
+	background: -moz-linear-gradient(center top, #00AA00, #008000);
+
+	-moz-border-radius: 6px;
+    -webkit-border-radius: 6px;
+    border-radius: 6px;
+}
+
+input[type="button"].delete{
+	background-color: #FFFFFF;
+	color: #FF3333;
+	border: 1px #550000 solid;
+	
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#AA0000), to(#800000));
+	background: -webkit-linear-gradient(0% 0%, 0% 100%, from(#AA0000), to(#800000));
+	background: -moz-linear-gradient(center top, #AA0000, #800000);
 }
 
 #cam_buttons input.disabled,
@@ -575,6 +596,9 @@ button,
 	color: darkgrey;
 	border: 1px #666 solid;
 	padding: 5px;
+
+	background: none;
+
 }
 
 input[type="button"]:hover,
@@ -776,7 +800,7 @@ div.desc {
 /**/
 
 .grey{
-	color: 
+	border-left: 1px #777 solid !important;
 }
 
 #canvasm, #canvasp{

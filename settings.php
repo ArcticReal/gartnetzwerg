@@ -29,7 +29,41 @@
     <link rel="stylesheet" type="text/css" href="./css/font-awesome.css">
 	<link rel="stylesheet" type="text/css" href="./css/main.css">
 </head>
-<body>
+	<body>
+	<script type="text/javascript">
+		function delete_sensor_unit_submit(){
+			if(document.forms["delete_su"]["sensorunit"].value == -1){
+				document.getElementById("alert").className = "";
+				document.getElementById("alert").innerHTML = "Keine Sensoreinheit zum Löschen ausgewählt.";
+			} else {
+				document.getElementById("delete_su").submit();
+			}
+		}
+
+		function settings_submit(){
+			var errors = new Array();
+
+			var email = document.forms["settings"]["email"].value;
+			var n = email.search(/^(([^<>()\[\]\\.,;:\s@"']+(\.[^<>()\[\]\\.,;:\s@"']+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
+			
+			var owm_location = document.forms["settings"]["wohnort"].value;
+			var n2 = owm_location.search(/^[^\\'"]{2,}$/);
+
+			var owm_key = document.forms["settings"]["owm_key"].value;
+			var n3 = owm_key.search(/^[^\\'"]{2,}$/);
+
+			if(email!="" && n == -1){
+				errors.push("Ungültige Email.");
+			} else if(owm_location!="" && n2 == -1){
+				errors.push("Der Standort darf kein ',\" oder \ enthalten.");
+			} else if(owm_key!="" && n3 == -1){
+				errors.push("Der OpenWeatherMap-Key darf kein ',\" oder \ enthalten.");
+			} else {
+				document.getElementById("settings").submit();
+			}
+		}
+	</script>
+
 	<!-- email / standort(owp) / key / -->
 	<div id="header" class="small">
 		<p>Allgemeine Einstellungen</p>
@@ -152,7 +186,7 @@
 								}
 								print("</select>");
 
-								print('<input onclick="delete_sensor_unit_submit()" id="delete_su_button" type="button" name="delete" value="Sensoreinheit löschen">');
+								print('<input onclick="delete_sensor_unit_submit()" class="delete" id="delete_su_button" type="button" name="delete" value="Sensoreinheit löschen">');
 							}
 						?>
 					</div>
@@ -179,7 +213,5 @@
 			<a href="javascript:;" onclick="settings_submit()"><i class="fa fa-check-circle fa-3x" aria-hidden="true"></i></a>
 		</div>
 	</div>
-
-	<script src="js.js"></script>
 </body>
 </html>
