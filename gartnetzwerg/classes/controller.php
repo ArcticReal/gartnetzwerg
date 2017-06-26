@@ -424,6 +424,7 @@ class Controller{
 			
 			if ($db_handler->delete_sensors($sensorunit_id)){
 				$return = $db_handler->delete_sensor_unit($sensorunit_id);
+				$this->refresh_local_objects();
 				
 			}else {
 				$return = 0;
