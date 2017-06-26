@@ -1466,7 +1466,7 @@ class Controller{
 	
 	}
 }
-$test = new Controller();
+//$test = new Controller();
 //$test->sum_water_usage(2, 2);
 
 
