@@ -1150,13 +1150,13 @@ class Controller{
 			$return_string .= "<i class='fa fa-thermometer-2' aria-hidden='true'></i> Die Erde ist anscheinend etwas warm. Je nach Tageszeit ist das kein Problem, sollte dies doch ganztägig erscheinen, versuche deine Pflanze etwas zu kühlen.";
 		}
 
-		/*if($offset_l < 0){
+		if($offset_l < 0){
 			//negative
 			$return_string .= "<i class='fa fa-low-vision' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Licht vertragen. Stelle sie etwas näher zum Fenster.<br/>";
 		} else if($offset_l > 0){
 			//positive
 			$return_string .= "<i class='fa fa-lightbulb-o' aria-hidden='true'></i> Deine Pflanze könnte etwas mehr Schatten vertragen. Stelle sie etwas weiter vom Fenster weg.<br/>";
-		}*/
+		}
 
 		if($offset_sh < 0){
 			//negative
