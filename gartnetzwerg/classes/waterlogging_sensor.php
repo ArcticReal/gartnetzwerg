@@ -6,8 +6,10 @@ class Waterlogging_sensor extends Sensor{
 		$path = "/home/pi/gartnetzwerg/sensor_ws.py";
 		$cmd = "sudo /var/www/html/gartnetzwerg/update_sensor.sh ".$ip." ".$path;
 		$result = shell_exec($cmd);
-				
-		if($result == 0){
+		
+		if($result == NULL){
+			$return = NULL;
+		}elseif($result == 0){
 			$return = 10;
 		}elseif($result <= 64){
 			$return = 9;
