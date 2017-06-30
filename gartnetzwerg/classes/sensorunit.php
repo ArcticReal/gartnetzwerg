@@ -115,16 +115,16 @@ class Sensorunit{
 			if (is_a($value, "Watertank_fillage_sensor")){
 				$watertank_sensor_data[$value->get_position()] = $value->get_value();
 			}
-			foreach ($watertank_sensor_data as $value){
-				$fillage_level += $value;
-				$max_fillage_level ++;
-			}		
-			if ($max_fillage_level != 0){
-				
-				$this->set_watertank_level($fillage_level/$max_fillage_level);
-			}else {
-				$this->set_watertank_level(NAN);
-			}
+		}
+		foreach ($watertank_sensor_data as $value){
+			$fillage_level += $value;
+			$max_fillage_level ++;
+		}
+		if ($max_fillage_level != 0){
+			
+			$this->set_watertank_level($fillage_level/$max_fillage_level);
+		}else {
+			$this->set_watertank_level(NAN);
 		}
 	}
 }

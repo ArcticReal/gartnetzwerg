@@ -174,6 +174,8 @@ class DB_Handler{
 				case "Watertank_fillage_sensor":
 					$this->sensorunits[$sensorunit_id]->set_sensor($sensor_ids[$i], new Watertank_fillage_sensor());
 					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i])->set_position(intval($type[1]));
+					$watertank_value = $this->fetch_last_watertank_value($sensorunit_id, intval($type[1]));
+					$this->sensorunits[$sensorunit_id]->get_sensor($sensor_ids[$i])->set_value($watertank_value);
 					$logtext = $logtext.date(LOG_TIME_FORMAT)."	Sensor_id: ".$sensor_ids[$i]." => Watertank_fillage_sensor\n";
 					break;
 				case "Waterlogging_sensor":
@@ -811,6 +813,30 @@ class DB_Handler{
 		return $akt_soil_temperature[0];
 	}
 		
+	public function fetch_last_watertank_value($sensor_unit_id, $position){
+		
+		$query = "SELECT sensor_id FROM sensor WHERE sensor_unit_id = ".$sensor_unit_id." AND type = 'Watertank_fillage_sensor".$position."';";
+		$result = mysqli_query($this->mysqli, $query);
+		$sensor_id = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = "\n".date(LOG_TIME_FORMAT)."	DB_Handler::fetch_akt_watertank_value(sensor_unit_id: ".$sensor_unit_id.", Position: ".$position.")\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$sensor_id[0]."\n";
+		
+		$query = "SELECT value FROM sensor_data WHERE sensor_id = ".$sensor_id[0]." ORDER BY date DESC LIMIT 1";
+		$result = mysqli_query($this->mysqli, $query);
+		$last_watertank_value = mysqli_fetch_array($result);
+		
+		// Logging
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	SQL Query: ".$query."\n";
+		$logtext = $logtext.date(LOG_TIME_FORMAT)."	Result: ".$last_watertank_value[0]."\n";
+		$this->write_log($logtext);
+		
+		return $last_watertank_value[0];
+	}
+	
+	
 	public function fetch_season(){
 		
 		$season_id = 1;
@@ -841,12 +867,15 @@ class DB_Handler{
 		$query = $query." AND manual = 0;";
 		$result = mysqli_query($this->mysqli, $query);
 		
+		$check = TRUE;
 		$light_hours = 0.0;
 		while ($light_hours_row = mysqli_fetch_array($result, MYSQLI_ASSOC)){
 			if (intval($light_hours_row["value"]) <= 50) $light_hours += 0.5;
+			
+			$check = FALSE;
 		}
 
-		if ($light_hours_row == NULL){
+		if ($check){
 			$light_hours = NULL;
 		}
 		
