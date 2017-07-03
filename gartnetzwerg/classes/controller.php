@@ -10,7 +10,6 @@ require_once 'db_handler.php';
 class Controller{
 	private $sensorunit_array;
 	private $plant_array;
-	private $curent_timestamp;		// HH:MM:SS-DD-MM-YYYY
 	private $openweathermap_api_key;
 	private $default_openweathermap_api_key = "cd91b0f34b0fd55a44899fa358743139";
 	private $openweathermap_location;
@@ -41,10 +40,6 @@ class Controller{
 	
 	public function set_plant($new_plant, $newplant_id){
 		$this->plant_array[$newplant_id] = $new_plant;
-	}
-	
-	public function set_current_timestamp($new_current_timestamp){
-		$this->curent_timestamp = $new_current_timestamp;
 	}
 	
 	public function set_openweathermap_api_key($new_openweathermap_api_key){

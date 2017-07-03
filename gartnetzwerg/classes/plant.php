@@ -5,8 +5,6 @@ class Plant{
 	
 	private $plant_id;
 	private $species_id;
-	private $family;
-	private $genus;
 	private $species;
 	private $name;
 	private $nickname;
@@ -57,14 +55,6 @@ class Plant{
 	
 	public function set_species_id($species_id){
 		$this->species_id = $species_id;
-	}
-	
-	public function set_family($family){
-		$this->family = $family;
-	}
-	
-	public function set_genus($genus){
-		$this->genus = $genus;
 	}
 	
 	public function set_species($species){
@@ -214,14 +204,6 @@ class Plant{
 	
 	public function get_species_id(){
 		return $this->species_id;
-	}
-	
-	public function get_family(){
-		return $this->family;
-	}
-	
-	public function get_genus(){
-		return $this->genus;
 	}
 	
 	public function get_species(){

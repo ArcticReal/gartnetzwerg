@@ -1,14 +1,7 @@
 <?php
 require_once 'sensor.php';
-class Camera extends Sensor{
-	/*public function update(){
-		/*TODO: (wurde aber noch nicht auf'm Zero getestet)
+class Camera{
 		
-		if($rReturn != ""){
-			$this->value = $rReturn;
-		}
-	}*/
-	
 	public function take_pic($mac_address,$plant_id,$nickname){
 		
 		
@@ -18,10 +11,6 @@ class Camera extends Sensor{
 		$cmd = "sudo ".__DIR__."/../take_picture.sh ".$ip." ".$plant_id."_".$nickname;
 		shell_exec($cmd);
 				
-	}
-	
-	public function set_cam(){
-		
 	}
 }
 
